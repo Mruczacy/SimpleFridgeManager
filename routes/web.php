@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,4 +15,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+})->name("welcome");
+
+Auth::routes();
+
+Route::middleware(['auth'])->group(function () {
+    Route::put('account/{user}', [UserController::class, 'updateOwn'])->name('users.updateOwn');
+    Route::get('account/{user}/edit', [UserController::class, 'editOwn'])->name('users.editOwn');
+    Route::get('account/{user}', [UserController::class, 'showMyAccount'])->name('users.showMyAccount');
+    Route::delete('account/{user}', [UserController::class, 'destroyOwn'])->name('users.destroyOwn');
+    Route::resource('users', UserController::class)->middleware('can:isAdmin');
+
 });
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

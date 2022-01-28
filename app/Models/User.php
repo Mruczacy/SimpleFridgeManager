@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'email_verified_at',
+        'role',
     ];
 
     /**
@@ -41,4 +43,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function fridges(){
+        return $this->belongsToMany(Fridge::class, 'fridgesToUsers', 'user_id', 'fridge_id');
+    }
 }

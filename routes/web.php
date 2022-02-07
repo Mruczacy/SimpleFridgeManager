@@ -20,10 +20,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
-    Route::put('account/{user}', [UserController::class, 'updateOwn'])->name('users.updateOwn');
-    Route::get('account/{user}/edit', [UserController::class, 'editOwn'])->name('users.editOwn');
-    Route::get('account/{user}', [UserController::class, 'showMyAccount'])->name('users.showMyAccount');
-    Route::delete('account/{user}', [UserController::class, 'destroyOwn'])->name('users.destroyOwn');
+    Route::prefix('account')->name('users.')->group(function () {
+        Route::put('/{user}', [UserController::class, 'updateOwn'])->name('updateOwn');
+        Route::get('/{user}/edit', [UserController::class, 'editOwn'])->name('editOwn');
+        Route::get('/{user}', [UserController::class, 'showMyAccount'])->name('showMyAccount');
+        Route::delete('/{user}', [UserController::class, 'destroyOwn'])->name('destroyOwn');
+    });
     Route::resource('users', UserController::class)->middleware('can:isAdmin');
 
 });

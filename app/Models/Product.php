@@ -6,7 +6,7 @@ class Product {
     protected $fillable = [
         'name',
         'expiration_date',
-        'user_id',
+
 
     ];
 
@@ -14,6 +14,6 @@ class Product {
     {
         return $this->belongsTo(Fridge::class);
     }
-    
+
 }
 ?>

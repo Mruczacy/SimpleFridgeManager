@@ -36,7 +36,14 @@
         {
             return view('fridges.create');
         }
-
+        /**
+         * Store a newly created Fridge in storage.
+         * Assign creator to the owner of the fridge.
+         *
+         * @param  \Illuminate\Http\Request  $request
+         * @return \Illuminate\Http\Response
+         *
+         */
         public function store(Request $request)
         {
             $request->validate([

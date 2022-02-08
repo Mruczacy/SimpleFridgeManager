@@ -20,6 +20,13 @@ class ProductController extends Controller
         ]);
     }
 
+    public function indexOwn()
+    {
+        return view('products.index', [
+            'products' => Auth::user()->products()->paginate(50)
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -32,23 +39,26 @@ class ProductController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
+     * Only the owner of the fridge can add products to it.
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'expiration_date' => 'required'
-        ]);
+        if(Auth::user()->fridges()->contains('id', $request->fridge_id)) {
+            $request->validate([
+                'name' => 'required',
+                'expiration_date' => 'required'
+            ]);
 
-        $product = new Product();
-        $product->name = $request->name;
-        $product->expiration_date = $request->expiration_date;
-        $product->save();
+            $product = new Product();
+            $product->name = $request->name;
+            $product->expiration_date = $request->expiration_date;
+            $product->save();
 
-        return redirect()->route('fridges.index');
+            return redirect()->route('fridges.index');
+        }
     }
 
     /**

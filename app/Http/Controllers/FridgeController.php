@@ -19,6 +19,13 @@
             ]);
         }
 
+        public function indexOwn()
+        {
+            return view('fridges.index', [
+                'fridges' => Auth::user()->fridges()->paginate(3)
+            ]);
+        }
+
         /**
          * Show the form for creating a new resource.
          *
@@ -39,6 +46,8 @@
             $fridge = new Fridge();
             $fridge->name = $request->name;
             $fridge->save();
+
+            Auth::user()->fridges()->attach($fridge->id, ['is_owner' => 1]);
 
             return redirect()->route('fridges.index');
         }
@@ -128,7 +137,9 @@
          */
         public function destroy(Fridge $fridge)
         {
+            Auth::user()->fridges()->detach($fridge->id);
             $fridge->delete();
+
 
             return redirect()->route('fridges.index');
         }
@@ -140,8 +151,12 @@
          */
         public function destroyOwn(Fridge $fridge)
         {
-            $fridge->delete();
-            return redirect()->route('home');
+            if($fridge->owners()->contains('id',Auth::user()->id)){
+                Auth::user()->fridges()->detach($fridge->id);
+                $fridge->delete();
+
+                return redirect()->route('home');
+            }
         }
     }
 

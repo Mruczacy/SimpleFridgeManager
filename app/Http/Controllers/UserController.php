@@ -88,12 +88,14 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $user->fridges()->detach();
         $user->delete();
         return redirect()->route('welcome')->with('success', 'Konto zostało usunięte pomyślnie');
     }
 
     public function destroyOwn(User $user){
         if(Auth::user()->id == $user->id){
+            $user->fridges()->detach();
             $user->delete();
             return redirect()->route('welcome')->with('success', 'Twoje konto zostało usunięte pomyślnie');
         }

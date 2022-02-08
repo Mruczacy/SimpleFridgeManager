@@ -13,7 +13,11 @@
 
 
         public function users(){
-            return $this->belongsToMany(User::class, 'fridgesToUsers', 'fridge_id', 'user_id');
+            return $this->belongsToMany(User::class, 'fridgesToUsers', 'fridge_id', 'user_id')->withPivot('isOwner');
+        }
+
+        public function owners(){
+            return $this->users()->wherePivot('isOwner', true);
         }
     }
 

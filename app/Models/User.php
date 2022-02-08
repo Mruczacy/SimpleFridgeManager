@@ -45,6 +45,10 @@ class User extends Authenticatable
     ];
 
     public function fridges(){
-        return $this->belongsToMany(Fridge::class, 'fridgesToUsers', 'user_id', 'fridge_id');
+        return $this->belongsToMany(Fridge::class, 'fridgesToUsers', 'user_id', 'fridge_id')->withPivot('isOwner');
+    }
+
+    public function ownFridges(){
+        return $this->fridges()->wherePivot('isOwner', true);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-class Product {
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model {
     protected $fillable = [
         'name',
         'expiration_date',

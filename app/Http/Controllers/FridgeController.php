@@ -4,6 +4,7 @@
     use App\Models\Fridge;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
+    use Exception;
 
     class FridgeController extends Controller
     {
@@ -93,10 +94,12 @@
          */
         public function editOwn(Fridge $fridge)
         {
-            if(Auth::user()->id == $fridge->user_id) {
+            if($fridge->owners->contains('id',Auth::user()->id)) {
                 return view('fridges.edit', [
                     'fridge' => $fridge
                 ]);
+            } else {
+                abort(403, 'Access denied');
             }
         }
 
@@ -107,7 +110,7 @@
          * @param  \App\Models\Fridge  $fridge
          * @return \Illuminate\Http\Response
          */
-        public function update()
+        public function update(Request $request, Fridge $fridge)
         {
             $request->validate([
                 'name' => 'required',
@@ -125,14 +128,16 @@
          * @return \Illuminate\Http\Response
          */
         public function updateOwn(Request $request, Fridge $fridge){
-            if(Auth::user()->id == $fridge->id){
+            if($fridge->owners->contains(Auth::user()->id)){
                 $request->validate([
                     'name' => 'required',
                 ]);
 
                 $fridge->update($request->all());
 
-                return redirect()->route('home');
+                return redirect()->route('myfridges.indexOwn');
+            } else {
+                abort(403, 'Access denied');
             }
         }
 
@@ -158,11 +163,13 @@
          */
         public function destroyOwn(Fridge $fridge)
         {
-            if($fridge->owners()->contains('id',Auth::user()->id)){
+            if($fridge->owners->contains('id',Auth::user()->id)){
                 Auth::user()->fridges()->detach($fridge->id);
                 $fridge->delete();
 
-                return redirect()->route('home');
+                return redirect()->route('myfridges.indexOwn');
+            } else {
+                abort(403, 'Access denied');
             }
         }
     }

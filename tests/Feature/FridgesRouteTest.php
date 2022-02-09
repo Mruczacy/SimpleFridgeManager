@@ -187,7 +187,27 @@ class FridgesRouteTest extends TestCase
             $response = $this->actingAs($user)->put("/fridges/" . $fridge->id, [
                 'name' => 'test',
             ]);
+
+            $response->assertStatus(403);
+            $user->delete();
             $fridge->delete();
+        }
+
+        public function testAdminCanUpdateFridges()
+        {
+            $fridge= Fridge::factory()->create();
+
+            $user = User::factory()->create(['role' => UserRole::ADMIN]);
+
+            $response = $this->actingAs($user)->put("/fridges/" . $fridge->id, [
+                'name' => 'test',
+            ]);
+
+            $response->assertStatus(302);
+            $response->assertRedirect("/fridges");
+            $fridge->delete();
+
+            $user->delete();
         }
 
 }

@@ -11,7 +11,7 @@ class ManagementController extends Controller {
 
     public function attachUserToFridge(Fridge $fridge, User $user, Request $request)
     {
-        if($fridge->owners()->contains('id', $user->id)) 
+        if($fridge->owners->contains('id', Auth::user()->id))
         {
             $request->validate([
                 'is_owner' => 'required|numeric|min:0|max:1',
@@ -23,7 +23,7 @@ class ManagementController extends Controller {
 
     public function detachUserFromFridge(Fridge $fridge, User $user, Request $request)
     {
-        if($fridge->owners()->contains('id', $user->id)) 
+        if($fridge->owners->contains('id', Auth::user()->id))
         {
             $fridge->users()->detach($user->id);
             return redirect()->route('fridges.index');

@@ -210,6 +210,31 @@ class FridgesRouteTest extends TestCase
             $user->delete();
         }
 
+        public function testGuestCannotAccessStoreFridges()
+        {
+            $response = $this->post("/fridges");
+
+            $response->assertStatus(302);
+            $response->assertRedirect("/login");
+        }
+
+        public function testUserCanStoreFridges()
+        {
+            $user = User::factory()->create(['role' => UserRole::USER]);
+
+            $response = $this->actingAs($user)->post("/fridges", [
+                'name' => 'test',
+            ]);
+
+            $response->assertStatus(302);
+            $response->assertRedirect("/fridges");
+            $this->assertTrue($user->fridges->contains('name', 'test'));
+            $fridge= Fridge::find($user->fridges->first()->id);
+            $user->fridges()->detach();
+            $fridge->delete();
+            $user->delete();
+        }
+
 }
 
 ?>

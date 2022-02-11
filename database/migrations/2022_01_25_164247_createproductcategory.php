@@ -13,14 +13,14 @@ class Createproductcategory extends Migration
      */
     public function up()
     {
-        Schema::create('productcategories', function (Blueprint $table) {
+        Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
             $table->string("name");
         });
 
         Schema::table('products', function (Blueprint $table) {
-            $table->unsignedBigInteger("productcategory_id");
-            $table->foreign("productcategory_id")->references("id")->on("productcategories")->delete("cascade");
+            $table->unsignedBigInteger("product_category_id");
+            $table->foreign("product_category_id")->references("id")->on("product_categories")->delete("cascade");
         });
     }
 
@@ -32,8 +32,9 @@ class Createproductcategory extends Migration
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropForeign(['productcategory_id']);
+            $table->dropForeign(['product_category_id']);
+            $table->dropColumn("product_category_id");
         });
-        Schema::dropIfExists('productcategories');
+        Schema::dropIfExists('products_categories');
     }
 }

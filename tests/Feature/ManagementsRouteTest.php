@@ -6,7 +6,6 @@ use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
-use App\Enums\UserRole;
 use App\Models\Fridge;
 
 class ManagementsRouteTest extends TestCase

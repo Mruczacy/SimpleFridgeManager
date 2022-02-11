@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\FridgeController;
 use App\Http\Controllers\HomeController;
 /*
@@ -48,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::resource('fridges', FridgeController::class)->only(['store', 'create', 'show']);
     Route::resource('products', ProductController::class)->only(['store', 'create']);
+    Route::resource('productscategory', ProductCategoryController::class);
     Route::middleware(['can:isAdmin'])->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('fridges', FridgeController::class)->except(['store', 'create', 'show']);

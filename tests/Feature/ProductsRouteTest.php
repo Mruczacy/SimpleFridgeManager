@@ -118,5 +118,119 @@ class ProductsRouteTest extends TestCase {
         $fridge->delete();
         $category->delete();
     }
+
+    public function testGuestCannotAccessEdit()
+    {
+        $product = Product::factory()->create();
+        $response = $this->get("/products/{$product->id}/edit");
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/login");
+        $product->delete();
+    }
+
+    public function testUserCannotAccessEdit()
+    {
+        $user = User::factory()->create(['role' => UserRole::USER]);
+        $product = Product::factory()->create();
+        $response = $this->actingAs($user)->get("/products/{$product->id}/edit");
+
+        $response->assertStatus(403);
+        $product->delete();
+        $user->delete();
+    }
+
+    public function testAdminCanAccessEdit()
+    {
+        $user = User::factory()->create(['role' => UserRole::ADMIN]);
+        $product = Product::factory()->create();
+        $response = $this->actingAs($user)->get("/products/{$product->id}/edit");
+
+        $response->assertStatus(200);
+        $product->delete();
+        $user->delete();
+    }
+
+    public function testGuestCannotAccessUpdate()
+    {
+        $product = Product::factory()->create();
+        $response = $this->put("/products/{$product->id}", [
+            'name' => 'test',
+            'expiration_date' => Carbon::now()->addDays(2137),
+            'fridge_id' => $product->fridge_id,
+            'product_category_id' => $product->product_category_id,
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/login");
+        $product->delete();
+    }
+
+    public function testUserCannotAccessUpdate()
+    {
+        $user = User::factory()->create(['role' => UserRole::USER]);
+        $product = Product::factory()->create();
+        $response = $this->actingAs($user)->put("/products/{$product->id}", [
+            'name' => 'test',
+            'expiration_date' => Carbon::now()->addDays(2137),
+            'fridge_id' => $product->fridge_id,
+            'product_category_id' => $product->product_category_id,
+        ]);
+
+        $response->assertStatus(403);
+        $product->delete();
+        $user->delete();
+    }
+
+    public function testAdminCanAccessUpdate()
+    {
+        $user = User::factory()->create(['role' => UserRole::ADMIN]);
+        $product = Product::factory()->create();
+        $response = $this->actingAs($user)->put("/products/{$product->id}", [
+            'name' => 'test',
+            'expiration_date' => Carbon::now()->addDays(2137),
+            'fridge_id' => $product->fridge_id,
+            'product_category_id' => $product->product_category_id,
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/myfridges");
+        $product->delete();
+        $user->delete();
+    }
+
+    public function testGuestCannotAccessDestroy()
+    {
+        $product = Product::factory()->create();
+        $response = $this->delete("/products/{$product->id}");
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/login");
+        $product->delete();
+    }
+
+    public function testUserCannotAccessDestroy()
+    {
+        $user = User::factory()->create(['role' => UserRole::USER]);
+        $product = Product::factory()->create();
+        $response = $this->actingAs($user)->delete("/products/{$product->id}");
+
+        $response->assertStatus(403);
+        $product->delete();
+        $user->delete();
+    }
+
+    public function testAdminCanAccessDestroy()
+    {
+        $user = User::factory()->create(['role' => UserRole::ADMIN]);
+        $product = Product::factory()->create();
+        $response = $this->actingAs($user)->delete("/products/{$product->id}");
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/myfridges");
+        $product->delete();
+        $user->delete();
+    }
+
 }
 ?>

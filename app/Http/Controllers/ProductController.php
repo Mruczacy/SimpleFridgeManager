@@ -102,7 +102,7 @@ class ProductController extends Controller
         $product->expiration_date = $request->expiration_date;
         $product->save();
 
-        return redirect()->route('myfridges.index');
+        return redirect()->route('myfridges.indexOwn');
 
     }
     public function updateOwn(Request $request, Product $product)
@@ -133,7 +133,7 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return redirect()->route('myfridges.index');
+        return redirect()->route('myfridges.indexOwn');
     }
 
     public function destroyOwn(Product $product)
@@ -141,7 +141,7 @@ class ProductController extends Controller
         if($product->fridge()->users()->contains('id', Auth::user()->id)){
             $product->delete();
 
-            return redirect()->route('myfridges.index');
+            return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');
         }

@@ -14,7 +14,7 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        return view('product.categories.index', [
+        return view('products.categories.index', [
             'categories' => ProductCategory::paginate(25)
         ]);
     }
@@ -26,7 +26,7 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        return view('product.categories.create');
+        return view('products.categories.create');
     }
 
     /**
@@ -54,10 +54,10 @@ class ProductCategoryController extends Controller
      * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductCategory $productCategory)
+    public function edit(ProductCategory $category)
     {
-        return view('product.categories.edit', [
-            'category' => $productCategory
+        return view('products.categories.edit', [
+            'productcategory' => $category
         ]);
     }
 
@@ -68,16 +68,15 @@ class ProductCategoryController extends Controller
      * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProductCategory $productCategory)
+    public function update(Request $request, ProductCategory $category)
     {
         $request->validate([
             'name' => 'required'
         ]);
+        $category->name = $request->name;
+        $category->save();
 
-        $productCategory->name = $request->name;
-        $productCategory->save();
-
-        return redirect()->route('products.index');
+        return redirect()->route('myfridges.indexOwn');
     }
 
     /**
@@ -86,10 +85,10 @@ class ProductCategoryController extends Controller
      * @param  \App\Models\ProductCategory  $productCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductCategory $productCategory)
+    public function destroy(ProductCategory $category)
     {
-        $productCategory->delete();
+        $category->delete();
 
-        return redirect()->route('products.index');
+        return redirect()->route('myfridges.indexOwn');
     }
 }

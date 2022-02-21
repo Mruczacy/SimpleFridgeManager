@@ -110,8 +110,8 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
         $this->assertTrue($fridge->products->contains('name', 'testa'));
-        $product= Product::find($fridge->products->where('name', 'testa')->first()->id);
-        $product->delete();
+        $this->assertNotNull(Product::find($fridge->products->where('name', 'testa')->first()->id));
+        Product::find($fridge->products->where('name', 'testa')->first()->id)->delete();
         $user->fridges()->detach();
         $fridge->users()->detach();
         $user->delete();
@@ -192,7 +192,8 @@ class ProductsRouteTest extends TestCase {
             'fridge_id' => $product->fridge_id,
             'product_category_id' => $product->product_category_id,
         ]);
-
+        $product2 = Product::find($product->id);
+        $this->assertFalse($product2->name == $product->name);
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
         $product->delete();
@@ -225,10 +226,9 @@ class ProductsRouteTest extends TestCase {
         $user = User::factory()->create(['role' => UserRole::ADMIN]);
         $product = Product::factory()->create();
         $response = $this->actingAs($user)->delete("/products/{$product->id}");
-
+        $this->assertNull(Product::find($product->id));
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
-        $product->delete();
         $user->delete();
     }
 

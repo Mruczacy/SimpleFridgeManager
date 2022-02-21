@@ -84,7 +84,8 @@ class MyFridgeRouteTest extends TestCase
         $response = $this->actingAs($user)->put("/myfridges/{$fridge->id}", [
             'name' => 'test',
         ]);
-
+        $fridge2 = Fridge::find($fridge->id);
+        $this->assertFalse($fridge2->name == $fridge->name);
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
 
@@ -122,7 +123,7 @@ class MyFridgeRouteTest extends TestCase
         $user->fridges()->attach($fridge->id, ['is_owner' => 1]);
 
         $response = $this->actingAs($user)->delete("/myfridges/{$fridge->id}");
-
+        $this->assertNull(Fridge::find($fridge->id));
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
         $user->delete();

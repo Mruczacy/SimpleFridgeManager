@@ -47,13 +47,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/attach/{fridge}/{user}', [ManagementController::class, 'attachUserToFridge'])->name('attach');
         Route::delete('/detach/{fridge}/{user}', [ManagementController::class, 'detachUserFromFridge'])->name('detach');
     });
-    Route::resource('fridges', FridgeController::class)->only(['store', 'create', 'show']);
+    Route::resource('fridges', FridgeController::class)->only(['store', 'create']);
     Route::resource('products', ProductController::class)->only(['store', 'create']);
-    Route::resource('productscategory', ProductCategoryController::class);
     Route::middleware(['can:isAdmin'])->group(function () {
         Route::resource('users', UserController::class);
-        Route::resource('fridges', FridgeController::class)->except(['store', 'create', 'show']);
-        Route::resource('products', ProductController::class)->except(['store', 'create']);
+        Route::resource('fridges', FridgeController::class)->except(['store', 'create']);
+        Route::resource('products', ProductController::class)->except(['store', 'create', 'show']);
+        Route::resource('products/categories', ProductCategoryController::class);
     });
 
 

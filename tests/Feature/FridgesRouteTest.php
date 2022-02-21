@@ -73,28 +73,31 @@ class FridgesRouteTest extends TestCase
         public function testGuestCannotAccessFridgesShow()
         {
             $fridge= Fridge::factory()->create();
-            $response = $this->get("/fridges/" . $fridge->id);
+            $response = $this->get("/fridges/{$fridge->id}");
 
             $response->assertStatus(302);
             $response->assertRedirect("/login");
             $fridge->delete();
         }
 
-        public function testUserAndAdminCanAccessFridgesShow()
+        public function testUserCannotAccessFridgesShow()
         {
             $user = User::factory()->create(['role' => UserRole::USER]);
-
             $fridge= Fridge::factory()->create();
 
-            $response = $this->actingAs($user)->get("/fridges/" . $fridge->id);
+            $response = $this->actingAs($user)->get("/fridges/{$fridge->id}");
 
-            $response->assertStatus(200);
-
+            $response->assertStatus(403);
+            $fridge->delete();
             $user->delete();
+        }
 
+        public function testAdminCanAccessFridgesShow()
+        {
+            $fridge = Fridge::factory()->create();
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
 
-            $response = $this->actingAs($user)->get("/fridges/" . $fridge->id);
+            $response = $this->actingAs($user)->get("/fridges/{$fridge->id}");
 
             $response->assertStatus(200);
 
@@ -165,7 +168,7 @@ class FridgesRouteTest extends TestCase
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
 
             $response = $this->actingAs($user)->delete("/fridges/" . $fridge->id);
-
+            $this->assertNull(Fridge::find($fridge->id));
             $response->assertStatus(302);
             $response->assertRedirect("/fridges");
             $fridge->delete();
@@ -202,7 +205,8 @@ class FridgesRouteTest extends TestCase
             $response = $this->actingAs($user)->put("/fridges/" . $fridge->id, [
                 'name' => 'test',
             ]);
-
+            $fridge2= Fridge::find($fridge->id);
+            $this->assertFalse($fridge2->name == $fridge->name);
             $response->assertStatus(302);
             $response->assertRedirect("/fridges");
             $fridge->delete();
@@ -229,9 +233,9 @@ class FridgesRouteTest extends TestCase
             $response->assertStatus(302);
             $response->assertRedirect("/fridges");
             $this->assertTrue($user->fridges->contains('name', 'test'));
-            $fridge= Fridge::find($user->fridges->first()->id);
+            $this->assertNotNull(Fridge::find($user->fridges->first()->id));
             $user->fridges()->detach();
-            $fridge->delete();
+            Fridge::find($user->fridges->first()->id)->delete();
             $user->delete();
         }
 

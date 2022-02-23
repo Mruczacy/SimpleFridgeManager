@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{product}', [ProductController::class, 'updateOwn'])->name('updateOwn');
         Route::get('/{product}/edit', [ProductController::class, 'editOwn'])->name('editOwn');
         Route::delete('/{product}', [ProductController::class, 'destroyOwn'])->name('destroyOwn');
+        Route::put('/move/{product}', [ProductController::class, 'moveProductBetweenFridgesOwn'])->name('move');
     });
     Route::prefix('manage')->name('manage.')->group(function () {
         Route::post('/attach/{fridge}/{user}', [ManagementController::class, 'attachUserToFridge'])->name('attach');
@@ -50,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('fridges', FridgeController::class)->only(['store', 'create']);
     Route::resource('products', ProductController::class)->only(['store', 'create']);
     Route::middleware(['can:isAdmin'])->group(function () {
+        Route::put('/products/move/{product}', [ProductController::class, 'moveProductBetweenFridges'])->name('products.move');
         Route::resource('users', UserController::class);
         Route::resource('fridges', FridgeController::class)->except(['store', 'create']);
         Route::resource('products', ProductController::class)->except(['store', 'create', 'show']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Fridge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +24,7 @@ class ProductController extends Controller
     public function indexOwn()
     {
         return view('products.index', [
-            'products' => Auth::user()->products()->paginate(50)
+            'products' => Auth::user()->fridges()->products()->paginate(50)
         ]);
     }
 
@@ -118,6 +119,28 @@ class ProductController extends Controller
             $product->save();
 
             return redirect()->route('myfridges.index');
+        } else {
+            abort(403, 'Access denied');
+        }
+    }
+
+    public function moveProductBetweenFridges(Request $request, Product $product) {
+        $request->validate([
+            'fridge_id' => 'required',
+        ]);
+        $product->fridge_id = $request->fridge_id;
+        $product->save();
+        return redirect()->route('fridges.index');
+    }
+
+    public function moveProductBetweenFridgesOwn(Request $request, Product $product) {
+        $request->validate([
+            'fridge_id' => 'required',
+        ]);
+        if(Fridge::find($product->fridge->id)->users->contains(Auth::user()->id)) {
+            $product->fridge_id = $request->fridge_id;
+            $product->save();
+            return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');
         }

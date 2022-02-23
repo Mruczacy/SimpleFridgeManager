@@ -200,6 +200,129 @@ class ProductsRouteTest extends TestCase {
         $user->delete();
     }
 
+    public function testGuestCannotAccessMoveProductsBetweenFridges() {
+        $fridge = Fridge::factory()->create();
+        $fridge2 = Fridge::factory()->create();
+        $product = Product::factory()->create([
+            'fridge_id' => $fridge->id,
+        ]);
+
+        $response = $this->put("/products/move/{$product->id}", [
+            'fridge_id' => $fridge2->id,
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect("/login");
+        $product->delete();
+        $fridge->delete();
+        $fridge2->delete();
+    }
+
+    public function testUserCannotAccessMoveProductsBetweenFridges() {
+        $user = User::factory()->create(['role' => UserRole::USER]);
+        $fridge = Fridge::factory()->create();
+        $fridge2 = Fridge::factory()->create();
+        $product = Product::factory()->create([
+            'fridge_id' => $fridge->id,
+        ]);
+
+        $response = $this->actingAs($user)->put("/products/move/{$product->id}", [
+            'fridge_id' => $fridge2->id,
+        ]);
+        $response->assertStatus(403);
+        $product->delete();
+        $fridge->delete();
+        $fridge2->delete();
+        $user->delete();
+    }
+
+    public function testAdminCanAccessMoveProductsBetweenFridges() {
+        $user = User::factory()->create(['role' => UserRole::ADMIN]);
+        $fridge = Fridge::factory()->create();
+        $fridge2 = Fridge::factory()->create();
+        $product = Product::factory()->create([
+            'fridge_id' => $fridge->id,
+        ]);
+
+        $response = $this->actingAs($user)->put("/products/move/{$product->id}", [
+            'fridge_id' => $fridge2->id,
+        ]);
+        $product2 = Product::find($product->id);
+        $this->assertFalse($product2->fridge_id == $product->fridge_id);
+        $response->assertStatus(302);
+        $response->assertRedirect("/fridges");
+        $product->delete();
+        $fridge->delete();
+        $fridge2->delete();
+        $user->delete();
+    }
+
+    public function testGuestCannotMoveProductsBetweenFridgesOwn(){
+        $fridge = Fridge::factory()->create();
+        $fridge2 = Fridge::factory()->create();
+        $product = Product::factory()->create([
+            'fridge_id' => $fridge->id,
+        ]);
+
+        $response = $this->put("/myproducts/move/{$product->id}", [
+            'fridge_id' => $fridge2->id,
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect("/login");
+        $product->delete();
+        $fridge->delete();
+        $fridge2->delete();
+    }
+
+    public function testUserCanMoveProductsBetweenItsOwnFridges() {
+        $user = User::factory()->create(['role' => UserRole::USER]);
+        $fridge = Fridge::factory()->create();
+        $fridge2 = Fridge::factory()->create();
+        $fridge->users()->attach($user, ['is_owner' => 0]);
+        $fridge2->users()->attach($user, ['is_owner' => 0]);
+        $product = Product::factory()->create([
+            'fridge_id' => $fridge->id,
+        ]);
+
+        $response = $this->actingAs($user)->put("/myproducts/move/{$product->id}", [
+            'fridge_id' => $fridge2->id,
+        ]);
+        $product2 = Product::find($product->id);
+        $this->assertFalse($product2->fridge_id == $product->fridge_id);
+        $response->assertStatus(302);
+        $response->assertRedirect("/myfridges");
+        $fridge->users()->detach();
+        $fridge2->users()->detach();
+        $product->delete();
+        $fridge->delete();
+        $fridge2->delete();
+        $user->delete();
+    }
+
+    public function testUserCannotMoveProductsBetweenFridgesOfOtherUsers() {
+        $user = User::factory()->create(['role' => UserRole::USER]);
+        $user2 = User::factory()->create(['role' => UserRole::USER]);
+        $fridge = Fridge::factory()->create();
+        $fridge2 = Fridge::factory()->create();
+        $fridge->users()->attach($user2, ['is_owner' => 0]);
+        $fridge2->users()->attach($user2, ['is_owner' => 0]);
+        $product = Product::factory()->create([
+            'fridge_id' => $fridge->id,
+        ]);
+
+        $response = $this->actingAs($user)->put("/myproducts/move/{$product->id}", [
+            'fridge_id' => $fridge2->id,
+        ]);
+        $this->assertTrue($product->fridge_id == $fridge->id);
+        $response->assertStatus(403);
+        $product->delete();
+        $fridge->users()->detach();
+        $fridge2->users()->detach();
+        $fridge->delete();
+        $fridge2->delete();
+        $user->delete();
+        $user2->delete();
+    }
+
     public function testGuestCannotAccessDestroy()
     {
         $product = Product::factory()->create();

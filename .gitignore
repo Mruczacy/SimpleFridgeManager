@@ -38,6 +38,9 @@ Homestead.json
 /app/phpunit.xml
 /phpunit.xml
 
+# Xdebug code coverage
+/reports
+
 # Build data
 /build/
 

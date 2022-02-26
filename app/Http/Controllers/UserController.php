@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -13,7 +14,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index() : View
     {
 
         return view('users.index', [
@@ -21,9 +22,10 @@ class UserController extends Controller
         ]);
     }
 
-    public function showMyAccount(User $user){
+    public function showMyAccount() : View
+    {
         return view('users.myaccount', [
-            'user' => $user
+            'user' => Auth::user()
         ]);
     }
     /**
@@ -32,7 +34,7 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user): View
+    public function edit(User $user) : View
     {
         return view('users.edit', [
             'user' => $user
@@ -45,6 +47,8 @@ class UserController extends Controller
             return view('users.edit', [
                 'user' => $user
             ]);
+        } else {
+            abort(403, 'Access denied');
         }
     }
 
@@ -76,7 +80,9 @@ class UserController extends Controller
 
             $user->update($request->all());
 
-            return redirect()->route('home');
+            return redirect()->route('users.showMyAccount');
+        } else {
+            abort(403, 'Access denied');
         }
     }
 
@@ -90,7 +96,7 @@ class UserController extends Controller
     {
         $user->fridges()->detach();
         $user->delete();
-        return redirect()->route('welcome')->with('success', 'Konto zostało usunięte pomyślnie');
+        return redirect()->route('users.index')->with('success', 'Konto zostało usunięte pomyślnie');
     }
 
     public function destroyOwn(User $user){
@@ -98,6 +104,8 @@ class UserController extends Controller
             $user->fridges()->detach();
             $user->delete();
             return redirect()->route('welcome')->with('success', 'Twoje konto zostało usunięte pomyślnie');
+        } else {
+            abort(403, 'Access denied');
         }
     }
 }

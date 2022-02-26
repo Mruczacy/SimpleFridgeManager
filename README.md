@@ -1,14 +1,14 @@
 # SimpleFridgeManager
 Fridge content list. Next time your products would not rotten as easy as now.
 
-# Testing
-You can run tests by command
+# Tests
+You can run tests by this command:
 ```
 php artisan test
 ```
 **Please remember to fulfill all requirements like setting up the database**
 
-You can also run code coverage tests by command
+You can also run code coverage tests by following command:
 ```
 vendor/bin/phpunit --coverage-html reports/
 ```

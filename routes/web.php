@@ -28,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('account')->name('users.')->group(function () {
         Route::put('/{user}', [UserController::class, 'updateOwn'])->name('updateOwn');
         Route::get('/{user}/edit', [UserController::class, 'editOwn'])->name('editOwn');
-        Route::get('/{user}', [UserController::class, 'showMyAccount'])->name('showMyAccount');
+        Route::get('/', [UserController::class, 'showMyAccount'])->name('showMyAccount');
         Route::delete('/{user}', [UserController::class, 'destroyOwn'])->name('destroyOwn');
     });
     Route::prefix('myfridges')->name('myfridges.')->group(function () {

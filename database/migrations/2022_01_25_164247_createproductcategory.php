@@ -35,6 +35,6 @@ class Createproductcategory extends Migration
             $table->dropForeign(['product_category_id']);
             $table->dropColumn("product_category_id");
         });
-        Schema::dropIfExists('products_categories');
+        Schema::dropIfExists('product_categories');
     }
 }

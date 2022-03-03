@@ -11,9 +11,6 @@ class HomeController extends Controller
      *
      * @return void
      */
-    /**
-     * @codeCoverageIgnore
-     */
     public function __construct()
     {
         $this->middleware('auth');
@@ -24,13 +21,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    /**
-     * @codeCoverageIgnore
-     */
     public function index()
     {
         return view('home');
     }
-
-
 }

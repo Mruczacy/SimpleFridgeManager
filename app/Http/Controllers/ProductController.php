@@ -80,7 +80,7 @@ class ProductController extends Controller
     }
     public function editOwn(Product $product)
     {
-        if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))) {
+        if(Auth::user()->isFridgeUser(Fridge::find($product->fridge_id))) {
             return view('products.edit', ['product' =>$product]);
         } else {
             abort(403, 'Access denied');
@@ -164,7 +164,7 @@ class ProductController extends Controller
 
     public function destroyOwn(Product $product)
     {
-        if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))){
+        if(Auth::user()->isFridgeUser(Fridge::find($product->fridge_id))){
             $product->delete();
 
             return redirect()->route('myfridges.indexOwn');

@@ -49,7 +49,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        if(Auth::user()->fridges->contains('id', $request->fridge_id)== 1) {
+        if(Auth::user()->isFridgeUser($request->fridge_id)) {
             $request->validate([
                 'name' => 'required',
                 'expiration_date' => 'required',
@@ -80,7 +80,7 @@ class ProductController extends Controller
     }
     public function editOwn(Product $product)
     {
-        if(Fridge::find($product->fridge_id)->users->contains('id', Auth::user()->id)) {
+        if(Auth::user()->isFridgeUser($product->fridge_id)) {
             return view('products.edit', ['product' =>$product]);
         } else {
             abort(403, 'Access denied');
@@ -111,7 +111,7 @@ class ProductController extends Controller
     }
     public function updateOwn(Request $request, Product $product)
     {
-        if($product->fridge->users->contains(Auth::user()->id)){
+        if(Auth::user()->isFridgeUser($product->fridge_id)){
             $request->validate([
                 'name' => 'required',
                 'product_category_id' => 'required',
@@ -140,7 +140,7 @@ class ProductController extends Controller
         $request->validate([
             'fridge_id' => 'required',
         ]);
-        if(Fridge::find($product->fridge->id)->users->contains(Auth::user()->id)) {
+        if(Auth::user()->isFridgeUser($product->fridge_id)) {
             $product->fridge_id = $request->fridge_id;
             $product->save();
             return redirect()->route('myfridges.indexOwn');
@@ -164,7 +164,7 @@ class ProductController extends Controller
 
     public function destroyOwn(Product $product)
     {
-        if(Fridge::find($product->fridge->id)->users->contains('id', Auth::user()->id)){
+        if(Auth::user()->isFridgeUser($product->fridge_id)){
             $product->delete();
 
             return redirect()->route('myfridges.indexOwn');

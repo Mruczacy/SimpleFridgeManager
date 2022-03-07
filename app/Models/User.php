@@ -57,7 +57,7 @@ class User extends Authenticatable
         return $fridge->owners->contains('id', $this->id);
     }
 
-    public function isFridgeUser($fridge_id){
-        return $this->fridges->contains('id', $fridge_id);
+    public function isFridgeUser(Fridge $fridge){
+        return $this->fridges->contains('id', $fridge->id);
     }
 }

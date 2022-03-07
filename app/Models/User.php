@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Fridge;
 
 class User extends Authenticatable
 {
@@ -50,5 +51,13 @@ class User extends Authenticatable
 
     public function ownFridges(){
         return $this->fridges()->wherePivot('is_Owner', true);
+    }
+
+    public function isFridgeOwner(Fridge $fridge){
+        return $fridge->owners->contains('id', $this->id);
+    }
+
+    public function isFridgeUser(Fridge $fridge){
+        return $this->fridges->contains('id', $fridge->id);
     }
 }

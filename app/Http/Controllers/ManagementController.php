@@ -10,9 +10,21 @@ use App\Http\Controllers\UserController;
 
 class ManagementController extends Controller {
 
+    public function showAnAttachForm(Fridge $fridge, User $user) {
+        if(Auth::user()->isFridgeOwner($fridge))
+        {
+            return view('management.attach', compact('fridge', 'user'));
+        }
+        else
+        {
+            abort(403, 'Access denied');
+        }
+    }
+
     public function attachUserToFridge(Fridge $fridge, User $user, Request $request)
     {
-        if($fridge->owners->contains('id', Auth::user()->id))
+
+        if(Auth::user()->isFridgeOwner($fridge))
         {
             $request->validate([
                 'is_owner' => 'required|numeric|min:0|max:1',
@@ -26,7 +38,7 @@ class ManagementController extends Controller {
 
     public function detachUserFromFridge(Fridge $fridge, User $user, Request $request)
     {
-        if($fridge->owners->contains('id', Auth::user()->id))
+        if(Auth::user()->isFridgeOwner($fridge))
         {
             $fridge->users()->detach($user->id);
             return redirect()->route('myfridges.indexOwn');

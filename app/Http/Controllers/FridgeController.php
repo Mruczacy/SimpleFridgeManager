@@ -94,7 +94,7 @@
          */
         public function editOwn(Fridge $fridge)
         {
-            if($fridge->owners->contains('id',Auth::user()->id)) {
+            if(Auth::user()->isFridgeOwner($fridge)) {
                 return view('fridges.edit', [
                     'fridge' => $fridge
                 ]);
@@ -128,7 +128,7 @@
          * @return \Illuminate\Http\Response
          */
         public function updateOwn(Request $request, Fridge $fridge){
-            if($fridge->owners->contains(Auth::user()->id)){
+            if(Auth::user()->isFridgeOwner($fridge)){
                 $request->validate([
                     'name' => 'required',
                 ]);
@@ -163,7 +163,7 @@
          */
         public function destroyOwn(Fridge $fridge)
         {
-            if($fridge->owners->contains('id',Auth::user()->id)){
+            if(Auth::user()->isFridgeOwner($fridge)){
                 Auth::user()->fridges()->detach($fridge->id);
                 $fridge->delete();
 

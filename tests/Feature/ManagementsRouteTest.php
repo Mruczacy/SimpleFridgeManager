@@ -12,6 +12,45 @@ class ManagementsRouteTest extends TestCase
 
 {
 
+    public function testGuestCannotGetAnAttachForm()
+    {
+        $user = User::factory()->create();
+        $fridge = Fridge::factory()->create();
+        $response = $this->get("/manage/attach/form/{$fridge->id}/{$user->id}");
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
+        $user->delete();
+        $fridge->delete();
+    }
+
+    public function testUserCannotGetAnAttachFormOnSbsFridge()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create();
+        $fridge->users()->attach($user2->id, ['is_owner' => 1]);
+        $response = $this->actingAs($user)->get("/manage/attach/form/{$fridge->id}/{$user->id}");
+        $response->assertStatus(403);
+        $fridge->users()->detach();
+        $user2->delete();
+        $user->delete();
+        $fridge->delete();
+    }
+
+    public function testUserCanGetAnAttachFormOnOwnFridge()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create();
+        $fridge->users()->attach($user->id, ['is_owner' => 1]);
+        $response = $this->actingAs($user)->get("/manage/attach/form/{$fridge->id}/{$user2->id}");
+        $response->assertStatus(200);
+        $fridge->users()->detach();
+        $user2->delete();
+        $user->delete();
+        $fridge->delete();
+    }
+
     public function testGuestCannotAttachFridgeToSb()
     {
         $user = User::factory()->create();

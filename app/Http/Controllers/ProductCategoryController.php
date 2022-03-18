@@ -45,7 +45,7 @@ class ProductCategoryController extends Controller
         $productcategory->name = $request->name;
         $productcategory->save();
 
-        return redirect()->route('myfridges.indexOwn');
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -57,7 +57,7 @@ class ProductCategoryController extends Controller
     public function edit(ProductCategory $category)
     {
         return view('products.categories.edit', [
-            'productcategory' => $category
+            'category' => $category
         ]);
     }
 

@@ -7,3 +7,11 @@
 .hello-react {
     color: #ff0000;
 }
+
+.margin-bot {
+    margin-bottom: 20px;
+}
+
+.text-red {
+    color: #ff0000;
+}

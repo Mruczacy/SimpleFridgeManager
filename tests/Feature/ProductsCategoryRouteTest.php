@@ -94,7 +94,7 @@ class ProductsCategoryRouteTest extends TestCase {
         ]);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/myfridges");
+        $response->assertRedirect("/products/categories");
 
         $user->delete();
     }

@@ -4,14 +4,14 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Edit Product</h2>
+                <h2>Edytuj użytkownika</h2>
             </div>
             <div class="pull-right">
                 @can('isAdmin')
-                <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('users.index') }}">Wróć</a>
                 @endcan
                 @can('isUser')
-                <a class="btn btn-primary" href="{{ route('home') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('home') }}">Wróć</a>
                 @endcan
             </div>
         </div>
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary">Potwierdź</button>
             </div>
         </div>
 

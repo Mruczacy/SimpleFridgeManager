@@ -58,15 +58,23 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+
+                                    <a class="dropdown-item" href="{{ route('users.showMyAccount', Auth::user()->id) }}">Moje konto</a>
+
+                                    @can('isAdmin')
+                                        <a class="dropdown-item" href="{{ route('categories.index') }}">Kategorie</a>
+                                    @endcan
+
+                                    <a class="dropdown-item text-red" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('Wyloguj') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
+
                                 </div>
                             </li>
                         @endguest
@@ -76,7 +84,9 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+            <div class="container">
+                @yield('content')
+            </div>
         </main>
     </div>
 </body>

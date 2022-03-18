@@ -38,7 +38,7 @@ class ProductCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required|string|max:255'
         ]);
 
         $productcategory = new ProductCategory();
@@ -71,7 +71,7 @@ class ProductCategoryController extends Controller
     public function update(Request $request, ProductCategory $category)
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required|string|max:255'
         ]);
         $category->name = $request->name;
         $category->save();

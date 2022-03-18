@@ -51,10 +51,10 @@ class ProductController extends Controller
     {
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))) {
             $request->validate([
-                'name' => 'required',
-                'expiration_date' => 'required',
-                'fridge_id' => 'required',
-                'product_category_id' => 'required'
+                'name' => 'required|string|max:255',
+                'expiration_date' => 'required|date|after_or_equal:today',
+                'fridge_id' => 'required|numeric|exists:fridges,id',
+                'product_category_id' => 'required|numeric|exists:product_categories,id'
             ]);
             $product = new Product();
             $product->name = $request->name;
@@ -97,10 +97,10 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name' => 'required',
-            'expiration_date' => 'required',
-            'product_category_id' => 'required',
-            'fridge_id' => 'required'
+            'name' => 'required|string|max:255',
+            'expiration_date' => 'required|date',
+            'product_category_id' => 'required|numeric|exists:product_categories,id',
+            'fridge_id' => 'required|numeric|exists:fridges,id'
         ]);
 
         $product->update($request->all());
@@ -113,10 +113,10 @@ class ProductController extends Controller
     {
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))){
             $request->validate([
-                'name' => 'required',
-                'product_category_id' => 'required',
-                'fridge_id' => 'required',
-                'expiration_date' => 'required'
+                'name' => 'required|string|max:255',
+                'product_category_id' => 'required|numeric|exists:product_categories,id',
+                'fridge_id' => 'required|numeric|exists:fridges,id',
+                'expiration_date' => 'required|date'
             ]);
             $product->update($request->all());
 
@@ -129,7 +129,7 @@ class ProductController extends Controller
 
     public function moveProductBetweenFridges(Request $request, Product $product) {
         $request->validate([
-            'fridge_id' => 'required',
+            'fridge_id' => 'required|numeric|exists:fridges,id',
         ]);
         $product->fridge_id = $request->fridge_id;
         $product->save();
@@ -138,7 +138,7 @@ class ProductController extends Controller
 
     public function moveProductBetweenFridgesOwn(Request $request, Product $product) {
         $request->validate([
-            'fridge_id' => 'required',
+            'fridge_id' => 'required|numeric|exists:fridges,id',
         ]);
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))) {
             $product->fridge_id = $request->fridge_id;

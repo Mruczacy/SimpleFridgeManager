@@ -62,8 +62,8 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
+            'name' => 'required|string',
+            'email' => 'required|email:rfc',
         ]);
 
         $user->update($request->all());
@@ -74,8 +74,8 @@ class UserController extends Controller
     public function updateOwn(Request $request, User $user){
         if(Auth::user()->id == $user->id){
             $request->validate([
-                'name' => 'required',
-                'email' => 'required',
+                'name' => 'required|string',
+                'email' => 'required|email:rfc',
             ]);
 
             $user->update($request->all());

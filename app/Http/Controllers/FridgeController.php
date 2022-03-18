@@ -113,7 +113,7 @@
         public function update(Request $request, Fridge $fridge)
         {
             $request->validate([
-                'name' => 'required',
+                'name' => 'required|string|max:255',
             ]);
 
             $fridge->update($request->all());
@@ -130,7 +130,7 @@
         public function updateOwn(Request $request, Fridge $fridge){
             if(Auth::user()->isFridgeOwner($fridge)){
                 $request->validate([
-                    'name' => 'required',
+                    'name' => 'required|string|max:255',
                 ]);
 
                 $fridge->update($request->all());

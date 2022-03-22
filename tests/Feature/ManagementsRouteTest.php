@@ -144,6 +144,62 @@ class ManagementsRouteTest extends TestCase
         $fridge->delete();
     }
 
+    public function testGuestCannotResignFromSbsFridge()
+    {
+        $user = User::factory()->create();
+        $fridge = Fridge::factory()->create();
+        $user->fridges()->attach($fridge->id, ['is_owner' => 1]);
+        $response = $this->post("/manage/resign/{$fridge->id}");
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/login");
+        $user->fridges()->detach();
+        $user->delete();
+        $fridge->delete();
+    }
+
+    public function testUserCannotResignFromSbsFridge()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create();
+        $user2->fridges()->attach($fridge->id, ['is_owner' => 1]);
+        $response = $this->actingAs($user)->post("/manage/resign/{$fridge->id}");
+        $user2->fridges()->detach();
+        $response->assertStatus(403);
+        $user->delete();
+        $user2->delete();
+        $fridge->delete();
+    }
+
+    public function testUserCanResignFromAccessibleFridge()
+    {
+        $user = User::factory()->create();
+        $fridge = Fridge::factory()->create();
+        $user->fridges()->attach($fridge->id, ['is_owner' => 0]);
+        $response = $this->actingAs($user)->post("/manage/resign/{$fridge->id}");
+
+        $response->assertStatus(302);
+        $response->assertRedirect("/myfridges");
+        $user->fridges()->detach();
+        $this->assertFalse($fridge->users->contains($user->id));
+        $user->delete();
+        $fridge->delete();
+    }
+
+    public function testOwnerCannotResignFromAccessibleFridge()
+    {
+        $user = User::factory()->create();
+        $fridge = Fridge::factory()->create();
+        $user->fridges()->attach($fridge->id, ['is_owner' => 1]);
+
+        $response = $this->actingAs($user)->post("/manage/resign/{$fridge->id}");
+        $user->fridges()->detach();
+        $response->assertStatus(403);
+        $user->delete();
+        $fridge->delete();
+    }
+
 }
 
 ?>

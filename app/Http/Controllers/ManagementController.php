@@ -47,6 +47,19 @@ class ManagementController extends Controller {
         }
     }
 
+    public function resignFromFridge(Fridge $fridge)
+    {
+        if(Auth::user()->isFridgeUserNoOwner($fridge))
+        {
+            $user = Auth::user();
+            $fridge->users()->detach($user->id);
+            $user->fridges()->detach($fridge->id);
+            return redirect()->route('myfridges.indexOwn');
+        } else {
+            abort(403, 'Access denied');
+        }
+    }
+
 }
 
 ?>

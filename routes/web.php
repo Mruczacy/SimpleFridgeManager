@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/attach/form/{fridge}/{user}', [ManagementController::class, 'showAnAttachForm'])->name('showAnAttachForm');
         Route::post('/attach/{fridge}/{user}', [ManagementController::class, 'attachUserToFridge'])->name('attach');
         Route::delete('/detach/{fridge}/{user}', [ManagementController::class, 'detachUserFromFridge'])->name('detach');
+        Route::post('/resign/{fridge}', [ManagementController::class, 'resignFromFridge'])->name('resign');
     });
     Route::resource('fridges', FridgeController::class)->only(['store', 'create']);
     Route::resource('products', ProductController::class)->only(['store', 'create']);

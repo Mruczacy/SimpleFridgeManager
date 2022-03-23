@@ -35,9 +35,15 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Fridge $fridge)
     {
-        return view('products.create');
+        if(Auth::user()->isFridgeUser($fridge)){
+            return view('products.create', [
+                'fridge' => $fridge
+            ]);
+        } else {
+            abort(403, 'Access denied');
+        }
     }
 
     /**
@@ -62,7 +68,7 @@ class ProductController extends Controller
             $product->fridge_id = $request->fridge_id;
             $product->product_category_id = $request->product_category_id;
             $product->save();
-            return redirect()->route('myfridges.indexOwn');
+            return redirect()->route('myfridges.showOwn', $request->fridge_id);
         } else {
             abort(403, 'Access denied');
         }

@@ -33,9 +33,11 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('myfridges')->name('myfridges.')->group(function () {
         Route::get('/', [FridgeController::class, 'indexOwn'])->name('indexOwn');
+        Route::get('/{fridge}', [FridgeController::class, 'showOwn'])->name('showOwn');
         Route::put('/{fridge}', [FridgeController::class, 'updateOwn'])->name('updateOwn');
         Route::get('/{fridge}/edit', [FridgeController::class, 'editOwn'])->name('editOwn');
         Route::delete('/{fridge}', [FridgeController::class, 'destroyOwn'])->name('destroyOwn');
+
     });
     Route::prefix('myproducts')->name('myproducts.')->group(function () {
         Route::get('/', [ProductController::class, 'indexOwn'])->name('indexOwn');
@@ -51,7 +53,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/resign/{fridge}', [ManagementController::class, 'resignFromFridge'])->name('resign');
     });
     Route::resource('fridges', FridgeController::class)->only(['store', 'create']);
-    Route::resource('products', ProductController::class)->only(['store', 'create']);
+    Route::resource('products', ProductController::class)->only(['store']);
+    Route::get('products/create/{fridge}', [ProductController::class, 'create'])->name('products.create');
     Route::middleware(['can:isAdmin'])->group(function () {
         Route::put('/products/move/{product}', [ProductController::class, 'moveProductBetweenFridges'])->name('products.move');
         Route::resource('users', UserController::class);

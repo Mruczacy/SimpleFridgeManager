@@ -231,7 +231,7 @@ class FridgesRouteTest extends TestCase
             ]);
 
             $response->assertStatus(302);
-            $response->assertRedirect("/fridges");
+            $response->assertRedirect("/myfridges");
             $this->assertTrue($user->fridges->contains('name', 'test'));
             $this->assertNotNull(Fridge::find($user->fridges->first()->id));
             $user->fridges()->detach();

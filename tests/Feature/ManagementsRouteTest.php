@@ -181,7 +181,6 @@ class ManagementsRouteTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
-        $user->fridges()->detach();
         $this->assertFalse($fridge->users->contains($user->id));
         $user->delete();
         $fridge->delete();

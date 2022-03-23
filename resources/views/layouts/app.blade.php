@@ -60,10 +60,12 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
                                     <a class="dropdown-item" href="{{ route('users.showMyAccount', Auth::user()->id) }}">Moje konto</a>
-
+                                    <a class="dropdown-item" href="{{ route('myfridges.indexOwn') }}">Moje lodówki</a>
                                     @can('isAdmin')
                                         <a class="dropdown-item" href="{{ route('categories.index') }}">Kategorie</a>
+                                        <a class="dropdown-item" href="{{ route('fridges.index') }}">Lodówki</a>
                                     @endcan
+
 
                                     <a class="dropdown-item text-red" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

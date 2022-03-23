@@ -57,7 +57,7 @@
 
             Auth::user()->fridges()->attach($fridge->id, ['is_owner' => 1]);
 
-            return redirect()->route('fridges.index');
+            return redirect()->route('myfridges.indexOwn');
         }
 
         /**
@@ -72,6 +72,17 @@
             return view('fridges.show', [
                 'fridge' => $fridge
             ]);
+        }
+
+        public function showOwn(Fridge $fridge)
+        {
+            if(Auth::user()->isFridgeUser($fridge)) {
+                return view('fridges.show', [
+                    'fridge' => $fridge
+                ]);
+            } else {
+                abort(403, 'Access denied');
+            }
         }
 
         /**
@@ -149,7 +160,10 @@
          */
         public function destroy(Fridge $fridge)
         {
-            Auth::user()->fridges()->detach($fridge->id);
+            $users = $fridge->users;
+            foreach ($users as $user) {
+                $user->fridges()->detach($fridge->id);
+            }
             $fridge->delete();
 
 
@@ -164,7 +178,10 @@
         public function destroyOwn(Fridge $fridge)
         {
             if(Auth::user()->isFridgeOwner($fridge)){
-                Auth::user()->fridges()->detach($fridge->id);
+                $users = $fridge->users;
+                foreach ($users as $user) {
+                    $user->fridges()->detach($fridge->id);
+                }
                 $fridge->delete();
 
                 return redirect()->route('myfridges.indexOwn');

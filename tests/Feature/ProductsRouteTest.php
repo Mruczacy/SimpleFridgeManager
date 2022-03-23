@@ -42,19 +42,32 @@ class ProductsRouteTest extends TestCase {
     }
 
     public function testGuestCannotAccessCreate() {
-        $response = $this->get("/products/create");
+        $fridge= Fridge::factory()->create();
+        $response = $this->get("/products/create/{$fridge->id}");
 
         $response->assertStatus(302);
         $response->assertRedirect("/login");
+        $fridge->delete();
     }
 
-    public function testUserCanAccessCreate() {
+    public function testUserCanAccessCreateInUsedFridge() {
         $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->get("/products/create");
-
+        $fridge= Fridge::factory()->create();
+        $user->fridges()->attach($fridge, ['is_owner' => false]);
+        $response = $this->actingAs($user)->get("/products/create/{$fridge->id}");
+        $user->fridges()->detach($fridge);
+        $fridge->delete();
+        $user->delete();
         $response->assertStatus(200);
 
+        $user->delete();
+    }
+    public function testUserCanotAccessCreateOnSbsFridge() {
+        $user = User::factory()->create();
+        $fridge= Fridge::factory()->create();
+        $response = $this->actingAs($user)->get("/products/create/{$fridge->id}");
+        $response->assertStatus(403);
+        $fridge->delete();
         $user->delete();
     }
 

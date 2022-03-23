@@ -121,7 +121,7 @@ class ProductsRouteTest extends TestCase {
         ]);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/myfridges");
+        $response->assertRedirect("/myfridges/{$fridge->id}");
         $this->assertTrue($fridge->products->contains('name', 'testa'));
         $this->assertNotNull(Product::find($fridge->products->where('name', 'testa')->first()->id));
         Product::find($fridge->products->where('name', 'testa')->first()->id)->delete();

@@ -13,29 +13,6 @@ use App\Enums\UserRole;
 use Carbon\Carbon;
 
 class MyProductsRouteTest extends TestCase {
-
-
-    public function testGuestCannotAccessIndexOwn() {
-        $response = $this->get("/myproducts");
-
-        $response->assertStatus(302);
-        $response->assertRedirect("/login");
-    }
-
-    public function testUserCanAccessIndexOwn() {
-        $user = User::factory()->create(['role' => UserRole::USER]);
-        $fridge = Fridge::factory()->create();
-        $product = Product::factory()->create(['fridge_id' => $fridge->id]);
-        $fridge->users()->attach($user, ['is_owner' => false]);
-        $response = $this->actingAs($user)->get("/myproducts");
-
-        $response->assertStatus(200);
-        $product->delete();
-        $fridge->users()->detach();
-        $fridge->delete();
-        $user->delete();
-    }
-
     public function testGuestCannotAccessEditOwn() {
         $product = Product::factory()->create();
         $response = $this->get("/myproducts/{$product->id}/edit");

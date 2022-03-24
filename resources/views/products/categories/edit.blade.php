@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Edytuj kategorię</h2>
+                <h2>Zmień nazwę</h2>
             </div>
             <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('categories.index') }}"> Back</a>

@@ -40,7 +40,6 @@ Route::middleware(['auth'])->group(function () {
 
     });
     Route::prefix('myproducts')->name('myproducts.')->group(function () {
-        Route::get('/', [ProductController::class, 'indexOwn'])->name('indexOwn');
         Route::put('/{product}', [ProductController::class, 'updateOwn'])->name('updateOwn');
         Route::get('/{product}/edit', [ProductController::class, 'editOwn'])->name('editOwn');
         Route::delete('/{product}', [ProductController::class, 'destroyOwn'])->name('destroyOwn');

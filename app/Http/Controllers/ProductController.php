@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Fridge;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -18,15 +20,7 @@ class ProductController extends Controller
     public function index()
     {
         return view('products.index', [
-            'products' => Product::paginate(50)
-        ]);
-    }
-
-    public function indexOwn()
-    {
-        $user = Auth::user();
-        return view('products.index', [
-            'fridges' => $user->fridges
+            'products' => Product::with('category')->get()
         ]);
     }
 
@@ -39,7 +33,10 @@ class ProductController extends Controller
     {
         if(Auth::user()->isFridgeUser($fridge)){
             return view('products.create', [
-                'fridge' => $fridge
+                'def_fridge' => $fridge,
+                'categories' => ProductCategory::all(),
+                'now' => Carbon::now(),
+                'fridges' => Auth::user()->fridges()->get()
             ]);
         } else {
             abort(403, 'Access denied');
@@ -82,12 +79,22 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', ['product' =>$product]);
+        return view('products.edit', [
+            'product' =>$product,
+            'manipulate_date' => Carbon::createFromFormat('Y-m-d', $product->expiration_date),
+            'fridges' => Fridge::all(),
+            'categories' => ProductCategory::all(),
+        ]);
     }
     public function editOwn(Product $product)
     {
         if(Auth::user()->isFridgeUser(Fridge::find($product->fridge_id))) {
-            return view('products.edit', ['product' =>$product]);
+            return view('products.edit', [
+                'product' =>$product,
+                'manipulate_date' => Carbon::createFromFormat('Y-m-d', $product->expiration_date),
+                'fridges' => Auth::user()->fridges,
+                'categories' => ProductCategory::all(),
+            ]);
         } else {
             abort(403, 'Access denied');
         }

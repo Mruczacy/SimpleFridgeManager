@@ -64,6 +64,7 @@
                                     @can('isAdmin')
                                         <a class="dropdown-item" href="{{ route('categories.index') }}">Kategorie</a>
                                         <a class="dropdown-item" href="{{ route('fridges.index') }}">Lodówki</a>
+                                        <a class="dropdown-item" href="{{ route('products.index') }}">Produkty</a>
                                     @endcan
 
 

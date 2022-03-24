@@ -16,14 +16,15 @@
         public function index()
         {
             return view('fridges.index', [
-                'fridges' => Fridge::paginate(3)
+                'fridges' => Fridge::with('products.category')->get()
             ]);
         }
 
         public function indexOwn()
         {
+
             return view('fridges.index', [
-                'fridges' => Auth::user()->fridges()->paginate(3)
+                'fridges' => Auth::user()->fridges()->with('products.category')->get()
             ]);
         }
 

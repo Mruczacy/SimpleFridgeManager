@@ -53,6 +53,7 @@
             <div class="form-group">
                 <strong>Kategoria:</strong>
                 <select name="product_category_id">
+                    <option value="">Brak</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach

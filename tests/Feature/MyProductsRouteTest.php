@@ -13,6 +13,8 @@ use App\Enums\UserRole;
 use Carbon\Carbon;
 
 class MyProductsRouteTest extends TestCase {
+
+    use RefreshDatabase;
     public function testGuestCannotAccessEditOwn() {
         $product = Product::factory()->create();
         $response = $this->get("/myproducts/{$product->id}/edit");

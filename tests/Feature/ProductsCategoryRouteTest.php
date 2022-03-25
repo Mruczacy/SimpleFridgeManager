@@ -11,6 +11,7 @@ use App\Models\ProductCategory;
 
 class ProductsCategoryRouteTest extends TestCase {
 
+    use RefreshDatabase;
     public function testGuestCannotAccessIndex() {
         $response = $this->get("/products/categories");
 

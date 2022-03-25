@@ -24,9 +24,9 @@
         <td>{{ $fridge->name }}</td>
         <td>
             @foreach ($fridge->products as $product)
-                <li>{{ $product->name }}</li>
-                <li>{{ $product->expiration_date }}</li>
-                <li>{{ $product->category->name  }}</li>
+                <div>Nazwa: {{ $product->name }}</div>
+                <div>Data przydatności do spożycia: {{ $product->expiration_date }}</div>
+                <div>Kategoria: {{ $product->category->name ?? "Brak kategorii"  }}</div>
                 @can('isAdmin')
                     <form action="{{ route('products.destroy',$product->id) }}" method="POST">
                         <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edytuj produkt</a>

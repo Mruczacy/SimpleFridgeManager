@@ -14,6 +14,7 @@ use Carbon\Carbon;
 
 class ProductsRouteTest extends TestCase {
 
+    use RefreshDatabase;
     public function testGuestCannotAccessIndex() {
         $response = $this->get("/products");
 

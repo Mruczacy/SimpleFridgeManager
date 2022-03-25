@@ -49,6 +49,17 @@
                     <textarea class="form-control" style="height:150px" name="email" placeholder="Email">{{ $user->email }}</textarea>
                 </div>
             </div>
+            @can('isAdmin')
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Role:</strong>
+                        <select name="role">
+                            <option value="{{$roles::ADMIN}}" @if($user->isActualRank($roles::ADMIN)) selected @endif>{{ $roles::ADMIN }}</option>
+                            <option value="{{$roles::USER}}" @if($user->isActualRank($roles::USER)) selected @endif>{{ $roles::USER }}</option>
+                        </select>
+                    </div>
+                </div>
+            @endcan
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
               <button type="submit" class="btn btn-primary">Potwierdź</button>
             </div>

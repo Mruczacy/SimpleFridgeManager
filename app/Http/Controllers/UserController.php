@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Enums\UserRole;
 
 class UserController extends Controller
 {
@@ -37,7 +38,8 @@ class UserController extends Controller
     public function edit(User $user) : View
     {
         return view('users.edit', [
-            'user' => $user
+            'user' => $user,
+            'roles' => UserRole::class
         ]);
     }
 
@@ -64,9 +66,12 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email:rfc',
+            'role' => 'required',
         ]);
-
-        $user->update($request->all());
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role = $request->role;
+        $user->update();
 
         return redirect()->route('users.index');
     }
@@ -76,9 +81,11 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string',
                 'email' => 'required|email:rfc',
-            ]);
 
-            $user->update($request->all());
+            ]);
+            $user->name = $request->name ?? $user->name;
+            $user->email = $request->email ?? $user->email;
+            $user->update();
 
             return redirect()->route('users.showMyAccount');
         } else {

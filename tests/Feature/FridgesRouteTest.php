@@ -11,12 +11,7 @@ use App\Models\Fridge;
 class FridgesRouteTest extends TestCase
 {
 
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-
+    use RefreshDatabase;
      public function testGuestAndUserCannotAccessFridgesList()
      {
             $response = $this->get("/fridges");

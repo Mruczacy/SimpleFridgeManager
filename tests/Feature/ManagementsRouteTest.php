@@ -12,6 +12,7 @@ class ManagementsRouteTest extends TestCase
 
 {
 
+    use RefreshDatabase;
     public function testGuestCannotGetAnAttachForm()
     {
         $user = User::factory()->create();

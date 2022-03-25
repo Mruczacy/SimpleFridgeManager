@@ -11,6 +11,7 @@ use App\Models\Fridge;
 class MyFridgeRouteTest extends TestCase
 {
 
+    use RefreshDatabase;
     public function testGuestCannotAccessIndexOwn()
     {
         $response = $this->get("/myfridges");

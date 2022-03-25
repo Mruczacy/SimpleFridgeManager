@@ -19,7 +19,7 @@ class Createproductcategory extends Migration
         });
 
         Schema::table('products', function (Blueprint $table) {
-            $table->unsignedBigInteger("product_category_id");
+            $table->unsignedBigInteger("product_category_id")->nullable();
             $table->foreign("product_category_id")->references("id")->on("product_categories")->delete("cascade");
         });
     }

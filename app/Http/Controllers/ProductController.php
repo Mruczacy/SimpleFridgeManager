@@ -57,13 +57,13 @@ class ProductController extends Controller
                 'name' => 'required|string|max:255',
                 'expiration_date' => 'required|date|after_or_equal:today',
                 'fridge_id' => 'required|numeric|exists:fridges,id',
-                'product_category_id' => 'required|numeric|exists:product_categories,id'
+                'product_category_id' => 'nullable|numeric|exists:product_categories,id'
             ]);
             $product = new Product();
             $product->name = $request->name;
             $product->expiration_date = $request->expiration_date;
             $product->fridge_id = $request->fridge_id;
-            $product->product_category_id = $request->product_category_id;
+            $product->product_category_id = $request->product_category_id ?? null;
             $product->save();
             return redirect()->route('myfridges.showOwn', $request->fridge_id);
         } else {

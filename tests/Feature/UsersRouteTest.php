@@ -143,11 +143,14 @@ class UsersRouteTest extends TestCase {
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->put("/users/{$user2->id}", [
                 'name' => 'test',
-                'email' => $user2->email
+                'email' => $user2->email,
+                'role' => UserRole::ADMIN,
             ]);
 
             $response->assertStatus(302);
             $response->assertRedirect("/users");
+            $test = User::find($user2->id);
+            $this->assertTrue($test->role== UserRole::ADMIN);
 
             $user->delete();
             $user2->delete();

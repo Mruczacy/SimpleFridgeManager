@@ -23,11 +23,11 @@
         </tr>
         @foreach ($products as $product)
         <tr>
-            <td>{{ $product->id }}</td>
-            <td>{{ $product->name }}</td>
-            <td>{{ $product->expiration_date }}</td>
-            <td>{{ $product->category->name}}</td>
-            <td>{{ $product->fridge_id}}</td>
+            <td>ID: {{ $product->id }}</td>
+            <td>Nazwa: {{ $product->name }}</td>
+            <td>Data przydatności do spożycia: {{ $product->expiration_date }}</td>
+            <td>Kategoria: {{ $product->category->name ?? "Brak kategorii"}}</td>
+            <td>ID lodówki: {{ $product->fridge_id}}</td>
             <td>
                 <form action="{{ route('products.destroy',$product->id) }}" method="POST">
 

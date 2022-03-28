@@ -69,7 +69,18 @@
                     @endif
                 </form>
             @endcan
-
+            @if (Auth::user()->isFridgeUserNoOwner($fridge))
+                <form action="{{ route('manage.resign',$fridge->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Zrezygnuj z korzystania z lodówki</button>
+                </form>
+            @endif
+            @if (Auth::user()->isFridgeOwner($fridge))
+                <form action="{{ route('manage.showAManageForm',$fridge->id) }}" method="GET">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Zarządzaj lodówką</button>
+                </form>
+            @endif
         </td>
     </tr>
     @endforeach

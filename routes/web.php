@@ -46,8 +46,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/move/{product}', [ProductController::class, 'moveProductBetweenFridgesOwn'])->name('move');
     });
     Route::prefix('manage')->name('manage.')->group(function () {
-        Route::get('/attach/form/{fridge}/{user}', [ManagementController::class, 'showAnAttachForm'])->name('showAnAttachForm');
-        Route::post('/attach/{fridge}/{user}', [ManagementController::class, 'attachUserToFridge'])->name('attach');
+        Route::get('/form/{fridge}', [ManagementController::class, 'showAManageForm'])->name('showAManageForm');
+        Route::post('/attach/{fridge}', [ManagementController::class, 'attachUserToFridge'])->name('attach');
         Route::delete('/detach/{fridge}/{user}', [ManagementController::class, 'detachUserFromFridge'])->name('detach');
         Route::post('/resign/{fridge}', [ManagementController::class, 'resignFromFridge'])->name('resign');
     });

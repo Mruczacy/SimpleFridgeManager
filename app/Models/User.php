@@ -47,14 +47,14 @@ class User extends Authenticatable
     ];
 
     public function fridges(){
-        return $this->belongsToMany(Fridge::class, 'fridgesToUsers', 'user_id', 'fridge_id')->withPivot('is_Owner');
+        return $this->belongsToMany(Fridge::class, 'fridgesToUsers', 'user_id', 'fridge_id')->withPivot('is_manager');
     }
 
     public function ownFridges(){
-        return $this->fridges()->wherePivot('is_Owner', true);
+        return $this->fridges()->wherePivot('is_manager', true);
     }
 
-    public function isFridgeOwner(Fridge $fridge){
+    public function isFridgeManager(Fridge $fridge){
         return $fridge->owners->contains('id', $this->id);
     }
 
@@ -63,10 +63,14 @@ class User extends Authenticatable
     }
 
     public function isFridgeUserNoOwner(Fridge $fridge){
-        return $this->fridges->contains('id', $fridge->id) && !$this->isFridgeOwner($fridge);
+        return $this->fridges->contains('id', $fridge->id) && !$this->isFridgeManager($fridge);
     }
 
     public function isActualRank($role){
         return $this->role == $role;
+    }
+
+    public function isFridgeOwner(Fridge $fridge){
+        return $fridge->owner_id == $this->id;
     }
 }

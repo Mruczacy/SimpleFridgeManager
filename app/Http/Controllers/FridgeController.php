@@ -54,9 +54,10 @@
 
             $fridge = new Fridge();
             $fridge->name = $request->name;
+            $fridge->owner_id = Auth::user()->id;
             $fridge->save();
 
-            Auth::user()->fridges()->attach($fridge->id, ['is_owner' => 1]);
+            Auth::user()->fridges()->attach($fridge->id, ['is_manager' => 1]);
 
             return redirect()->route('myfridges.indexOwn');
         }
@@ -106,7 +107,7 @@
          */
         public function editOwn(Fridge $fridge)
         {
-            if(Auth::user()->isFridgeOwner($fridge)) {
+            if(Auth::user()->isFridgeManager($fridge)) {
                 return view('fridges.edit', [
                     'fridge' => $fridge
                 ]);
@@ -140,7 +141,7 @@
          * @return \Illuminate\Http\Response
          */
         public function updateOwn(Request $request, Fridge $fridge){
-            if(Auth::user()->isFridgeOwner($fridge)){
+            if(Auth::user()->isFridgeManager($fridge)){
                 $request->validate([
                     'name' => 'required|string|max:255',
                 ]);
@@ -178,7 +179,7 @@
          */
         public function destroyOwn(Fridge $fridge)
         {
-            if(Auth::user()->isFridgeOwner($fridge)){
+            if(Auth::user()->isFridgeManager($fridge)){
                 $users = $fridge->users;
                 foreach ($users as $user) {
                     $user->fridges()->detach($fridge->id);

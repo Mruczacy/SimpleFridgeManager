@@ -21,11 +21,11 @@
 
 
         public function users(){
-            return $this->belongsToMany(User::class, 'fridgesToUsers', 'fridge_id', 'user_id')->withPivot('is_owner');
+            return $this->belongsToMany(User::class, 'fridgesToUsers', 'fridge_id', 'user_id')->withPivot('is_manager');
         }
 
         public function owners(){
-            return $this->users()->wherePivot('is_owner', true);
+            return $this->users()->wherePivot('is_manager', true);
         }
     }
 

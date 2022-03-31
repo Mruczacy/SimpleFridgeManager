@@ -10,38 +10,27 @@ use App\Models\Fridge;
 
 class FridgesRouteTest extends TestCase
 {
-
     use RefreshDatabase;
      public function testGuestAndUserCannotAccessFridgesList()
      {
             $response = $this->get("/fridges");
-
             $response->assertStatus(302);
             $response->assertRedirect("/login");
             $user = User::factory()->create(['role' => UserRole::USER]);
-
             $response = $this->actingAs($user)->get("/fridges");
-
             $response->assertStatus(403);
-
-            $user->delete();
      }
 
         public function testAdminCanAccessFridgesList()
         {
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
-
             $response = $this->actingAs($user)->get("/fridges");
-
             $response->assertStatus(200);
-
-            $user->delete();
         }
 
         public function testGuestCannotAccessFridgesCreate()
         {
             $response = $this->get("/fridges/create");
-
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
@@ -49,154 +38,108 @@ class FridgesRouteTest extends TestCase
         public function testUserAndAdminCanAccessFridgesCreate()
         {
             $user = User::factory()->create(['role' => UserRole::USER]);
-
             $response = $this->actingAs($user)->get("/fridges/create");
-
             $response->assertStatus(200);
-
-            $user->delete();
-
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
-
             $response = $this->actingAs($user)->get("/fridges/create");
-
             $response->assertStatus(200);
-
-            $user->delete();
         }
 
         public function testGuestCannotAccessFridgesShow()
         {
-            $fridge= Fridge::factory()->create();
+            $user= User::factory()->create();
+            $fridge= Fridge::factory()->create(['owner_id' => $user->id]);
             $response = $this->get("/fridges/{$fridge->id}");
-
             $response->assertStatus(302);
             $response->assertRedirect("/login");
-            $fridge->delete();
         }
 
         public function testUserCannotAccessFridgesShow()
         {
             $user = User::factory()->create(['role' => UserRole::USER]);
-            $fridge= Fridge::factory()->create();
-
+            $user2 = User::factory()->create();
+            $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
             $response = $this->actingAs($user)->get("/fridges/{$fridge->id}");
-
             $response->assertStatus(403);
-            $fridge->delete();
-            $user->delete();
         }
 
         public function testAdminCanAccessFridgesShow()
         {
-            $fridge = Fridge::factory()->create();
+            $user2 = User::factory()->create();
+            $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
-
             $response = $this->actingAs($user)->get("/fridges/{$fridge->id}");
-
             $response->assertStatus(200);
-
-            $user->delete();
-
-            $fridge->delete();
         }
 
         public function testGuestAndUserCannotAccessFridgesEdit()
         {
-            $fridge= Fridge::factory()->create();
+            $user2 = User::factory()->create();
+            $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
             $response = $this->get("/fridges/" . $fridge->id . "/edit");
 
             $response->assertStatus(302);
             $response->assertRedirect("/login");
             $user = User::factory()->create(['role' => UserRole::USER]);
-
             $response= $this->actingAs($user)->get("/fridges/" . $fridge->id . "/edit");
-
             $response->assertStatus(403);
-
-            $user->delete();
-
-            $fridge->delete();
         }
 
         public function testAdminCanAccessFridgesEdit()
         {
-            $fridge= Fridge::factory()->create();
-
+            $user2 = User::factory()->create();
+            $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
-
             $response = $this->actingAs($user)->get("/fridges/" . $fridge->id . "/edit");
-
             $response->assertStatus(200);
-
-            $user->delete();
-
-            $fridge->delete();
         }
 
         public function testGuestAndUserCannotDestroyFridges()
         {
-            $fridge= Fridge::factory()->create();
+            $user2 = User::factory()->create();
+            $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
             $response = $this->delete("/fridges/" . $fridge->id);
-
             $response->assertStatus(302);
             $response->assertRedirect("/login");
             $fridge->delete();
-
             $user = User::factory()->create(['role' => UserRole::USER]);
-
-            $fridge= Fridge::factory()->create();
-
+            $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
             $response = $this->actingAs($user)->delete("/fridges/" . $fridge->id);
-
             $response->assertStatus(403);
-
-            $user->delete();
-
-            $fridge->delete();
         }
 
         public function testAdminCanDestroyFridges()
         {
-            $fridge= Fridge::factory()->create();
-
+            $user2 = User::factory()->create();
+            $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
-
             $response = $this->actingAs($user)->delete("/fridges/" . $fridge->id);
             $this->assertNull(Fridge::find($fridge->id));
             $response->assertStatus(302);
             $response->assertRedirect("/fridges");
-            $fridge->delete();
-
-            $user->delete();
         }
 
         public function testGuestAndUsersCannotUpdateFridges()
         {
-            $fridge= Fridge::factory()->create();
+            $user2 = User::factory()->create();
+            $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
             $response = $this->put("/fridges/" . $fridge->id, [
                 'name' => 'test',
             ]);
-
             $response->assertStatus(302);
             $response->assertRedirect("/login");
-
             $user= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->put("/fridges/" . $fridge->id, [
                 'name' => 'test',
             ]);
-
             $response->assertStatus(403);
-            $user->delete();
-            $fridge->delete();
         }
 
         public function testAdminCanUpdateFridges()
         {
-            $fridge= Fridge::factory()->create();
-
+            $user2 = User::factory()->create();
+            $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
-
             $response = $this->actingAs($user)->put("/fridges/" . $fridge->id, [
                 'name' => 'test',
             ]);
@@ -204,15 +147,11 @@ class FridgesRouteTest extends TestCase
             $this->assertFalse($fridge2->name == $fridge->name);
             $response->assertStatus(302);
             $response->assertRedirect("/fridges");
-            $fridge->delete();
-
-            $user->delete();
         }
 
         public function testGuestCannotAccessStoreFridges()
         {
             $response = $this->post("/fridges");
-
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
@@ -220,20 +159,13 @@ class FridgesRouteTest extends TestCase
         public function testUserCanStoreFridges()
         {
             $user = User::factory()->create(['role' => UserRole::USER]);
-
             $response = $this->actingAs($user)->post("/fridges", [
                 'name' => 'test',
             ]);
-
             $response->assertStatus(302);
             $response->assertRedirect("/myfridges");
             $this->assertTrue($user->fridges->contains('name', 'test'));
             $this->assertNotNull(Fridge::find($user->fridges->first()->id));
-            $user->fridges()->detach();
-            Fridge::find($user->fridges->first()->id)->delete();
-            $user->delete();
         }
-
 }
-
 ?>

@@ -43,18 +43,21 @@ class ProductsRouteTest extends TestCase {
     }
 
     public function testGuestCannotAccessCreate() {
-        $fridge= Fridge::factory()->create();
+        $user= User::factory()->create();
+        $fridge= Fridge::factory()->create(['owner_id' => $user->id]);
         $response = $this->get("/products/create/{$fridge->id}");
 
         $response->assertStatus(302);
         $response->assertRedirect("/login");
         $fridge->delete();
+        $user->delete();
     }
 
     public function testUserCanAccessCreateInUsedFridge() {
         $user = User::factory()->create();
-        $fridge= Fridge::factory()->create();
-        $user->fridges()->attach($fridge, ['is_owner' => false]);
+        $user2 = User::factory()->create();
+        $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
+        $user->fridges()->attach($fridge, ['is_manager' => false]);
         $response = $this->actingAs($user)->get("/products/create/{$fridge->id}");
         $user->fridges()->detach($fridge);
         $fridge->delete();
@@ -62,19 +65,23 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(200);
 
         $user->delete();
+        $user2->delete();
     }
     public function testUserCanotAccessCreateOnSbsFridge() {
         $user = User::factory()->create();
-        $fridge= Fridge::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
         $response = $this->actingAs($user)->get("/products/create/{$fridge->id}");
         $response->assertStatus(403);
         $fridge->delete();
+        $user2->delete();
         $user->delete();
     }
 
     public function testGuestCannotAccessStore()
     {
-        $fridge = Fridge::factory()->create();
+        $user= User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
         $response = $this->post("/products", [
             'name' => 'test',
             'expiration_date' => Carbon::now()->addDays(2137),
@@ -84,15 +91,16 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(302);
         $response->assertRedirect("/login");
         $fridge->delete();
+        $user->delete();
     }
 
     public function testUserCannotAccessStoreProductOnSbsFridge()
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
-        $fridge = Fridge::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
         $category = ProductCategory::factory()->create();
-        $fridge->users()->attach($user2, ['is_owner' => 1]);
+        $fridge->users()->attach($user2, ['is_manager' => 1]);
         $response = $this->actingAs($user)->post("/products", [
             'name' => 'test',
             'expiration_date' => Carbon::now()->addDays(2137),
@@ -102,18 +110,20 @@ class ProductsRouteTest extends TestCase {
 
         $response->assertStatus(403);
         $fridge->users()->detach();
+        $fridge->delete();
         $user2->delete();
         $user->delete();
-        $fridge->delete();
+
         $category->delete();
     }
 
     public function testUserCanAccessStoreProductOnItsFridge()
     {
         $user = User::factory()->create();
-        $fridge = Fridge::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
         $category = ProductCategory::factory()->create();
-        $user->fridges()->attach($fridge->id, ['is_owner' => 0]);
+        $user->fridges()->attach($fridge->id, ['is_manager' => 0]);
         $response = $this->actingAs($user)->post("/products", [
             'name' => 'testa',
             'expiration_date' => Carbon::now()->addDays(2137),
@@ -131,6 +141,7 @@ class ProductsRouteTest extends TestCase {
         $user->delete();
         $fridge->delete();
         $category->delete();
+        $user2->delete();
     }
 
     public function testGuestCannotAccessEdit()
@@ -215,8 +226,10 @@ class ProductsRouteTest extends TestCase {
     }
 
     public function testGuestCannotAccessMoveProductsBetweenFridges() {
-        $fridge = Fridge::factory()->create();
-        $fridge2 = Fridge::factory()->create();
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge2 = Fridge::factory()->create(['owner_id' => $user->id]);
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
@@ -229,12 +242,16 @@ class ProductsRouteTest extends TestCase {
         $product->delete();
         $fridge->delete();
         $fridge2->delete();
+        $user->delete();
+        $user2->delete();
     }
 
     public function testUserCannotAccessMoveProductsBetweenFridges() {
         $user = User::factory()->create(['role' => UserRole::USER]);
-        $fridge = Fridge::factory()->create();
-        $fridge2 = Fridge::factory()->create();
+        $user2 = User::factory()->create();
+        $user3 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge2 = Fridge::factory()->create(['owner_id' => $user3->id]);
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
@@ -247,12 +264,16 @@ class ProductsRouteTest extends TestCase {
         $fridge->delete();
         $fridge2->delete();
         $user->delete();
+        $user2->delete();
+        $user3->delete();
     }
 
     public function testAdminCanAccessMoveProductsBetweenFridges() {
         $user = User::factory()->create(['role' => UserRole::ADMIN]);
-        $fridge = Fridge::factory()->create();
-        $fridge2 = Fridge::factory()->create();
+        $user2 = User::factory()->create();
+        $user3 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge2 = Fridge::factory()->create(['owner_id' => $user3->id]);
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
@@ -271,8 +292,10 @@ class ProductsRouteTest extends TestCase {
     }
 
     public function testGuestCannotMoveProductsBetweenFridgesOwn(){
-        $fridge = Fridge::factory()->create();
-        $fridge2 = Fridge::factory()->create();
+        $user= User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
+        $fridge2 = Fridge::factory()->create(['owner_id' => $user2->id]);
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
@@ -282,17 +305,15 @@ class ProductsRouteTest extends TestCase {
         ]);
         $response->assertStatus(302);
         $response->assertRedirect("/login");
-        $product->delete();
-        $fridge->delete();
-        $fridge2->delete();
     }
 
     public function testUserCanMoveProductsBetweenItsOwnFridges() {
         $user = User::factory()->create(['role' => UserRole::USER]);
-        $fridge = Fridge::factory()->create();
-        $fridge2 = Fridge::factory()->create();
-        $fridge->users()->attach($user, ['is_owner' => 0]);
-        $fridge2->users()->attach($user, ['is_owner' => 0]);
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge2 = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge->users()->attach($user, ['is_manager' => 0]);
+        $fridge2->users()->attach($user, ['is_manager' => 0]);
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
@@ -306,19 +327,16 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/myfridges");
         $fridge->users()->detach();
         $fridge2->users()->detach();
-        $product->delete();
-        $fridge->delete();
-        $fridge2->delete();
-        $user->delete();
     }
 
     public function testUserCannotMoveProductsBetweenFridgesOfOtherUsers() {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $user2 = User::factory()->create(['role' => UserRole::USER]);
-        $fridge = Fridge::factory()->create();
-        $fridge2 = Fridge::factory()->create();
-        $fridge->users()->attach($user2, ['is_owner' => 0]);
-        $fridge2->users()->attach($user2, ['is_owner' => 0]);
+        $user3 = User::factory()->create(['role' => UserRole::USER]);
+        $fridge = Fridge::factory()->create(['owner_id' => $user3->id]);
+        $fridge2 = Fridge::factory()->create(['owner_id' => $user3->id]);
+        $fridge->users()->attach($user2, ['is_manager' => 0]);
+        $fridge2->users()->attach($user2, ['is_manager' => 0]);
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
@@ -331,10 +349,6 @@ class ProductsRouteTest extends TestCase {
         $product->delete();
         $fridge->users()->detach();
         $fridge2->users()->detach();
-        $fridge->delete();
-        $fridge2->delete();
-        $user->delete();
-        $user2->delete();
     }
 
     public function testGuestCannotAccessDestroy()

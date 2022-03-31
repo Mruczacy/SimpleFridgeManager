@@ -11,7 +11,7 @@ use App\Http\Controllers\UserController;
 class ManagementController extends Controller {
 
     public function showAManageForm(Fridge $fridge) {
-        if(Auth::user()->isFridgeOwner($fridge))
+        if(Auth::user()->isFridgeManager($fridge))
         {
             return view('management.manage', [
                 'fridge' => $fridge,
@@ -27,13 +27,13 @@ class ManagementController extends Controller {
     public function attachUserToFridge(Fridge $fridge, Request $request)
     {
 
-        if(Auth::user()->isFridgeOwner($fridge))
+        if(Auth::user()->isFridgeManager($fridge))
         {
             $request->validate([
-                'is_owner' => 'required|numeric|min:0|max:1',
+                'is_manager' => 'required|numeric|min:0|max:1',
                 'user_id' => 'required|numeric|exists:users,id',
             ]);
-            $fridge->users()->attach($request->user_id, ['is_owner' => $request->is_owner]);
+            $fridge->users()->attach($request->user_id, ['is_manager' => $request->is_manager]);
             return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');
@@ -42,7 +42,7 @@ class ManagementController extends Controller {
 
     public function detachUserFromFridge(Fridge $fridge, User $user)
     {
-        if(Auth::user()->isFridgeOwner($fridge) && $user->isFridgeUser($fridge))
+        if(Auth::user()->isFridgeManager($fridge) && $user->isFridgeUser($fridge))
         {
             $fridge->users()->detach($user->id);
             return redirect()->route('myfridges.indexOwn');

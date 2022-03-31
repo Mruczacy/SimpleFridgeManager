@@ -63,7 +63,7 @@
                     @endif
                     @csrf
                     @method('DELETE')
-                    @if(Auth::user()->isFridgeOwner($fridge))
+                    @if(Auth::user()->isFridgeManager($fridge))
                         <a class="btn btn-primary" href="{{ route('myfridges.editOwn',$fridge->id) }}">Zmień nazwę</a>
                         <button type="submit" class="btn btn-danger">Usuń</button>
                     @endif
@@ -75,7 +75,7 @@
                     <button type="submit" class="btn btn-primary">Zrezygnuj z korzystania z lodówki</button>
                 </form>
             @endif
-            @if (Auth::user()->isFridgeOwner($fridge))
+            @if (Auth::user()->isFridgeManager($fridge))
                 <form action="{{ route('manage.showAManageForm',$fridge->id) }}" method="GET">
                     @csrf
                     <button type="submit" class="btn btn-primary">Zarządzaj lodówką</button>

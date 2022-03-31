@@ -15,7 +15,6 @@ class MyFridgeRouteTest extends TestCase
     public function testGuestCannotAccessIndexOwn()
     {
         $response = $this->get("/myfridges");
-
         $response->assertStatus(302);
         $response->assertRedirect("/login");
     }
@@ -23,18 +22,13 @@ class MyFridgeRouteTest extends TestCase
     public function testUserCanAccessIndexOwn()
     {
         $user = User::factory()->create();
-
         $response = $this->actingAs($user)->get("/myfridges");
-
         $response->assertStatus(200);
-
-        $user->delete();
     }
 
     public function testGuestCannotAccessEditOwn()
     {
         $response = $this->get("/myfridges/1/edit");
-
         $response->assertStatus(302);
         $response->assertRedirect("/login");
     }
@@ -43,15 +37,9 @@ class MyFridgeRouteTest extends TestCase
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
-        $user->fridges()->attach($fridge->id, ['is_owner' => 1]);
-
+        $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
         $response = $this->actingAs($user)->get("/myfridges/{$fridge->id}/edit");
-
         $response->assertStatus(200);
-
-        $user->fridges()->detach();
-        $user->delete();
-        $fridge->delete();
     }
 
     public function testUserCannotAccessEditOwnOnSbsFridge()
@@ -59,19 +47,12 @@ class MyFridgeRouteTest extends TestCase
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
         $response = $this->actingAs($user)->get("/myfridges/{$fridge->id}/edit");
-
         $response->assertStatus(403);
-
-        $user->delete();
-        $fridge->delete();
-
-
     }
 
     public function testGuestCannotAccessUpdateOwn()
     {
         $response = $this->put("/myfridges/1");
-
         $response->assertStatus(302);
         $response->assertRedirect("/login");
     }
@@ -80,8 +61,7 @@ class MyFridgeRouteTest extends TestCase
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
-        $user->fridges()->attach($fridge->id, ['is_owner' => 1]);
-
+        $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
         $response = $this->actingAs($user)->put("/myfridges/{$fridge->id}", [
             'name' => 'test',
         ]);
@@ -89,10 +69,6 @@ class MyFridgeRouteTest extends TestCase
         $this->assertFalse($fridge2->name == $fridge->name);
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
-
-        $user->fridges()->detach();
-        $user->delete();
-        $fridge->delete();
     }
 
     public function testUserCannotAccessUpdateOwnOnSbsFridge()
@@ -102,11 +78,7 @@ class MyFridgeRouteTest extends TestCase
         $response = $this->actingAs($user)->put("/myfridges/{$fridge->id}", [
             'name' => 'test',
         ]);
-
         $response->assertStatus(403);
-
-        $user->delete();
-        $fridge->delete();
     }
 
     public function testGuestCannotAccessDestroyOwn()
@@ -121,13 +93,11 @@ class MyFridgeRouteTest extends TestCase
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
-        $user->fridges()->attach($fridge->id, ['is_owner' => 1]);
-
+        $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
         $response = $this->actingAs($user)->delete("/myfridges/{$fridge->id}");
         $this->assertNull(Fridge::find($fridge->id));
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
-        $user->delete();
     }
 
     public function testUserCannotAccessDestroyOwnOnSbsFridge()
@@ -135,10 +105,7 @@ class MyFridgeRouteTest extends TestCase
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
         $response = $this->actingAs($user)->delete("/myfridges/{$fridge->id}");
-
         $response->assertStatus(403);
-        $user->delete();
-        $fridge->delete();
     }
 }
 ?>

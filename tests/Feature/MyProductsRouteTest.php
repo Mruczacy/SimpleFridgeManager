@@ -27,7 +27,7 @@ class MyProductsRouteTest extends TestCase {
     public function testUserCanAccessEditOwn() {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
-        $fridge->users()->attach($user, ['is_owner' => false]);
+        $fridge->users()->attach($user, ['is_manager' => false]);
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
@@ -45,7 +45,7 @@ class MyProductsRouteTest extends TestCase {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $user2 = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
-        $fridge->users()->attach($user2, ['is_owner' => false]);
+        $fridge->users()->attach($user2, ['is_manager' => false]);
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
@@ -84,7 +84,7 @@ class MyProductsRouteTest extends TestCase {
     public function testUserCanAccessUpdateOwn() {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
-        $fridge->users()->attach($user, ['is_owner' => false]);
+        $fridge->users()->attach($user, ['is_manager' => false]);
         $category = ProductCategory::factory()->create();
         $category2 = ProductCategory::factory()->create();
         $product = Product::factory()->create([
@@ -115,7 +115,7 @@ class MyProductsRouteTest extends TestCase {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $user2 = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
-        $fridge->users()->attach($user2, ['is_owner' => false]);
+        $fridge->users()->attach($user2, ['is_manager' => false]);
         $category = ProductCategory::factory()->create();
         $category2 = ProductCategory::factory()->create();
         $product = Product::factory()->create([
@@ -154,7 +154,7 @@ class MyProductsRouteTest extends TestCase {
     public function testUserCanAccessDestroyOwn() {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
-        $fridge->users()->attach($user, ['is_owner' => true]);
+        $fridge->users()->attach($user, ['is_manager' => true]);
         $product = Product::factory()->create(['fridge_id' => $fridge->id]);
 
         $response = $this->actingAs($user)->delete("/myproducts/{$product->id}");
@@ -174,8 +174,8 @@ class MyProductsRouteTest extends TestCase {
         $user2 = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
         $fridge2= Fridge::factory()->create();
-        $fridge->users()->attach($user, ['is_owner' => true]);
-        $fridge2->users()->attach($user2, ['is_owner' => true]);
+        $fridge->users()->attach($user, ['is_manager' => true]);
+        $fridge2->users()->attach($user2, ['is_manager' => true]);
         $product = Product::factory()->create(['fridge_id' => $fridge2->id]);
 
         $response = $this->actingAs($user)->delete("/myproducts/{$product->id}");

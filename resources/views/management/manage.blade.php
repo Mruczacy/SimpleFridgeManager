@@ -13,7 +13,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 @foreach ($users as $user)
-                    @if($user->isFridgeOwner($fridge))
+                    @if($user->isFridgeManager($fridge))
                         <strong>{{ $user->name }}</strong>
                         <strong>Właściciel (nie można go usunąć!)</strong>
                     @else
@@ -37,9 +37,9 @@
                     <div class="input-group">
                         <strong>ID Użytkownika</strong>
                         <input type="text" name="user_id" class="form-control" placeholder="ID Użytkownika">
-                        <strong>Właściciel, a może użytkownik?</strong>
-                        <select name="is_owner">
-                            <option value="1">Właściciel</option>
+                        <strong>Menadżer, a może użytkownik?</strong>
+                        <select name="is_manager">
+                            <option value="1">Menadżer</option>
                             <option value="0" selected>Użytkownik</option>
                         </select>
                         <span class="input-group-btn">

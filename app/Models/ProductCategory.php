@@ -10,13 +10,14 @@ class ProductCategory extends Model
 {
     public $timestamps= false;
 
-    use HasFactory;
+    use HasFactory, Traits\ProductCategoryTrait;
 
     protected $fillable = [
         'name',
     ];
 
-    public function products() {
-        return $this->hasMany(Product::class);
+    public function getProductCategory() {
+        return $this;
     }
+
 }

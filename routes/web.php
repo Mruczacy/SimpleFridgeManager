@@ -50,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/attach/{fridge}', [ManagementController::class, 'attachUserToFridge'])->name('attach');
         Route::delete('/detach/{fridge}/{user}', [ManagementController::class, 'detachUserFromFridge'])->name('detach');
         Route::post('/resign/{fridge}', [ManagementController::class, 'resignFromFridge'])->name('resign');
+        Route::put('/transfer/{fridge}', [ManagementController::class, 'transferOwnership'])->name('transferOwnership');
+        Route::put('/updaterank/{fridge}', [ManagementController::class, 'updateUserRank'])->name('updateUserRank');
     });
     Route::resource('fridges', FridgeController::class)->only(['store', 'create']);
     Route::resource('products', ProductController::class)->only(['store']);

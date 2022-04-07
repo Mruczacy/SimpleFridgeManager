@@ -26,8 +26,7 @@ class ManagementsRouteTest extends TestCase
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
-        $user3= User::factory()->create();
-        $fridge = Fridge::factory()->create(['owner_id' => $user3->id]);
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
         $fridge->users()->attach($user2->id, ['is_manager' => 1]);
         $response = $this->actingAs($user)->get("/manage/form/{$fridge->id}");
         $response->assertStatus(403);
@@ -36,8 +35,7 @@ class ManagementsRouteTest extends TestCase
     public function testUserCanGetAManageFormOnOwnFridge()
     {
         $user = User::factory()->create();
-        $user2 = User::factory()->create();
-        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
         $fridge->users()->attach($user->id, ['is_manager' => 1]);
         $response = $this->actingAs($user)->get("/manage/form/{$fridge->id}");
         $response->assertStatus(200);
@@ -159,6 +157,88 @@ class ManagementsRouteTest extends TestCase
         $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
         $response = $this->actingAs($user)->post("/manage/resign/{$fridge->id}");
         $response->assertStatus(403);
+    }
+
+    public function testGuestCannotTransferOwnerShip()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
+        $response = $this->put("/manage/transfer/{$fridge->id}", [
+            'owner_id' => $user->id,
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect("/login");
+    }
+
+    public function testUserCannotTransferOwnershipOnSbsFridge()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $user->fridges()->attach($fridge->id, ['is_manager' => 0]);
+        $response = $this->actingAs($user)->put("/manage/transfer/{$fridge->id}", [
+            'owner_id' => $user->id,
+        ]);
+        $response->assertStatus(403);
+    }
+
+    public function testOwnerCanTransferOwnership()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
+        $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
+        $response = $this->actingAs($user)->put("/manage/transfer/{$fridge->id}", [
+            'owner_id' => $user2->id,
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect("/myfridges");
+        $fridge = Fridge::find($fridge->id);
+        $this->assertTrue($fridge->owner_id == $user2->id);
+    }
+
+    public function testGuestCannotUpdateUserRank()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $user->fridges()->attach($fridge->id, ['is_manager' => 0]);
+        $response = $this->put("/manage/updaterank/{$fridge->id}", [
+            'user_id' => $user->id,
+            'is_manager' => 1,
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect("/login");
+    }
+
+    public function testUserCannotUpdateUserRankOnSbsFridge()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $user->fridges()->attach($fridge->id, ['is_manager' => 0]);
+        $response = $this->actingAs($user)->put("/manage/updaterank/{$fridge->id}", [
+            'user_id' => $user->id,
+            'is_manager' => 1,
+        ]);
+        $response->assertStatus(403);
+    }
+
+    public function testOwnerCanUpdateUserRank()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
+        $user2->fridges()->attach($fridge->id, ['is_manager' => 0]);
+        $response = $this->actingAs($user)->put("/manage/updaterank/{$fridge->id}", [
+            'user_id' => $user2->id,
+            'is_manager' => 1,
+        ]);
+        $response->assertStatus(302);
+        $response->assertRedirect("/myfridges");
+        $this->assertTrue($fridge->managers->contains($user2->id));
     }
 }
 

@@ -101,7 +101,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $fridges= $user->ownFridges;
+        $fridges= $user->managedFridges;
         $user->fridges()->detach();
         foreach($fridges as $fridge){
             $fridge->delete();
@@ -112,7 +112,7 @@ class UserController extends Controller
 
     public function destroyOwn(User $user){
         if(Auth::user()->id == $user->id){
-            $fridges= $user->ownFridges;
+            $fridges= $user->managedFridges;
             $user->fridges()->detach();
             foreach($fridges as $fridge){
                 $fridge->delete();

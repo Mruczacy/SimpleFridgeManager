@@ -13,7 +13,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 @foreach ($users as $user)
-                    @if($user->isFridgeManager($fridge))
+                    @if($user->isFridgeOwner($fridge))
                         <strong>{{ $user->name }}</strong>
                         <strong>Właściciel (nie można go usunąć!)</strong>
                     @else
@@ -49,6 +49,53 @@
                 </form>
             </div>
         </div>
+        @if(Auth::user()->isFridgeOwner($fridge))
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <h1>Zaaktualizuj rangę użytkownika</h1>
+                <form action="{{route('manage.updateUserRank', $fridge)}}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="input-group">
+                        <strong>Wybierz użytkownika z listy</strong>
+                        <select name="user_id">
+                            @foreach($users as $user)
+                                <option value="{{$user->id}}">{{"ID: ".$user->id." Nazwa: ".$user->name}}</option>
+                            @endforeach
+                        </select>
+                        <strong>Menadżer, a może użytkownik?</strong>
+                        <select name="is_manager">
+                            <option value="1">Menadżer</option>
+                            <option value="0" selected>Użytkownik</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary">Potwierdź</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <h1>Przekaż status właściciela</h1>
+                <form action="{{route('manage.transferOwnership', $fridge)}}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="input-group">
+                        <strong>Wybierz użytkownika z listy</strong>
+                        <select name="owner_id">
+                            @foreach($users as $user)
+                                <option value="{{$user->id}}">{{"ID: ".$user->id." Nazwa: ".$user->name}}</option>
+                            @endforeach
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-primary">Potwierdź</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
     </div>
 
 

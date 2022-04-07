@@ -107,7 +107,7 @@
          */
         public function editOwn(Fridge $fridge)
         {
-            if(Auth::user()->isFridgeManager($fridge)) {
+            if(Auth::user()->isPermittedToManage($fridge)) {
                 return view('fridges.edit', [
                     'fridge' => $fridge
                 ]);
@@ -141,7 +141,7 @@
          * @return \Illuminate\Http\Response
          */
         public function updateOwn(Request $request, Fridge $fridge){
-            if(Auth::user()->isFridgeManager($fridge)){
+            if(Auth::user()->isPermittedToManage($fridge)){
                 $request->validate([
                     'name' => 'required|string|max:255',
                 ]);

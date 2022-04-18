@@ -6,11 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class Createfridgetable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('fridges', function (Blueprint $table) {
@@ -35,11 +31,6 @@ class Createfridgetable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {

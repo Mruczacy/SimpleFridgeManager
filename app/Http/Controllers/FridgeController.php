@@ -8,11 +8,7 @@
 
     class FridgeController extends Controller
     {
-        /**
-         * Display a listing of the resource.
-         *
-         * @return \Illuminate\Http\Response
-         */
+
         public function index()
         {
             return view('fridges.index', [
@@ -28,24 +24,11 @@
             ]);
         }
 
-        /**
-         * Show the form for creating a new resource.
-         *
-         * @return \Illuminate\Http\Response
-         */
-
         public function create()
         {
             return view('fridges.create');
         }
-        /**
-         * Store a newly created Fridge in storage.
-         * Assign creator to the owner of the fridge.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @return \Illuminate\Http\Response
-         *
-         */
+
         public function store(Request $request)
         {
             $request->validate([
@@ -61,13 +44,6 @@
 
             return redirect()->route('myfridges.indexOwn');
         }
-
-        /**
-         * Display the specified resource.
-         *
-         * @param  \App\Models\Fridge  $fridge
-         * @return \Illuminate\Http\Response
-         */
 
         public function show(Fridge $fridge)
         {
@@ -87,24 +63,13 @@
             }
         }
 
-        /**
-         * Show the form for editing the specified resource.
-         *
-         * @param  \App\Models\Fridge  $fridge
-         * @return \Illuminate\Http\Response
-         */
         public function edit(Fridge $fridge)
         {
             return view('fridges.edit', [
                 'fridge' => $fridge
             ]);
         }
-        /**
-         * Show the form for editing the specified resource.
-         * Can be requested just by owner
-         * @param  \App\Models\Fridge  $fridge
-         * @return \Illuminate\Http\Response
-         */
+
         public function editOwn(Fridge $fridge)
         {
             if(Auth::user()->isPermittedToManage($fridge)) {
@@ -116,13 +81,6 @@
             }
         }
 
-        /**
-         * Update the specified resource in storage.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \App\Models\Fridge  $fridge
-         * @return \Illuminate\Http\Response
-         */
         public function update(Request $request, Fridge $fridge)
         {
             $request->validate([
@@ -133,13 +91,7 @@
 
             return redirect()->route('fridges.index');
         }
-        /**
-         * Update the specified resource in storage.
-         * Can be requested just by owner
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \App\Models\Fridge  $fridge
-         * @return \Illuminate\Http\Response
-         */
+
         public function updateOwn(Request $request, Fridge $fridge){
             if(Auth::user()->isPermittedToManage($fridge)){
                 $request->validate([
@@ -154,12 +106,6 @@
             }
         }
 
-        /**
-         * Remove the specified resource from storage.
-         *
-         * @param  \App\Models\Fridge  $fridge
-         * @return \Illuminate\Http\Response
-         */
         public function destroy(Fridge $fridge)
         {
             $users = $fridge->users;
@@ -171,12 +117,7 @@
 
             return redirect()->route('fridges.index');
         }
-        /**
-         * Remove the specified resource from storage.
-         * Can be requested just by owner
-         * @param  \App\Models\Fridge  $fridge
-         * @return \Illuminate\Http\Response
-         */
+
         public function destroyOwn(Fridge $fridge)
         {
             if(Auth::user()->isFridgeManager($fridge)){

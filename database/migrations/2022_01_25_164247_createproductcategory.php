@@ -6,11 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class Createproductcategory extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('product_categories', function (Blueprint $table) {
@@ -24,11 +20,6 @@ class Createproductcategory extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {

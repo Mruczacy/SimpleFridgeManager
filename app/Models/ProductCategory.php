@@ -16,7 +16,7 @@ class ProductCategory extends Model
         'name',
     ];
 
-    public function getProductCategory() {
+    public function getProductCategory() : ProductCategory {
         return $this;
     }
 

@@ -16,7 +16,7 @@ class Product extends Model {
         'product_category_id',
         'fridge_id',
     ];
-    public function getProduct() {
+    public function getProduct() : Product {
         return $this;
     }
 

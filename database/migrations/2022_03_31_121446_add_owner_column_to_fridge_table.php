@@ -6,11 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class AddOwnerColumnToFridgeTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
 
@@ -26,11 +22,6 @@ class AddOwnerColumnToFridgeTable extends Migration
 
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::table('fridges', function (Blueprint $table) {

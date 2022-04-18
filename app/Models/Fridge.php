@@ -14,8 +14,7 @@
             'name',
             'owner_id',
         ];
-        public function getFridge()
-        {
+        public function getFridge() : Fridge {
             return $this;
         }
 

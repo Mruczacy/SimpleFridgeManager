@@ -36,7 +36,7 @@ class UserController extends Controller
 
     public function editOwn(User $user)
     {
-        if(Auth::user()->id == $user->id) {
+        if($user->isEqualToAuth()) {
             return view('users.edit', [
                 'user' => $user
             ]);
@@ -61,7 +61,7 @@ class UserController extends Controller
     }
 
     public function updateOwn(Request $request, User $user){
-        if(Auth::user()->id == $user->id){
+        if($user->isEqualToAuth()){
             $request->validate([
                 'name' => 'required|string',
                 'email' => 'required|email:rfc',
@@ -89,7 +89,7 @@ class UserController extends Controller
     }
 
     public function destroyOwn(User $user){
-        if(Auth::user()->id == $user->id){
+        if($user->isEqualToAuth()){
             $fridges= $user->managedFridges;
             $user->fridges()->detach();
             foreach($fridges as $fridge){

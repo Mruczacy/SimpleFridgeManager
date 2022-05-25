@@ -37,7 +37,7 @@
 
             $fridge = new Fridge();
             $fridge->name = $request->name;
-            $fridge->owner_id = Auth::user()->id;
+            $fridge->owner_id = Auth::id();
             $fridge->save();
 
             Auth::user()->fridges()->attach($fridge->id, ['is_manager' => 1]);

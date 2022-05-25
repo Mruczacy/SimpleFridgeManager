@@ -55,7 +55,7 @@ class ManagementController extends Controller {
     {
         if(Auth::user()->isFridgeUserNoOwner($fridge))
         {
-            $fridge->users()->detach(Auth::user()->id);
+            $fridge->users()->detach(Auth::id());
             return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');

@@ -4,6 +4,7 @@ namespace App\Models\Traits;
 use App\Models\Fridge;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 trait UserTrait {
 
     abstract public function getUser();
@@ -42,6 +43,10 @@ trait UserTrait {
 
     public function isPermittedToManage(Fridge $fridge) : bool {
         return $this->getUser()->isFridgeManager($fridge) || $this->getUser()->isFridgeOwner($fridge);
+    }
+
+    public function isEqualToAuth() : bool {
+        return $this->getUser()->id == Auth::id();
     }
 }
 

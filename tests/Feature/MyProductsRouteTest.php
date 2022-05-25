@@ -18,10 +18,8 @@ class MyProductsRouteTest extends TestCase {
     public function testGuestCannotAccessEditOwn() {
         $product = Product::factory()->create();
         $response = $this->get("/myproducts/{$product->id}/edit");
-
         $response->assertStatus(302);
         $response->assertRedirect("/login");
-        $product->delete();
     }
 
     public function testUserCanAccessEditOwn() {
@@ -31,14 +29,8 @@ class MyProductsRouteTest extends TestCase {
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
-
         $response = $this->actingAs($user)->get("/myproducts/{$product->id}/edit");
-        $product->delete();
         $response->assertStatus(200);
-        $fridge->users()->detach();
-        $fridge->delete();
-
-        $user->delete();
     }
 
     public function testUserCannotAccessEditOwnOnSbs() {
@@ -51,13 +43,7 @@ class MyProductsRouteTest extends TestCase {
         ]);
 
         $response = $this->actingAs($user)->get("/myproducts/{$product->id}/edit");
-        $product->delete();
         $response->assertStatus(403);
-        $fridge->users()->detach();
-        $fridge->delete();
-
-        $user->delete();
-        $user2->delete();
     }
 
     public function testGuestCannotAccessUpdateOwn() {
@@ -76,9 +62,6 @@ class MyProductsRouteTest extends TestCase {
         $this->assertTrue($product2->name == $product->name);
         $response->assertStatus(302);
         $response->assertRedirect("/login");
-        $product->delete();
-        $category->delete();
-        $category2->delete();
     }
 
     public function testUserCanAccessUpdateOwn() {
@@ -103,12 +86,6 @@ class MyProductsRouteTest extends TestCase {
         $this->assertTrue($product2->name == 'test');
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
-        $product->delete();
-        $fridge->users()->detach();
-        $fridge->delete();
-        $user->delete();
-        $category->delete();
-        $category2->delete();
     }
 
     public function testUserCannotAccessUpdateOwnOnSbs() {
@@ -133,22 +110,13 @@ class MyProductsRouteTest extends TestCase {
         $this->assertTrue($product2->product_category_id == $product->product_category_id);
         $this->assertTrue($product2->name == $product->name);
         $response->assertStatus(403);
-        $product->delete();
-        $fridge->users()->detach();
-        $fridge->delete();
-        $user->delete();
-        $user2->delete();
-        $category->delete();
-        $category2->delete();
     }
 
     public function testGuestCannotAccessDestroyOwn() {
         $product = Product::factory()->create();
         $response = $this->delete("/myproducts/{$product->id}");
-
         $response->assertStatus(302);
         $response->assertRedirect("/login");
-        $product->delete();
     }
 
     public function testUserCanAccessDestroyOwn() {
@@ -156,16 +124,10 @@ class MyProductsRouteTest extends TestCase {
         $fridge = Fridge::factory()->create();
         $fridge->users()->attach($user, ['is_manager' => true]);
         $product = Product::factory()->create(['fridge_id' => $fridge->id]);
-
         $response = $this->actingAs($user)->delete("/myproducts/{$product->id}");
-
         $response->assertStatus(302);
         $response->assertRedirect("/myfridges");
-
         $this->assertNull(Product::find($product->id));
-        $fridge->users()->detach();
-        $fridge->delete();
-        $user->delete();
     }
 
     public function testUserCannotAccessDestroyOwnOnSbs() {
@@ -177,17 +139,8 @@ class MyProductsRouteTest extends TestCase {
         $fridge->users()->attach($user, ['is_manager' => true]);
         $fridge2->users()->attach($user2, ['is_manager' => true]);
         $product = Product::factory()->create(['fridge_id' => $fridge2->id]);
-
         $response = $this->actingAs($user)->delete("/myproducts/{$product->id}");
         $response->assertStatus(403);
-
-        $product->delete();
-        $fridge->users()->detach();
-        $fridge2->users()->detach();
-        $fridge->delete();
-        $fridge2->delete();
-        $user->delete();
-        $user2->delete();
     }
 }
 

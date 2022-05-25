@@ -60,7 +60,7 @@
                         <strong>Wybierz użytkownika z listy</strong>
                         <select name="user_id">
                             @foreach($users as $user)
-                                @if(Auth::user()->id != $user->id)<option value="{{$user->id}}">{{"ID: ".$user->id." Nazwa: ".$user->name}}</option>@endif
+                                @if(!$user->isEqualToAuth())<option value="{{$user->id}}">{{"ID: ".$user->id." Nazwa: ".$user->name}}</option>@endif
                             @endforeach
                         </select>
                         <strong>Menadżer, a może użytkownik?</strong>
@@ -85,7 +85,7 @@
                         <strong>Wybierz użytkownika z listy</strong>
                         <select name="owner_id">
                             @foreach($users as $user)
-                                @if(Auth::user()->id != $user->id)<option value="{{$user->id}}">{{"ID: ".$user->id." Nazwa: ".$user->name}}</option>@endif
+                                @if(!$user->isEqualToAuth())<option value="{{$user->id}}">{{"ID: ".$user->id." Nazwa: ".$user->name}}</option>@endif
                             @endforeach
                         </select>
                         <span class="input-group-btn">

@@ -101,7 +101,6 @@ class FridgesRouteTest extends TestCase
             $response = $this->delete("/fridges/" . $fridge->id);
             $response->assertStatus(302);
             $response->assertRedirect("/login");
-            $fridge->delete();
             $user = User::factory()->create(['role' => UserRole::USER]);
             $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
             $response = $this->actingAs($user)->delete("/fridges/" . $fridge->id);

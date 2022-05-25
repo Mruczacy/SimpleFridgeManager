@@ -7,7 +7,7 @@
                 <h2>Lista użytkowników</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('users.showMyAccount', Auth::user()->id) }}">Moje konto</a>
+                <a class="btn btn-success" href="{{ route('users.showMyAccount', Auth::id()) }}">Moje konto</a>
             </div>
         </div>
     </div>

@@ -90,8 +90,6 @@ class ProductController extends Controller
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))){
             $request->validated();
             $product->update($request->all());
-
-
             return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');
@@ -119,7 +117,6 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-
         return redirect()->route('myfridges.indexOwn');
     }
 
@@ -127,7 +124,6 @@ class ProductController extends Controller
     {
         if(Auth::user()->isFridgeUser(Fridge::find($product->fridge_id))){
             $product->delete();
-
             return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');

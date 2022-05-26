@@ -103,25 +103,17 @@
 
         public function destroy(Fridge $fridge)
         {
-            $users = $fridge->users;
-            foreach ($users as $user) {
-                $user->fridges()->detach($fridge->id);
-            }
             $fridge->delete();
-
-
             return redirect()->route('fridges.index');
         }
 
         public function destroyOwn(Fridge $fridge)
         {
             if(Auth::user()->isFridgeManager($fridge)){
-                $users = $fridge->users;
-                foreach ($users as $user) {
+                foreach ($fridge->users as $user) {
                     $user->fridges()->detach($fridge->id);
                 }
                 $fridge->delete();
-
                 return redirect()->route('myfridges.indexOwn');
             } else {
                 abort(403, 'Access denied');

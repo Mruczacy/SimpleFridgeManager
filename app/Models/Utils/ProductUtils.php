@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Traits;
+namespace App\Models\Utils;
 use App\Models\ProductCategory;
 use App\Models\Fridge;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

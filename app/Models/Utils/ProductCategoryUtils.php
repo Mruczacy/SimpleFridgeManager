@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Traits;
+namespace App\Models\Utils;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 

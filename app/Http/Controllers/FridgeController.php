@@ -19,9 +19,12 @@
 
         public function indexOwn()
         {
-
+            $fridges = Auth::user()->fridges()->with('products.category')->get()/*->sortBy('products.expiration_date', 'desc')*/;
+            foreach($fridges as $fridge) {
+                $fridge->products = $fridge->products->sortBy('expiration_date')->values()->all();
+            }
             return view('fridges.index', [
-                'fridges' => Auth::user()->fridges()->with('products.category')->get()
+                'fridges' => $fridges
             ]);
         }
 
@@ -46,6 +49,7 @@
 
         public function show(Fridge $fridge)
         {
+            $fridge->products = $fridge->products->sortBy('expiration_date')->values()->all();
             return view('fridges.show', [
                 'fridge' => $fridge
             ]);
@@ -53,6 +57,7 @@
 
         public function showOwn(Fridge $fridge)
         {
+            $fridge->products = $fridge->products->sortBy('expiration_date')->values()->all();
             if(Auth::user()->isFridgeUser($fridge)) {
                 return view('fridges.show', [
                     'fridge' => $fridge

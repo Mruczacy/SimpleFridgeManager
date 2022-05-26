@@ -38,7 +38,7 @@
                         <form action="{{ route('products.destroy',$product->id) }}" method="POST">
 
                             <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edytuj</a>
-                            <a class="btn btn-primary" href="{{ route('products.move',$product->id) }}">Przenieś</a>
+                            <a class="btn btn-primary" href="{{ route('products.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
                             @csrf
                             @method('DELETE')
 
@@ -48,7 +48,7 @@
                         <form action="{{ route('myproducts.destroyOwn',$product->id) }}" method="POST">
 
                             <a class="btn btn-primary" href="{{ route('myproducts.editOwn',$product->id) }}">Edytuj</a>
-                            <a class="btn btn-primary" href="{{ route('myproducts.move',$product->id) }}">Przenieś</a>
+                            <a class="btn btn-primary" href="{{ route('myproducts.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
 
                             @csrf
                             @method('DELETE')

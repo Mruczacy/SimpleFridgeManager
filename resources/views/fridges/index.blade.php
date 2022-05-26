@@ -30,6 +30,7 @@
                 @can('isAdmin')
                     <form action="{{ route('products.destroy',$product->id) }}" method="POST">
                         <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edytuj produkt</a>
+                        <a class="btn btn-primary" href="{{ route('products.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Usuń produkt</button>
@@ -37,6 +38,7 @@
                 @else
                     <form action="{{ route('myproducts.destroyOwn',$product->id) }}" method="POST">
                         <a class="btn btn-primary" href="{{ route('myproducts.editOwn',$product->id) }}">Edytuj produkt</a>
+                        <a class="btn btn-primary" href="{{ route('myproducts.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Usuń produkt</button>
@@ -50,6 +52,7 @@
                     @if(Auth::user()->isFridgeUser($fridge))
                         <a class="btn btn-primary" href="{{  route('products.create', $fridge->id)  }}">Dodaj produkt</a>
                     @endif
+
                     @csrf
                     @method('DELETE')
                     <a class="btn btn-primary" href="{{ route('fridges.edit',$fridge->id) }}">Zmień nazwę</a>

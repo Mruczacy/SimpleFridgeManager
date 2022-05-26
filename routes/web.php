@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{product}/edit', [ProductController::class, 'editOwn'])->name('editOwn');
         Route::delete('/{product}', [ProductController::class, 'destroyOwn'])->name('destroyOwn');
         Route::put('/move/{product}', [ProductController::class, 'moveProductBetweenFridgesOwn'])->name('move');
+        Route::get('/moveform/{product}/{fridge}', [ManagementController::class, 'showAMoveFormOwn'])->name('moveform');
     });
     Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('/form/{fridge}', [ManagementController::class, 'showAManageForm'])->name('showAManageForm');
@@ -48,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('products/create/{fridge}', [ProductController::class, 'create'])->name('products.create');
     Route::middleware(['can:isAdmin'])->group(function () {
         Route::put('/products/move/{product}', [ProductController::class, 'moveProductBetweenFridges'])->name('products.move');
+        Route::get('/products/moveform/{product}/{fridge}', [ManagementController::class, 'showAMoveForm'])->name('moveform');
         Route::resource('users', UserController::class);
         Route::resource('fridges', FridgeController::class)->except(['store', 'create']);
         Route::resource('products', ProductController::class)->except(['store', 'create', 'show']);

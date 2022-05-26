@@ -25,7 +25,7 @@ class ValidateProductRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'product_category_id' => 'required|numeric|exists:product_categories,id',
+            'product_category_id' => 'nullable|numeric|exists:product_categories,id',
             'fridge_id' => 'required|numeric|exists:fridges,id',
             'expiration_date' => 'required|date',
         ];

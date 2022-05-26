@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fridge;
 use App\Models\User;
+use App\Models\Product;
 use App\Http\Controllers\UserController;
 use App\Http\Requests\ValidateUserCandidateRequest;
 use App\Http\Requests\ValidateOwnerCandidateRequest;
@@ -18,6 +19,29 @@ class ManagementController extends Controller {
             return view('management.manage', [
                 'fridge' => $fridge,
                 'users' => $fridge->users()->get(),
+            ]);
+        }
+        else
+        {
+            abort(403, 'Access denied');
+        }
+    }
+
+    public function showAMoveForm(Product $product, Fridge $fridge) {
+            return view('management.moveproduct', [
+                'fridges' => Fridge::all(),
+                'product' => $product,
+                'def_fridge' => $fridge,
+            ]);
+    }
+
+    public function showAMoveFormOwn(Product $product, Fridge $fridge) {
+        if(Auth::user()->isFridgeUser($fridge))
+        {
+            return view('management.moveproduct', [
+                'fridges' => Auth::user()->fridges,
+                'def_fridge' => $fridge,
+                'product' => $product,
             ]);
         }
         else

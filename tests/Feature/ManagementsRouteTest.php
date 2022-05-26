@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\Models\User;
 use App\Models\Fridge;
+use App\Models\Product;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ManagementsRouteTest extends TestCase
 
@@ -38,6 +40,72 @@ class ManagementsRouteTest extends TestCase
         $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
         $fridge->users()->attach($user->id, ['is_manager' => 1]);
         $response = $this->actingAs($user)->get("/manage/form/{$fridge->id}");
+        $response->assertStatus(200);
+    }
+
+    public function testGuestCannotGetAMoveForm()
+    {
+        $user = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
+        $product = Product::factory()->create(['fridge_id' => $fridge->id]);
+        $response = $this->get("/products/moveform/{$product->id}/{$fridge->id}");
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
+    }
+
+    public function testUserCannotGetAMoveForm()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge->users()->attach($user2->id, ['is_manager' => 1]);
+        $product = Product::factory()->create(['fridge_id' => $fridge->id]);
+        $response = $this->actingAs($user)->get("/products/moveform/{$product->id}/{$fridge->id}");
+        $response->assertStatus(403);
+    }
+
+    public function testAdminCanGetAMoveForm()
+    {
+        $user = User::factory()->create(['role' => UserRole::ADMIN]);
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge->users()->attach($user2->id, ['is_manager' => 1]);
+        $product = Product::factory()->create(['fridge_id' => $fridge->id]);
+        $response = $this->actingAs($user)->get("/products/moveform/{$product->id}/{$fridge->id}");
+        $response->assertStatus(200);
+    }
+
+    public function testGuestCannotGetAMoveFormOnSbsFridge()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge->users()->attach($user2->id, ['is_manager' => 1]);
+        $product = Product::factory()->create(['fridge_id' => $fridge->id]);
+        $response = $this->get("/myproducts/moveform/{$product->id}/{$fridge->id}");
+        $response->assertStatus(302);
+        $response->assertRedirect('/login');
+    }
+
+    public function testUserCannotGetAMoveFormOnSbsFridge()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge->users()->attach($user2->id, ['is_manager' => 1]);
+        $product = Product::factory()->create(['fridge_id' => $fridge->id]);
+        $response = $this->actingAs($user)->get("/myproducts/moveform/{$product->id}/{$fridge->id}");
+        $response->assertStatus(403);
+    }
+
+    public function testUserCanGetAMoveFormOnSbsFridge()
+    {
+        $user = User::factory()->create();
+        $user2 = User::factory()->create();
+        $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
+        $fridge->users()->attach($user2->id, ['is_manager' => 1]);
+        $product = Product::factory()->create(['fridge_id' => $fridge->id]);
+        $response = $this->actingAs($user2)->get("/myproducts/moveform/{$product->id}/{$fridge->id}");
         $response->assertStatus(200);
     }
 

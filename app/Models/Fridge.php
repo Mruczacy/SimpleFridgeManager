@@ -6,7 +6,7 @@
 
     class Fridge extends Model {
 
-        use HasFactory, Traits\FridgeTrait;
+        use HasFactory, Traits\FridgeUtils;
 
         public $timestamps= false;
 

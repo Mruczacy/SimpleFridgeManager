@@ -8,7 +8,7 @@ use App\Models\ProductCategory;
 
 class Product extends Model {
 
-    use HasFactory, Traits\ProductTrait;
+    use HasFactory, Traits\ProductUtils;
 
     protected $fillable = [
         'name',

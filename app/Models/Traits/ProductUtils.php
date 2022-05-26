@@ -5,7 +5,7 @@ use App\Models\ProductCategory;
 use App\Models\Fridge;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-trait ProductTrait {
+trait ProductUtils {
     abstract public function getProduct();
 
     public function fridge() : BelongsTo {

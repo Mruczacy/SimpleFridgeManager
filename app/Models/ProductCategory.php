@@ -10,7 +10,7 @@ class ProductCategory extends Model
 {
     public $timestamps= false;
 
-    use HasFactory, Traits\ProductCategoryTrait;
+    use HasFactory, Traits\ProductCategoryUtils;
 
     protected $fillable = [
         'name',

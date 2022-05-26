@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-trait FridgeTrait {
+trait FridgeUtils {
     abstract public function getFridge();
 
     public function products() : HasMany {

@@ -2,6 +2,7 @@
     namespace App\Http\Controllers;
 
     use App\Models\Fridge;
+    use App\Http\Requests\ValidateFridgeRequest;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
     use Exception;
@@ -29,11 +30,9 @@
             return view('fridges.create');
         }
 
-        public function store(Request $request)
+        public function store(ValidateFridgeRequest $request)
         {
-            $request->validate([
-                'name' => 'required|string|max:255',
-            ]);
+            $request->validated();
 
             $fridge = new Fridge();
             $fridge->name = $request->name;
@@ -81,22 +80,18 @@
             }
         }
 
-        public function update(Request $request, Fridge $fridge)
+        public function update(ValidateFridgeRequest $request, Fridge $fridge)
         {
-            $request->validate([
-                'name' => 'required|string|max:255',
-            ]);
+            $request->validated();
 
             $fridge->update($request->all());
 
             return redirect()->route('fridges.index');
         }
 
-        public function updateOwn(Request $request, Fridge $fridge){
+        public function updateOwn(ValidateFridgeRequest $request, Fridge $fridge){
             if(Auth::user()->isPermittedToManage($fridge)){
-                $request->validate([
-                    'name' => 'required|string|max:255',
-                ]);
+                $request->validated();
 
                 $fridge->update($request->all());
 

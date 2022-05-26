@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
+use App\Http\Requests\ValidateProductCategoryRequest;
 
 class ProductCategoryController extends Controller
 {
@@ -20,11 +21,9 @@ class ProductCategoryController extends Controller
         return view('products.categories.create');
     }
 
-    public function store(Request $request)
+    public function store(ValidateProductCategoryRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255'
-        ]);
+        $request->validated();
 
         $productcategory = new ProductCategory();
         $productcategory->name = $request->name;
@@ -40,11 +39,10 @@ class ProductCategoryController extends Controller
         ]);
     }
 
-    public function update(Request $request, ProductCategory $category)
+    public function update(ValidateProductCategoryRequest $request, ProductCategory $category)
     {
-        $request->validate([
-            'name' => 'required|string|max:255'
-        ]);
+        $request->validated();
+
         $category->name = $request->name;
         $category->save();
 

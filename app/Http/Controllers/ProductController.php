@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Http\Requests\ValidateFridgeIdRequest;
+use App\Http\Requests\ValidateProductRequest;
 
 class ProductController extends Controller
 {
@@ -34,15 +36,10 @@ class ProductController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(ValidateProductRequest $request)
     {
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))) {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'expiration_date' => 'required|date|after_or_equal:today',
-                'fridge_id' => 'required|numeric|exists:fridges,id',
-                'product_category_id' => 'nullable|numeric|exists:product_categories,id'
-            ]);
+            $request->validated();
             $product = new Product();
             $product->name = $request->name;
             $product->expiration_date = $request->expiration_date;
@@ -78,14 +75,9 @@ class ProductController extends Controller
         }
     }
 
-    public function update(Request $request, Product $product)
+    public function update(ValidateProductRequest $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'expiration_date' => 'required|date',
-            'product_category_id' => 'required|numeric|exists:product_categories,id',
-            'fridge_id' => 'required|numeric|exists:fridges,id'
-        ]);
+        $request->validated();
 
         $product->update($request->all());
         $product->save();
@@ -93,15 +85,10 @@ class ProductController extends Controller
         return redirect()->route('myfridges.indexOwn');
 
     }
-    public function updateOwn(Request $request, Product $product)
+    public function updateOwn(ValidateProductRequest $request, Product $product)
     {
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))){
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'product_category_id' => 'required|numeric|exists:product_categories,id',
-                'fridge_id' => 'required|numeric|exists:fridges,id',
-                'expiration_date' => 'required|date'
-            ]);
+            $request->validated();
             $product->update($request->all());
 
 
@@ -111,19 +98,15 @@ class ProductController extends Controller
         }
     }
 
-    public function moveProductBetweenFridges(Request $request, Product $product) {
-        $request->validate([
-            'fridge_id' => 'required|numeric|exists:fridges,id',
-        ]);
+    public function moveProductBetweenFridges(ValidateFridgeIdRequest $request, Product $product) {
+        $request->validated();
         $product->fridge_id = $request->fridge_id;
         $product->save();
         return redirect()->route('fridges.index');
     }
 
-    public function moveProductBetweenFridgesOwn(Request $request, Product $product) {
-        $request->validate([
-            'fridge_id' => 'required|numeric|exists:fridges,id',
-        ]);
+    public function moveProductBetweenFridgesOwn(ValidateFridgeIdRequest $request, Product $product) {
+        $request->validated();
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))) {
             $product->fridge_id = $request->fridge_id;
             $product->save();

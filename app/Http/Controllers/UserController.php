@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Enums\UserRole;
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UpdateOwnUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use App\Enums\UserRole;
 
 class UserController extends Controller
 {
@@ -45,13 +47,9 @@ class UserController extends Controller
         }
     }
 
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email:rfc',
-            'role' => 'required',
-        ]);
+        $request->validated();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role = $request->role;
@@ -60,13 +58,9 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
-    public function updateOwn(Request $request, User $user){
+    public function updateOwn(UpdateOwnUserRequest $request, User $user){
         if($user->isEqualToAuth()){
-            $request->validate([
-                'name' => 'required|string',
-                'email' => 'required|email:rfc',
-
-            ]);
+            $request->validated();
             $user->name = $request->name ?? $user->name;
             $user->email = $request->email ?? $user->email;
             $user->update();

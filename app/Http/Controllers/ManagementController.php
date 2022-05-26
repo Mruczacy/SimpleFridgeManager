@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fridge;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\UserController;
+use App\Http\Requests\ValidateUserCandidateRequest;
+use App\Http\Requests\ValidateOwnerCandidateRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ManagementController extends Controller {
 
@@ -24,15 +26,12 @@ class ManagementController extends Controller {
         }
     }
 
-    public function attachUserToFridge(Fridge $fridge, Request $request)
+    public function attachUserToFridge(Fridge $fridge, ValidateUserCandidateRequest $request)
     {
 
         if(Auth::user()->isFridgeManager($fridge))
         {
-            $request->validate([
-                'is_manager' => 'required|numeric|min:0|max:1',
-                'user_id' => 'required|numeric|exists:users,id',
-            ]);
+            $request->validated();
             $fridge->users()->attach($request->user_id, ['is_manager' => $request->is_manager]);
             return redirect()->route('myfridges.indexOwn');
         } else {
@@ -62,10 +61,8 @@ class ManagementController extends Controller {
         }
     }
 
-    public function transferOwnership(Fridge $fridge, Request $request){
-        $request->validate([
-            'owner_id' => 'required|numeric|exists:users,id',
-        ]);
+    public function transferOwnership(Fridge $fridge, ValidateOwnerCandidateRequest $request){
+        $request->validated();
         if(Auth::user()->isFridgeOwner($fridge))
         {
             $fridge->update($request->all());
@@ -76,12 +73,9 @@ class ManagementController extends Controller {
         }
     }
 
-    public function updateUserRank(Fridge $fridge, Request $request)
+    public function updateUserRank(Fridge $fridge, ValidateUserCandidateRequest $request)
     {
-        $request->validate([
-            'is_manager' => 'required|numeric|min:0|max:1',
-            'user_id' => 'required|numeric|exists:users,id'
-        ]);
+        $request->validated();
         if(Auth::user()->isFridgeOwner($fridge))
         {
             $fridge->users()->updateExistingPivot($request->user_id, ['is_manager' => $request->is_manager]);

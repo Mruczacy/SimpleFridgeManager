@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidateOwnerCandidateRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,10 @@ class ValidateOwnerCandidateRequest extends FormRequest
     public function rules()
     {
         return [
-            'owner_id' => 'required|numeric|exists:users,id',
+            'name' => 'required|string|max:255',
+            'product_category_id' => 'nullable|numeric|exists:product_categories,id',
+            'fridge_id' => 'required|numeric|exists:fridges,id',
+            'expiration_date' => 'required|date',
         ];
     }
 }

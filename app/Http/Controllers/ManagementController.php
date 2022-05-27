@@ -6,8 +6,8 @@ use App\Models\Fridge;
 use App\Models\User;
 use App\Models\Product;
 use App\Http\Controllers\UserController;
-use App\Http\Requests\ValidateUserCandidateRequest;
-use App\Http\Requests\ValidateOwnerCandidateRequest;
+use App\Http\Requests\UserCandidateRequest;
+use App\Http\Requests\OwnerCandidateRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -44,7 +44,7 @@ class ManagementController extends Controller {
         abort(403, 'Access denied');
     }
 
-    public function attachUserToFridge(Fridge $fridge, ValidateUserCandidateRequest $request)
+    public function attachUserToFridge(Fridge $fridge, UserCandidateRequest $request)
     {
 
         if(Auth::user()->isFridgeManager($fridge))
@@ -76,7 +76,7 @@ class ManagementController extends Controller {
         abort(403, 'Access denied');
     }
 
-    public function transferOwnership(Fridge $fridge, ValidateOwnerCandidateRequest $request){
+    public function transferOwnership(Fridge $fridge, OwnerCandidateRequest $request){
         if(Auth::user()->isFridgeOwner($fridge))
         {
             $fridge->update($request->validated());
@@ -85,7 +85,7 @@ class ManagementController extends Controller {
         abort(403, 'Access denied');
     }
 
-    public function updateUserRank(Fridge $fridge, ValidateUserCandidateRequest $request)
+    public function updateUserRank(Fridge $fridge, UserCandidateRequest $request)
     {
         $validated=$request->validated();
         if(Auth::user()->isFridgeOwner($fridge))

@@ -2,7 +2,7 @@
     namespace App\Http\Controllers;
 
     use App\Models\Fridge;
-    use App\Http\Requests\ValidateFridgeRequest;
+    use App\Http\Requests\FridgeRequest;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
     use Exception;
@@ -33,7 +33,7 @@
             return view('fridges.create');
         }
 
-        public function store(ValidateFridgeRequest $request)
+        public function store(FridgeRequest $request)
         {
             $fridge=Fridge::create($request->validated() + ['owner_id' => Auth::id()]);
             $fridge->save();
@@ -78,13 +78,13 @@
             abort(403, 'Access denied');
         }
 
-        public function update(ValidateFridgeRequest $request, Fridge $fridge)
+        public function update(FridgeRequest $request, Fridge $fridge)
         {
             $fridge->update($request->validated());
             return redirect()->route('fridges.index');
         }
 
-        public function updateOwn(ValidateFridgeRequest $request, Fridge $fridge){
+        public function updateOwn(FridgeRequest $request, Fridge $fridge){
             if(Auth::user()->isPermittedToManage($fridge)){
                 $fridge->update($request->validated());
                 return redirect()->route('myfridges.indexOwn');

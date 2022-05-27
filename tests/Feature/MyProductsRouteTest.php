@@ -79,7 +79,7 @@ class MyProductsRouteTest extends TestCase {
             'name' => 'test',
             'product_category_id' => $category2->id,
             'fridge_id' => $fridge->id,
-            'expiration_date' => Carbon::now()->addDays(2137),
+            'expiration_date' => now()->addDays(2137),
         ]);
         $product2 = Product::find($product->id);
         $this->assertTrue($product2->product_category_id != $product->product_category_id);
@@ -104,7 +104,7 @@ class MyProductsRouteTest extends TestCase {
             'name' => 'test',
             'product_category_id' => $category2->id,
             'fridge_id' => $fridge->id,
-            'expiration_date' => Carbon::now()->addDays(2137),
+            'expiration_date' => now()->addDays(2137),
         ]);
         $product2 = Product::find($product->id);
         $this->assertTrue($product2->product_category_id == $product->product_category_id);

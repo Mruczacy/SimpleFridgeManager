@@ -39,14 +39,9 @@ class ProductController extends Controller
     public function store(ValidateProductRequest $request)
     {
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))) {
-            $request->validated();
-            $product = new Product();
-            $product->name = $request->name;
-            $product->expiration_date = $request->expiration_date;
-            $product->fridge_id = $request->fridge_id;
-            $product->product_category_id = $request->product_category_id ?? null;
-            $product->save();
-            return redirect()->route('myfridges.showOwn', $request->fridge_id);
+            $validated=$request->validated();
+            Product::create($validated)->save();
+            return redirect()->route('myfridges.showOwn', $validated['fridge_id']);
         } else {
             abort(403, 'Access denied');
         }
@@ -77,19 +72,14 @@ class ProductController extends Controller
 
     public function update(ValidateProductRequest $request, Product $product)
     {
-        $request->validated();
-
-        $product->update($request->all());
-        $product->save();
-
+        $product->update($request->validated());
         return redirect()->route('myfridges.indexOwn');
-
     }
+
     public function updateOwn(ValidateProductRequest $request, Product $product)
     {
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))){
-            $request->validated();
-            $product->update($request->all());
+            $product->update($request->validated());
             return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');
@@ -97,17 +87,13 @@ class ProductController extends Controller
     }
 
     public function moveProductBetweenFridges(ValidateFridgeIdRequest $request, Product $product) {
-        $request->validated();
-        $product->fridge_id = $request->fridge_id;
-        $product->save();
+        $product->update($request->validated());
         return redirect()->route('fridges.index');
     }
 
     public function moveProductBetweenFridgesOwn(ValidateFridgeIdRequest $request, Product $product) {
-        $request->validated();
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))) {
-            $product->fridge_id = $request->fridge_id;
-            $product->save();
+            $product->update($request->validated());
             return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');

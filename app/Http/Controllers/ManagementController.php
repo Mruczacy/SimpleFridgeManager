@@ -55,8 +55,8 @@ class ManagementController extends Controller {
 
         if(Auth::user()->isFridgeManager($fridge))
         {
-            $request->validated();
-            $fridge->users()->attach($request->user_id, ['is_manager' => $request->is_manager]);
+            $validated=$request->validated();
+            $fridge->users()->attach($validated['user_id'], ['is_manager' => $validated['is_manager']]);
             return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');
@@ -86,11 +86,9 @@ class ManagementController extends Controller {
     }
 
     public function transferOwnership(Fridge $fridge, ValidateOwnerCandidateRequest $request){
-        $request->validated();
         if(Auth::user()->isFridgeOwner($fridge))
         {
-            $fridge->update($request->all());
-            $fridge->save();
+            $fridge->update($request->validated());
             return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');
@@ -99,10 +97,10 @@ class ManagementController extends Controller {
 
     public function updateUserRank(Fridge $fridge, ValidateUserCandidateRequest $request)
     {
-        $request->validated();
+        $validated=$request->validated();
         if(Auth::user()->isFridgeOwner($fridge))
         {
-            $fridge->users()->updateExistingPivot($request->user_id, ['is_manager' => $request->is_manager]);
+            $fridge->users()->updateExistingPivot($validated['user_id'], ['is_manager' => $validated['is_manager']]);
             return redirect()->route('myfridges.indexOwn');
         } else {
             abort(403, 'Access denied');

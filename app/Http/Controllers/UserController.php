@@ -49,22 +49,13 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $request->validated();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role = $request->role;
-        $user->update();
-
+        $user->update($request->validated());
         return redirect()->route('users.index');
     }
 
     public function updateOwn(UpdateOwnUserRequest $request, User $user){
         if($user->isEqualToAuth()){
-            $request->validated();
-            $user->name = $request->name ?? $user->name;
-            $user->email = $request->email ?? $user->email;
-            $user->update();
-
+            $user->update($request->validated());
             return redirect()->route('users.showMyAccount');
         } else {
             abort(403, 'Access denied');

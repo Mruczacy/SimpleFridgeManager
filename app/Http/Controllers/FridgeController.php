@@ -35,13 +35,8 @@
 
         public function store(ValidateFridgeRequest $request)
         {
-            $request->validated();
-
-            $fridge = new Fridge();
-            $fridge->name = $request->name;
-            $fridge->owner_id = Auth::id();
+            $fridge=Fridge::create($request->validated() + ['owner_id' => Auth::id()]);
             $fridge->save();
-
             Auth::user()->fridges()->attach($fridge->id, ['is_manager' => 1]);
 
             return redirect()->route('myfridges.indexOwn');
@@ -87,19 +82,13 @@
 
         public function update(ValidateFridgeRequest $request, Fridge $fridge)
         {
-            $request->validated();
-
-            $fridge->update($request->all());
-
+            $fridge->update($request->validated());
             return redirect()->route('fridges.index');
         }
 
         public function updateOwn(ValidateFridgeRequest $request, Fridge $fridge){
             if(Auth::user()->isPermittedToManage($fridge)){
-                $request->validated();
-
-                $fridge->update($request->all());
-
+                $fridge->update($request->validated());
                 return redirect()->route('myfridges.indexOwn');
             } else {
                 abort(403, 'Access denied');

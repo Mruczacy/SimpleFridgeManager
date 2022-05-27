@@ -23,11 +23,7 @@ class ProductCategoryController extends Controller
 
     public function store(ValidateProductCategoryRequest $request)
     {
-        $request->validated();
-
-        $productcategory = new ProductCategory();
-        $productcategory->name = $request->name;
-        $productcategory->save();
+        ProductCategory::create($request->validated())->save();
 
         return redirect()->route('categories.index');
     }
@@ -41,11 +37,7 @@ class ProductCategoryController extends Controller
 
     public function update(ValidateProductCategoryRequest $request, ProductCategory $category)
     {
-        $request->validated();
-
-        $category->name = $request->name;
-        $category->save();
-
+        $category->update($request->validated());
         return redirect()->route('myfridges.indexOwn');
     }
 

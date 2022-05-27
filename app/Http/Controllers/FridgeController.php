@@ -57,9 +57,8 @@
                 return view('fridges.show', [
                     'fridge' => $fridge
                 ]);
-            } else {
-                abort(403, 'Access denied');
             }
+            abort(403, 'Access denied');
         }
 
         public function edit(Fridge $fridge)
@@ -75,9 +74,8 @@
                 return view('fridges.edit', [
                     'fridge' => $fridge
                 ]);
-            } else {
-                abort(403, 'Access denied');
             }
+            abort(403, 'Access denied');
         }
 
         public function update(ValidateFridgeRequest $request, Fridge $fridge)
@@ -90,9 +88,8 @@
             if(Auth::user()->isPermittedToManage($fridge)){
                 $fridge->update($request->validated());
                 return redirect()->route('myfridges.indexOwn');
-            } else {
-                abort(403, 'Access denied');
             }
+            abort(403, 'Access denied');
         }
 
         public function destroy(Fridge $fridge)
@@ -109,9 +106,8 @@
                 }
                 $fridge->delete();
                 return redirect()->route('myfridges.indexOwn');
-            } else {
-                abort(403, 'Access denied');
             }
+            abort(403, 'Access denied');
         }
     }
 

@@ -42,9 +42,8 @@ class UserController extends Controller
             return view('users.edit', [
                 'user' => $user
             ]);
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function update(UpdateUserRequest $request, User $user)
@@ -57,9 +56,8 @@ class UserController extends Controller
         if($user->isEqualToAuth()){
             $user->update($request->validated());
             return redirect()->route('users.showMyAccount');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function destroy(User $user)
@@ -82,8 +80,7 @@ class UserController extends Controller
             }
             $user->delete();
             return redirect()->route('welcome')->with('success', 'Twoje konto zostało usunięte pomyślnie');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 }

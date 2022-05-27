@@ -21,10 +21,7 @@ class ManagementController extends Controller {
                 'users' => $fridge->users()->get(),
             ]);
         }
-        else
-        {
-            abort(403, 'Access denied');
-        }
+        abort(403, 'Access denied');
     }
 
     public function showAMoveForm(Product $product, Fridge $fridge) {
@@ -44,10 +41,7 @@ class ManagementController extends Controller {
                 'product' => $product,
             ]);
         }
-        else
-        {
-            abort(403, 'Access denied');
-        }
+        abort(403, 'Access denied');
     }
 
     public function attachUserToFridge(Fridge $fridge, ValidateUserCandidateRequest $request)
@@ -58,9 +52,8 @@ class ManagementController extends Controller {
             $validated=$request->validated();
             $fridge->users()->attach($validated['user_id'], ['is_manager' => $validated['is_manager']]);
             return redirect()->route('myfridges.indexOwn');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function detachUserFromFridge(Fridge $fridge, User $user)
@@ -69,9 +62,8 @@ class ManagementController extends Controller {
         {
             $fridge->users()->detach($user->id);
             return redirect()->route('myfridges.indexOwn');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function resignFromFridge(Fridge $fridge)
@@ -80,9 +72,8 @@ class ManagementController extends Controller {
         {
             $fridge->users()->detach(Auth::id());
             return redirect()->route('myfridges.indexOwn');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function transferOwnership(Fridge $fridge, ValidateOwnerCandidateRequest $request){
@@ -90,9 +81,8 @@ class ManagementController extends Controller {
         {
             $fridge->update($request->validated());
             return redirect()->route('myfridges.indexOwn');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function updateUserRank(Fridge $fridge, ValidateUserCandidateRequest $request)
@@ -102,9 +92,8 @@ class ManagementController extends Controller {
         {
             $fridge->users()->updateExistingPivot($validated['user_id'], ['is_manager' => $validated['is_manager']]);
             return redirect()->route('myfridges.indexOwn');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
 }

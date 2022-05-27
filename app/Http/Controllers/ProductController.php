@@ -31,9 +31,8 @@ class ProductController extends Controller
                 'now' => Carbon::now(),
                 'fridges' => Auth::user()->fridges()->get()
             ]);
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function store(ValidateProductRequest $request)
@@ -42,9 +41,8 @@ class ProductController extends Controller
             $validated=$request->validated();
             Product::create($validated)->save();
             return redirect()->route('myfridges.showOwn', $validated['fridge_id']);
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function edit(Product $product)
@@ -65,9 +63,8 @@ class ProductController extends Controller
                 'fridges' => Auth::user()->fridges,
                 'categories' => ProductCategory::all(),
             ]);
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function update(ValidateProductRequest $request, Product $product)
@@ -81,9 +78,8 @@ class ProductController extends Controller
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))){
             $product->update($request->validated());
             return redirect()->route('myfridges.indexOwn');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function moveProductBetweenFridges(ValidateFridgeIdRequest $request, Product $product) {
@@ -95,9 +91,8 @@ class ProductController extends Controller
         if(Auth::user()->isFridgeUser(Fridge::find($request->fridge_id))) {
             $product->update($request->validated());
             return redirect()->route('myfridges.indexOwn');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 
     public function destroy(Product $product)
@@ -111,8 +106,7 @@ class ProductController extends Controller
         if(Auth::user()->isFridgeUser(Fridge::find($product->fridge_id))){
             $product->delete();
             return redirect()->route('myfridges.indexOwn');
-        } else {
-            abort(403, 'Access denied');
         }
+        abort(403, 'Access denied');
     }
 }

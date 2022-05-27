@@ -15,34 +15,34 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
-    Route::prefix('account')->name('users.')->group(function () {
-        Route::put('/{user}', [UserController::class, 'updateOwn'])->name('updateOwn');
-        Route::get('/{user}/edit', [UserController::class, 'editOwn'])->name('editOwn');
-        Route::get('/', [UserController::class, 'showMyAccount'])->name('showMyAccount');
-        Route::delete('/{user}', [UserController::class, 'destroyOwn'])->name('destroyOwn');
+    Route::prefix('account')->controller(UserController::class)->name('users.')->group(function () {
+        Route::put('/{user}', 'updateOwn')->name('updateOwn');
+        Route::get('/{user}/edit', 'editOwn')->name('editOwn');
+        Route::get('/', 'showMyAccount')->name('showMyAccount');
+        Route::delete('/{user}', 'destroyOwn')->name('destroyOwn');
     });
-    Route::prefix('myfridges')->name('myfridges.')->group(function () {
-        Route::get('/', [FridgeController::class, 'indexOwn'])->name('indexOwn');
-        Route::get('/{fridge}', [FridgeController::class, 'showOwn'])->name('showOwn');
-        Route::put('/{fridge}', [FridgeController::class, 'updateOwn'])->name('updateOwn');
-        Route::get('/{fridge}/edit', [FridgeController::class, 'editOwn'])->name('editOwn');
-        Route::delete('/{fridge}', [FridgeController::class, 'destroyOwn'])->name('destroyOwn');
+    Route::prefix('myfridges')->controller(FridgeController::class)->name('myfridges.')->group(function () {
+        Route::get('/', 'indexOwn')->name('indexOwn');
+        Route::get('/{fridge}', 'showOwn')->name('showOwn');
+        Route::put('/{fridge}', 'updateOwn')->name('updateOwn');
+        Route::get('/{fridge}/edit', 'editOwn')->name('editOwn');
+        Route::delete('/{fridge}', 'destroyOwn')->name('destroyOwn');
 
     });
-    Route::prefix('myproducts')->name('myproducts.')->group(function () {
-        Route::put('/{product}', [ProductController::class, 'updateOwn'])->name('updateOwn');
-        Route::get('/{product}/edit', [ProductController::class, 'editOwn'])->name('editOwn');
-        Route::delete('/{product}', [ProductController::class, 'destroyOwn'])->name('destroyOwn');
-        Route::put('/move/{product}', [ProductController::class, 'moveProductBetweenFridgesOwn'])->name('move');
+    Route::prefix('myproducts')->controller(ProductController::class)->name('myproducts.')->group(function () {
+        Route::put('/{product}', 'updateOwn')->name('updateOwn');
+        Route::get('/{product}/edit', 'editOwn')->name('editOwn');
+        Route::delete('/{product}', 'destroyOwn')->name('destroyOwn');
+        Route::put('/move/{product}', 'moveProductBetweenFridgesOwn')->name('move');
         Route::get('/moveform/{product}/{fridge}', [ManagementController::class, 'showAMoveFormOwn'])->name('moveform');
     });
-    Route::prefix('manage')->name('manage.')->group(function () {
-        Route::get('/form/{fridge}', [ManagementController::class, 'showAManageForm'])->name('showAManageForm');
-        Route::post('/attach/{fridge}', [ManagementController::class, 'attachUserToFridge'])->name('attach');
-        Route::delete('/detach/{fridge}/{user}', [ManagementController::class, 'detachUserFromFridge'])->name('detach');
-        Route::post('/resign/{fridge}', [ManagementController::class, 'resignFromFridge'])->name('resign');
-        Route::put('/transfer/{fridge}', [ManagementController::class, 'transferOwnership'])->name('transferOwnership');
-        Route::put('/updaterank/{fridge}', [ManagementController::class, 'updateUserRank'])->name('updateUserRank');
+    Route::prefix('manage')->controller(ManagementController::class)->name('manage.')->group(function () {
+        Route::get('/form/{fridge}', 'showAManageForm')->name('showAManageForm');
+        Route::post('/attach/{fridge}', 'attachUserToFridge')->name('attach');
+        Route::delete('/detach/{fridge}/{user}', 'detachUserFromFridge')->name('detach');
+        Route::post('/resign/{fridge}', 'resignFromFridge')->name('resign');
+        Route::put('/transfer/{fridge}', 'transferOwnership')->name('transferOwnership');
+        Route::put('/updaterank/{fridge}', 'updateUserRank')->name('updateUserRank');
     });
     Route::resource('fridges', FridgeController::class)->only(['store', 'create']);
     Route::resource('products', ProductController::class)->only(['store']);

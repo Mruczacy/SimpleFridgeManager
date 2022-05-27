@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use App\Models\Fridge;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,29 +17,23 @@ class Createfridgetable extends Migration
         });
         Schema::create('fridgesToUsers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('fridge_id');
             $table->integer('is_owner');
-            $table->foreign('user_id')->references('id')->on('users')->delete('cascade');
-            $table->foreign('fridge_id')->references('id')->on('fridges')->delete('cascade');
+            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(Fridge::class);
 
         });
 
         Schema::table('products', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropColumn(['user_id']);
-            $table->unsignedBigInteger('fridge_id');
-            $table->foreign('fridge_id')->references('id')->on('fridges')->delete('cascade');
+            $table->dropColumn('user_id');
+            $table->foreignIdFor(Fridge::class);
         });
     }
 
     public function down()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropForeign(['fridge_id']);
-            $table->dropColumn(['fridge_id']);
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->delete('cascade');
+            $table->dropColumn('fridge_id');
+            $table->foreignIdFor(User::class);
         });
         Schema::dropIfExists('fridgesToUsers');
         Schema::dropIfExists('fridges');

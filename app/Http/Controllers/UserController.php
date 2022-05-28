@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Enums\UserRole;
+use App\Http\Requests\UserIsEqualToAuth;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UpdateOwnUserRequest;
 use Illuminate\Http\Request;
@@ -53,7 +54,7 @@ class UserController extends Controller
     }
 
     public function updateOwn(UpdateOwnUserRequest $request, User $user){
-        if($user->isEqualToAuth()){
+        if($user->isEqualToAuth()) {
             $user->update($request->validated());
             return redirect()->route('users.showMyAccount');
         }
@@ -72,14 +73,14 @@ class UserController extends Controller
     }
 
     public function destroyOwn(User $user){
-        if($user->isEqualToAuth()){
+        if($user->isEqualToAuth()) {
             $fridges= $user->managedFridges;
             $user->fridges()->detach();
             foreach($fridges as $fridge){
                 $fridge->delete();
             }
             $user->delete();
-            return redirect()->route('welcome')->with('success', 'Twoje konto zostało usunięte pomyślnie');
+            return redirect()->route('welcome')->with('success', 'Konto zostało usunięte pomyślnie');
         }
         abort(403, 'Access denied');
     }

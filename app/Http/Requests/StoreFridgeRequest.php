@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class UpdateUserRequest extends FormRequest
+class StoreFridgeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->isAdmin();
+        return Auth::check();
     }
 
     /**
@@ -24,9 +25,7 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
-            'email' => 'required|email:rfc',
-            'role' => 'required',
+            'name' => 'required|string|max:255',
         ];
     }
 }

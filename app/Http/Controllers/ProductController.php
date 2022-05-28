@@ -22,9 +22,9 @@ class ProductController extends Controller
         ]);
     }
 
-    public function create(Fridge $fridge)
+    public function create(Request $request, Fridge $fridge)
     {
-        if(Auth::user()->isFridgeUser($fridge)){
+        if($request->user()->isFridgeUser($fridge)){
             return view('products.create', [
                 'def_fridge' => $fridge,
                 'categories' => ProductCategory::all(),
@@ -37,7 +37,7 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request)
     {
-        if(Auth::user()->isFridgeUser(Fridge::findOrFail($request->fridge_id))) {
+        if($request->user()->isFridgeUser(Fridge::findOrFail($request->fridge_id))) {
             $validated=$request->validated();
             Product::create($validated)->save();
             return redirect()->route('myfridges.showOwn', $validated['fridge_id']);
@@ -54,13 +54,13 @@ class ProductController extends Controller
             'categories' => ProductCategory::all(),
         ]);
     }
-    public function editOwn(Product $product)
+    public function editOwn(Request $request, Product $product)
     {
-        if(Auth::user()->isFridgeUser(Fridge::findOrFail($product->fridge_id))) {
+        if($request->user()->isFridgeUser(Fridge::findOrFail($product->fridge_id))) {
             return view('products.edit', [
-                'product' =>$product,
+                'product' => $product,
                 'manipulate_date' => Carbon::createFromFormat('Y-m-d', $product->expiration_date),
-                'fridges' => Auth::user()->fridges,
+                'fridges' => $request->user()->fridges()->get(),
                 'categories' => ProductCategory::all(),
             ]);
         }
@@ -75,11 +75,8 @@ class ProductController extends Controller
 
     public function updateOwn(ProductRequest $request, Product $product)
     {
-        if(Auth::user()->isFridgeUser(Fridge::findOrFail($request->fridge_id))){
-            $product->update($request->validated());
-            return redirect()->route('myfridges.indexOwn');
-        }
-        abort(403, 'Access denied');
+        $product->update($request->validated());
+        return redirect()->route('myfridges.indexOwn');
     }
 
     public function moveProductBetweenFridges(FridgeIdRequest $request, Product $product) {
@@ -88,7 +85,7 @@ class ProductController extends Controller
     }
 
     public function moveProductBetweenFridgesOwn(FridgeIdRequest $request, Product $product) {
-        if(Auth::user()->isFridgeUser(Fridge::findOrFail($request->fridge_id))) {
+        if($request->user()->isFridgeUser(Fridge::findOrFail($request->fridge_id))) {
             $product->update($request->validated());
             return redirect()->route('myfridges.indexOwn');
         }
@@ -101,9 +98,9 @@ class ProductController extends Controller
         return redirect()->route('myfridges.indexOwn');
     }
 
-    public function destroyOwn(Product $product)
+    public function destroyOwn(Request $request, Product $product)
     {
-        if(Auth::user()->isFridgeUser(Fridge::findOrFail($product->fridge_id))){
+        if($request->user()->isFridgeUser(Fridge::findOrFail($product->fridge_id))){
             $product->delete();
             return redirect()->route('myfridges.indexOwn');
         }

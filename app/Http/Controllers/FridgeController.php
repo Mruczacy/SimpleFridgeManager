@@ -2,8 +2,8 @@
     namespace App\Http\Controllers;
 
     use App\Models\Fridge;
-    use App\Http\Requests\FridgeRequest;
-    use Illuminate\Support\Facades\Auth;
+    use App\Http\Requests\StoreFridgeRequest;
+    use App\Http\Requests\UpdateFridgeRequest;
     use Illuminate\Http\Request;
     use Exception;
 
@@ -17,9 +17,9 @@
             ]);
         }
 
-        public function indexOwn()
+        public function indexOwn(Request $request)
         {
-            $fridges = Auth::user()->fridges()->with('products.category')->get()/*->sortBy('products.expiration_date', 'desc')*/;
+            $fridges = $request->user()->fridges()->with('products.category')->get()/*->sortBy('products.expiration_date', 'desc')*/;
             foreach($fridges as $fridge) {
                 $fridge->products = $fridge->products->sortBy('expiration_date')->values()->all();
             }
@@ -33,11 +33,11 @@
             return view('fridges.create');
         }
 
-        public function store(FridgeRequest $request)
+        public function store(StoreFridgeRequest $request)
         {
-            $fridge=Fridge::create($request->validated() + ['owner_id' => Auth::id()]);
+            $fridge=Fridge::create($request->validated() + ['owner_id' => $request->user()->id]);
             $fridge->save();
-            Auth::user()->fridges()->attach($fridge->id, ['is_manager' => 1]);
+            $request->user()->fridges()->attach($fridge->id, ['is_manager' => 1]);
 
             return redirect()->route('myfridges.indexOwn');
         }
@@ -50,10 +50,10 @@
             ]);
         }
 
-        public function showOwn(Fridge $fridge)
+        public function showOwn(Request $request, Fridge $fridge)
         {
             $fridge->products = $fridge->products->sortBy('expiration_date')->values()->all();
-            if(Auth::user()->isFridgeUser($fridge)) {
+            if($request->user()->isFridgeUser($fridge)) {
                 return view('fridges.show', [
                     'fridge' => $fridge
                 ]);
@@ -68,9 +68,9 @@
             ]);
         }
 
-        public function editOwn(Fridge $fridge)
+        public function editOwn(Request $request, Fridge $fridge)
         {
-            if(Auth::user()->isPermittedToManage($fridge)) {
+            if($request->user()->isPermittedToManage($fridge)) {
                 return view('fridges.edit', [
                     'fridge' => $fridge
                 ]);
@@ -78,17 +78,15 @@
             abort(403, 'Access denied');
         }
 
-        public function update(FridgeRequest $request, Fridge $fridge)
+        public function update(UpdateFridgeRequest $request, Fridge $fridge)
         {
             $fridge->update($request->validated());
             return redirect()->route('fridges.index');
         }
 
-        public function updateOwn(FridgeRequest $request, Fridge $fridge){
-            if(Auth::user()->isPermittedToManage($fridge)){
-                $fridge->update($request->validated());
-                return redirect()->route('myfridges.indexOwn');
-            }
+        public function updateOwn(UpdateFridgeRequest $request, Fridge $fridge){
+            $fridge->update($request->validated());
+            return redirect()->route('myfridges.indexOwn');
             abort(403, 'Access denied');
         }
 
@@ -98,9 +96,9 @@
             return redirect()->route('fridges.index');
         }
 
-        public function destroyOwn(Fridge $fridge)
+        public function destroyOwn(Request $request, Fridge $fridge)
         {
-            if(Auth::user()->isFridgeManager($fridge)){
+            if($request->user()->isFridgeManager($fridge)){
                 foreach ($fridge->users as $user) {
                     $user->fridges()->detach($fridge->id);
                 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use App\Models\Fridge;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -71,5 +72,9 @@ class User extends Authenticatable
 
     public function isEqualToAuth() : bool {
         return $this->id == Auth::id();
+    }
+
+    public function isAdmin() : bool {
+        return $this->role == UserRole::ADMIN;
     }
 }

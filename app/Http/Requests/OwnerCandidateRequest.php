@@ -13,7 +13,7 @@ class OwnerCandidateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->isFridgeOwner($this->fridge);
     }
 
     /**

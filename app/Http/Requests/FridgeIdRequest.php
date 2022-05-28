@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Fridge;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FridgeIdRequest extends FormRequest
@@ -13,7 +14,8 @@ class FridgeIdRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+
+        return $this->user()->isFridgeUser(Fridge::findOrFail($this->fridge_id)) || $this->user()->isAdmin();
     }
 
     /**

@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                @forelse ($users as $user)
+                @foreach ($users as $user)
                     @if($user->isFridgeOwner($fridge))
                         <strong>{{ $user->name }}</strong>
                         <strong>Właściciel (nie można go usunąć!)</strong>
@@ -59,7 +59,7 @@
                     <div class="input-group">
                         <strong>Wybierz użytkownika z listy</strong>
                         <select name="user_id">
-                            @forelse($users as $user)
+                            @foreach($users as $user)
                                 @if(!$user->isEqualToAuth())<option value="{{$user->id}}">{{"ID: ".$user->id." Nazwa: ".$user->name}}</option>@endif
                             @endforeach
                         </select>
@@ -84,7 +84,7 @@
                     <div class="input-group">
                         <strong>Wybierz użytkownika z listy</strong>
                         <select name="owner_id">
-                            @forelse($users as $user)
+                            @foreach($users as $user)
                                 @if(!$user->isEqualToAuth())<option value="{{$user->id}}">{{"ID: ".$user->id." Nazwa: ".$user->name}}</option>@endif
                             @endforeach
                         </select>

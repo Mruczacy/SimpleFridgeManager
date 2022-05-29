@@ -22,7 +22,7 @@
         <div class="alert alert-danger">
             <strong>Whoops!</strong> There were some problems with your input.<br><br>
             <ul>
-                @forelse ($errors->all() as $error)
+                @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <strong>Lodówka:</strong>
                     <select name="fridge_id">
-                        @forelse($fridges as $fridge)
+                        @foreach($fridges as $fridge)
                             <option value="{{ $fridge->id }}" @if($product->isActualFridge($fridge)) selected @endif>{{ $fridge->name }}</option>
                         @endforeach
                     </select>
@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <strong>Kategoria:</strong>
                     <select name="product_category_id">
-                        @forelse($categories as $category)
+                        @foreach($categories as $category)
                             <option value="{{ $category->id }}" @if($product->isActualCategory($category)) selected @endif>{{ $category->name }}</option>
                         @endforeach
                     </select>

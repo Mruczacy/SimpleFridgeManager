@@ -92,7 +92,9 @@ class MyFridgeRouteTest extends TestCase
     public function testUserCanAccessDestroyOwnOnItsFridge()
     {
         $user = User::factory()->create();
-        $fridge = Fridge::factory()->create();
+        $fridge = Fridge::factory()->create([
+            'owner_id' => $user->id,
+        ]);
         $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
         $response = $this->actingAs($user)->delete("/myfridges/{$fridge->id}");
         $this->assertNull(Fridge::find($fridge->id));

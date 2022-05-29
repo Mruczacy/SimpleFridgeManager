@@ -20,7 +20,7 @@
         ];
 
         public function products() : HasMany {
-            return $this->hasMany(Product::class);
+            return $this->hasMany(Product::class)->orderBy('expiration_date', 'asc');
         }
 
         public function users() : BelongsToMany {

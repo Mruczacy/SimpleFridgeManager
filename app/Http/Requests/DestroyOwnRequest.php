@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Fridge;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateOwnUserRequest extends FormRequest
+class DestroyOwnRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class UpdateOwnUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user->isEqualToAuth();
+        return $this->user()->isFridgeUser(Fridge::findOrFail($this->product->fridge_id));
     }
 
     /**
@@ -24,8 +25,7 @@ class UpdateOwnUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
-            'email' => 'required|email:rfc',
+            //
         ];
     }
 }

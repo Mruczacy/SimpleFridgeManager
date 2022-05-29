@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Enums\UserRole;
+use App\Http\Requests\IsEqualToAuthRequest;
 use App\Http\Requests\UserIsEqualToAuth;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UpdateOwnUserRequest;
@@ -16,16 +17,15 @@ class UserController extends Controller
 
     public function index() : View
     {
-
         return view('users.index', [
             'users' => User::paginate(5)
         ]);
     }
 
-    public function showMyAccount() : View
+    public function showMyAccount(Request $request) : View
     {
         return view('users.myaccount', [
-            'user' => Auth::user()
+            'user' => $request->user()
         ]);
     }
 
@@ -37,14 +37,11 @@ class UserController extends Controller
         ]);
     }
 
-    public function editOwn(User $user)
+    public function editOwn(IsEqualToAuthRequest $request, User $user)
     {
-        if($user->isEqualToAuth()) {
-            return view('users.edit', [
-                'user' => $user
-            ]);
-        }
-        abort(403, 'Access denied');
+        return view('users.edit', [
+            'user' => $user
+        ]);
     }
 
     public function update(UpdateUserRequest $request, User $user)
@@ -54,11 +51,8 @@ class UserController extends Controller
     }
 
     public function updateOwn(UpdateOwnUserRequest $request, User $user){
-        if($user->isEqualToAuth()) {
-            $user->update($request->validated());
-            return redirect()->route('users.showMyAccount');
-        }
-        abort(403, 'Access denied');
+        $user->update($request->validated());
+        return redirect()->route('users.showMyAccount');
     }
 
     public function destroy(User $user)
@@ -72,16 +66,13 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Konto zostało usunięte pomyślnie');
     }
 
-    public function destroyOwn(User $user){
-        if($user->isEqualToAuth()) {
-            $fridges= $user->managedFridges;
-            $user->fridges()->detach();
-            foreach($fridges as $fridge){
-                $fridge->delete();
-            }
-            $user->delete();
-            return redirect()->route('welcome')->with('success', 'Konto zostało usunięte pomyślnie');
+    public function destroyOwn(IsEqualToAuthRequest $request, User $user){
+        $fridges= $user->managedFridges;
+        $user->fridges()->detach();
+        foreach($fridges as $fridge){
+            $fridge->delete();
         }
-        abort(403, 'Access denied');
+        $user->delete();
+        return redirect()->route('welcome')->with('success', 'Konto zostało usunięte pomyślnie');
     }
 }

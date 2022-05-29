@@ -25,11 +25,11 @@ class ManagementController extends Controller {
     }
 
     public function showAMoveForm(Product $product, Fridge $fridge) {
-            return view('management.moveproduct', [
-                'fridges' => Fridge::all(),
-                'product' => $product,
-                'def_fridge' => $fridge,
-            ]);
+        return view('management.moveproduct', [
+            'fridges' => Fridge::all(),
+            'product' => $product,
+            'def_fridge' => $fridge,
+        ]);
     }
 
     public function showAMoveFormOwn(IsFridgeUserRequest $request,Product $product, Fridge $fridge) {

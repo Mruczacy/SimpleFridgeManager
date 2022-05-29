@@ -30,7 +30,7 @@
                     <th>Nazwa</th>
                     <th width="280px">Akcje</th>
                 </tr>
-                @foreach ($fridge->products as $product)
+                @forelse ($fridge->products as $product)
                 <tr>
                     <td>{{ $product->name }}</td>
                     <td>
@@ -59,7 +59,10 @@
 
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                    <div>Brak produktów w lodówce</div>
+                    <a class="btn btn-primary" href="{{ route('products.create', $fridge->id)}}">Wrzuć coś do lodówki!</a>
+                @endforelse
             </table>
         </div>
     </div>

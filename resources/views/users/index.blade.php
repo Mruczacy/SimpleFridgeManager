@@ -25,7 +25,7 @@
             <th>Email:</th>
             <th width="280px">Action</th>
         </tr>
-        @foreach ($users as $user)
+        @forelse ($users as $user)
         <tr>
             <td>{{ $user->id }}</td>
             <td>{{ $user->name }}</td>

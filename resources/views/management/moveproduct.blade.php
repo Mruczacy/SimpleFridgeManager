@@ -19,7 +19,7 @@
                     <div class="input-group">
                         <strong>Lodówka</strong>
                         <select name="fridge_id">
-                            @foreach($fridges as $fridge)
+                            @forelse($fridges as $fridge)
                                 <option value="{{ $fridge->id }}" @if($def_fridge == $fridge) selected @endif>{{ $fridge->name }}</option>
                             @endforeach
                         </select>
@@ -32,7 +32,7 @@
                     <div class="input-group">
                         <strong>Lodówka</strong>
                         <select name="fridge_id">
-                            @foreach($fridges as $fridge)
+                            @forelse($fridges as $fridge)
                                 <option value="{{ $fridge->id }}" @if($def_fridge == $fridge) selected @endif>{{ $fridge->name }}</option>
                             @endforeach
                         </select>

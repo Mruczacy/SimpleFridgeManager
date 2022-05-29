@@ -19,7 +19,7 @@
         <th>Nazwa</th>
         <th width="280px">Akcje</th>
     </tr>
-    @foreach ($categories as $category)
+    @forelse ($categories as $category)
     <tr>
         <td>{{ $category->id }}</td>
         <td>{{ $category->name }}</td>
@@ -35,7 +35,10 @@
             </form>
         </td>
     </tr>
-    @endforeach
+    @empty
+        <div>Brak kategorii</div>
+        <a class="btn btn-primary" href="{{route('categories.create')}}">Nie bądź żyd stwórz jakąś</a>
+    @endforelse
 </table>
 {!! $categories->links() !!}
 

@@ -58,20 +58,16 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $fridges= $user->managedFridges;
+        $user->ownFridges()->delete();
         $user->fridges()->detach();
-        foreach($fridges as $fridge){
-            $fridge->delete();
-        }
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Konto zostało usunięte pomyślnie');
     }
 
     public function destroyOwn(IsEqualToAuthRequest $request, User $user){
         $fridges= $user->managedFridges;
+        $user->ownFridges()->delete();
         $user->fridges()->detach();
-        foreach($fridges as $fridge){
-            $fridge->delete();
-        }
         $user->delete();
         return redirect()->route('welcome')->with('success', 'Konto zostało usunięte pomyślnie');
     }

@@ -21,7 +21,7 @@
             <th>ID Lodówki</th>
             <th width="280px">Akcje</th>
         </tr>
-        @foreach ($products as $product)
+        @forelse ($products as $product)
         <tr>
             <td>ID: {{ $product->id }}</td>
             <td>Nazwa: {{ $product->name }}</td>
@@ -40,7 +40,9 @@
                 </form>
             </td>
         </tr>
-        @endforeach
+        @empty
+            <div>Nie ma jeszcze żadnych produktów</div>
+        @endforelse
     </table>
 
 

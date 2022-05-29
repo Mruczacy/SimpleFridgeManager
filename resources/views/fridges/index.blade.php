@@ -19,11 +19,11 @@
         <th>Produkty</th>
         <th width="280px">Akcje</th>
     </tr>
-    @foreach ($fridges as $fridge)
+    @forelse ($fridges as $fridge)
     <tr>
         <td>{{ $fridge->name }}</td>
         <td>
-            @foreach ($fridge->products as $product)
+            @forelse ($fridge->products as $product)
                 <div>Nazwa: {{ $product->name }}</div>
                 <div>Data przydatności do spożycia: {{ $product->expiration_date }}</div>
                 <div>Kategoria: {{ $product->category->name ?? "Brak kategorii"  }}</div>
@@ -44,7 +44,10 @@
                         <button type="submit" class="btn btn-danger">Usuń produkt</button>
                     </form>
                 @endcan
-            @endforeach
+            @empty
+                <div>Nie masz jeszcze żadnych produktów</div>
+                <a class="btn btn-primary" href="{{ route('products.create', $fridge->id) }}">Włóż coś do lodówki!</a>
+            @endforelse
         <td>
             @can('isAdmin')
                 <form action="{{ route('fridges.destroy',$fridge->id) }}" method="POST">
@@ -86,7 +89,9 @@
             @endif
         </td>
     </tr>
-    @endforeach
+    @empty
+        <div>Nie masz jeszcze żadnych lodówek</div>
+    @endforelse
 </table>
 
 @endsection

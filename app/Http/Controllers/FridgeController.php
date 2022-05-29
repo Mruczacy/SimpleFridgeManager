@@ -90,9 +90,6 @@
 
         public function destroyOwn(IsFridgeOwnerRequest $request, Fridge $fridge)
         {
-            foreach ($fridge->users as $user) {
-                $user->fridges()->detach($fridge->id);
-            }
             $fridge->delete();
             return redirect()->route('myfridges.indexOwn');
         }

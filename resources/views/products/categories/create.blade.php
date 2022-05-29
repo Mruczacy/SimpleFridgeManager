@@ -16,7 +16,7 @@
     <div class="alert alert-danger">
         <strong>KURWAAAAAA!</strong> Jest problem z podanymi przez ciebie informacjami.<br><br>
         <ul>
-            @foreach ($errors->all() as $error)
+            @forelse ($errors->all() as $error)
                 <li>{{ $error }}</li>
             @endforeach
         </ul>

@@ -27,9 +27,9 @@
         @else
             <form action="{{ route('myfridges.updateOwn',$fridge->id) }}" method="POST">
         @endcan
-
                 @csrf
                 @method('PUT')
+
 
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12">

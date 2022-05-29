@@ -36,23 +36,20 @@
                     <td>
                         @can('isAdmin')
                         <form action="{{ route('products.destroy',$product->id) }}" method="POST">
-
-                            <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edytuj</a>
-                            <a class="btn btn-primary" href="{{ route('products.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
                             @csrf
                             @method('DELETE')
+                            <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edytuj</a>
+                            <a class="btn btn-primary" href="{{ route('products.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
+
 
                             <button type="submit" class="btn btn-danger">Usuń</button>
                         </form>
                         @else
                         <form action="{{ route('myproducts.destroyOwn',$product->id) }}" method="POST">
-
-                            <a class="btn btn-primary" href="{{ route('myproducts.editOwn',$product->id) }}">Edytuj</a>
-                            <a class="btn btn-primary" href="{{ route('myproducts.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
-
                             @csrf
                             @method('DELETE')
-
+                            <a class="btn btn-primary" href="{{ route('myproducts.editOwn',$product->id) }}">Edytuj</a>
+                            <a class="btn btn-primary" href="{{ route('myproducts.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
                             <button type="submit" class="btn btn-danger">Usuń</button>
                         </form>
                         @endcan

@@ -30,11 +30,11 @@
             <td>ID lodówki: {{ $product->fridge_id}}</td>
             <td>
                 <form action="{{ route('products.destroy',$product->id) }}" method="POST">
-
-                    <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edit</a>
-
                     @csrf
                     @method('DELETE')
+                    <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edit</a>
+
+
 
                     <button type="submit" class="btn btn-danger">Usuń</button>
                 </form>

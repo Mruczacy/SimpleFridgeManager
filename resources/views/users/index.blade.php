@@ -32,11 +32,11 @@
             <td>{{ $user->email }}</td>
             <td>
                 <form action="{{ route('users.destroy',$user->id) }}" method="POST">
-
-                    <a class="btn btn-primary" href="{{ route('users.edit',$user->id) }}">Edytuj</a>
-
                     @csrf
                     @method('DELETE')
+                    <a class="btn btn-primary" href="{{ route('users.edit',$user->id) }}">Edytuj</a>
+
+
 
                     <button type="submit" class="btn btn-danger">Usuń</button>
                 </form>

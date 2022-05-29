@@ -25,12 +25,9 @@
         <td>{{ $category->name }}</td>
         <td>
             <form action="{{ route('categories.destroy',$category->id) }}" method="POST">
-
-                <a class="btn btn-primary" href="{{ route('categories.edit',$category->id) }}">Edytuj</a>
-
                 @csrf
                 @method('DELETE')
-
+                <a class="btn btn-primary" href="{{ route('categories.edit',$category->id) }}">Edytuj</a>
                 <button type="submit" class="btn btn-danger">Usuń</button>
             </form>
         </td>

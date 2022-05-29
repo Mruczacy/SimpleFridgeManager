@@ -29,18 +29,18 @@
                 <div>Kategoria: {{ $product->category->name ?? "Brak kategorii"  }}</div>
                 @can('isAdmin')
                     <form action="{{ route('products.destroy',$product->id) }}" method="POST">
-                        <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edytuj produkt</a>
-                        <a class="btn btn-primary" href="{{ route('products.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
                         @csrf
                         @method('DELETE')
+                        <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edytuj produkt</a>
+                        <a class="btn btn-primary" href="{{ route('products.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
                         <button type="submit" class="btn btn-danger">Usuń produkt</button>
                     </form>
                 @else
                     <form action="{{ route('myproducts.destroyOwn',$product->id) }}" method="POST">
-                        <a class="btn btn-primary" href="{{ route('myproducts.editOwn',$product->id) }}">Edytuj produkt</a>
-                        <a class="btn btn-primary" href="{{ route('myproducts.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
                         @csrf
                         @method('DELETE')
+                        <a class="btn btn-primary" href="{{ route('myproducts.editOwn',$product->id) }}">Edytuj produkt</a>
+                        <a class="btn btn-primary" href="{{ route('myproducts.moveform',[$product->id,$fridge->id]) }}">Przenieś</a>
                         <button type="submit" class="btn btn-danger">Usuń produkt</button>
                     </form>
                 @endcan
@@ -51,24 +51,26 @@
         <td>
             @can('isAdmin')
                 <form action="{{ route('fridges.destroy',$fridge->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
                     <a class="btn btn-secondary" href="{{ route('fridges.show',$fridge->id) }}">Pokaż</a>
                     @if(Auth::user()->isFridgeUser($fridge))
                         <a class="btn btn-primary" href="{{  route('products.create', $fridge->id)  }}">Dodaj produkt</a>
                     @endif
 
-                    @csrf
-                    @method('DELETE')
+
                     <a class="btn btn-primary" href="{{ route('fridges.edit',$fridge->id) }}">Zmień nazwę</a>
                     <button type="submit" class="btn btn-danger">Usuń</button>
                 </form>
             @else
                 <form action="{{ route('myfridges.destroyOwn',$fridge->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
                     <a class="btn btn-secondary" href="{{ route('myfridges.showOwn',$fridge->id) }}">Pokaż</a>
                     @if(Auth::user()->isFridgeUser($fridge))
                         <a class="btn btn-primary" href="{{  route('products.create', $fridge->id)  }}">Dodaj produkt</a>
                     @endif
-                    @csrf
-                    @method('DELETE')
+
                     @if(Auth::user()->isFridgeOwner($fridge))
                         <a class="btn btn-primary" href="{{ route('myfridges.editOwn',$fridge->id) }}">Zmień nazwę</a>
                         <button type="submit" class="btn btn-danger">Usuń</button>

@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Fridge;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidateOwnerCandidateRequest extends FormRequest
+class DestroyOwnRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class ValidateOwnerCandidateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->isFridgeUser(Fridge::findOrFail($this->product->fridge_id));
     }
 
     /**
@@ -24,7 +25,7 @@ class ValidateOwnerCandidateRequest extends FormRequest
     public function rules()
     {
         return [
-            'owner_id' => 'required|numeric|exists:users,id',
+            //
         ];
     }
 }

@@ -6,27 +6,6 @@ use App\Models\Fridge;
 
 class FridgeObserver
 {
-    /**
-     * Handle the Fridge "created" event.
-     *
-     * @param  \App\Models\Fridge  $fridge
-     * @return void
-     */
-    public function created(Fridge $fridge)
-    {
-        //
-    }
-
-    /**
-     * Handle the Fridge "updated" event.
-     *
-     * @param  \App\Models\Fridge  $fridge
-     * @return void
-     */
-    public function updated(Fridge $fridge)
-    {
-        //
-    }
 
     /**
      * Handle the Fridge "deleted" event.
@@ -39,18 +18,6 @@ class FridgeObserver
         foreach ($fridge->users as $user) {
             $user->fridges()->detach($fridge->id);
         }
-        $fridge->delete();
-    }
-
-    /**
-     * Handle the Fridge "restored" event.
-     *
-     * @param  \App\Models\Fridge  $fridge
-     * @return void
-     */
-    public function restored(Fridge $fridge)
-    {
-        //
     }
 
     /**

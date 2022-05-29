@@ -65,7 +65,7 @@ class ProductsRouteTest extends TestCase {
         $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
         $response = $this->post("/products", [
             'name' => 'test',
-            'expiration_date' => Carbon::now()->addDays(2137),
+            'expiration_date' => now()->addDays(2137),
             'fridge_id' => $fridge->id,
         ]);
         $response->assertStatus(302);
@@ -82,7 +82,7 @@ class ProductsRouteTest extends TestCase {
         $fridge->users()->attach($user2, ['is_manager' => 1]);
         $response = $this->actingAs($user)->post("/products", [
             'name' => 'test',
-            'expiration_date' => Carbon::now()->addDays(2137),
+            'expiration_date' => now()->addDays(2137),
             'fridge_id' => $fridge->id,
             'product_category_id' => $category->id,
         ]);
@@ -100,7 +100,7 @@ class ProductsRouteTest extends TestCase {
         $user->fridges()->attach($fridge->id, ['is_manager' => 0]);
         $response = $this->actingAs($user)->post("/products", [
             'name' => 'testa',
-            'expiration_date' => Carbon::now()->addDays(2137),
+            'expiration_date' => now()->addDays(2137),
             'fridge_id' => $fridge->id,
             'product_category_id' => $category->id,
         ]);
@@ -141,7 +141,7 @@ class ProductsRouteTest extends TestCase {
         $product = Product::factory()->create();
         $response = $this->put("/products/{$product->id}", [
             'name' => 'test',
-            'expiration_date' => Carbon::now()->addDays(2137),
+            'expiration_date' => now()->addDays(2137),
             'fridge_id' => $product->fridge_id,
             'product_category_id' => $product->product_category_id,
         ]);
@@ -155,7 +155,7 @@ class ProductsRouteTest extends TestCase {
         $product = Product::factory()->create();
         $response = $this->actingAs($user)->put("/products/{$product->id}", [
             'name' => 'test',
-            'expiration_date' => Carbon::now()->addDays(2137),
+            'expiration_date' => now()->addDays(2137),
             'fridge_id' => $product->fridge_id,
             'product_category_id' => $product->product_category_id,
         ]);
@@ -168,7 +168,7 @@ class ProductsRouteTest extends TestCase {
         $product = Product::factory()->create();
         $response = $this->actingAs($user)->put("/products/{$product->id}", [
             'name' => 'test',
-            'expiration_date' => Carbon::now()->addDays(2137),
+            'expiration_date' => now()->addDays(2137),
             'fridge_id' => $product->fridge_id,
             'product_category_id' => $product->product_category_id,
         ]);

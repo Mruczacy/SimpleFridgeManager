@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidateFridgeIdRequest extends FormRequest
+class OwnerCandidateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class ValidateFridgeIdRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->isFridgeOwner($this->fridge);
     }
 
     /**
@@ -24,7 +24,7 @@ class ValidateFridgeIdRequest extends FormRequest
     public function rules()
     {
         return [
-            'fridge_id' => 'required|numeric|exists:fridges,id',
+            'owner_id' => 'required|numeric|exists:users,id',
         ];
     }
 }

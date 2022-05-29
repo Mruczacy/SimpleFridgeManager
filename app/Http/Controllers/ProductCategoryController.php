@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
-use App\Http\Requests\ValidateProductCategoryRequest;
+use App\Http\Requests\ProductCategoryRequest;
 
 class ProductCategoryController extends Controller
 {
@@ -21,13 +21,9 @@ class ProductCategoryController extends Controller
         return view('products.categories.create');
     }
 
-    public function store(ValidateProductCategoryRequest $request)
+    public function store(ProductCategoryRequest $request)
     {
-        $request->validated();
-
-        $productcategory = new ProductCategory();
-        $productcategory->name = $request->name;
-        $productcategory->save();
+        ProductCategory::create($request->validated())->save();
 
         return redirect()->route('categories.index');
     }
@@ -39,13 +35,9 @@ class ProductCategoryController extends Controller
         ]);
     }
 
-    public function update(ValidateProductCategoryRequest $request, ProductCategory $category)
+    public function update(ProductCategoryRequest $request, ProductCategory $category)
     {
-        $request->validated();
-
-        $category->name = $request->name;
-        $category->save();
-
+        $category->update($request->validated());
         return redirect()->route('myfridges.indexOwn');
     }
 

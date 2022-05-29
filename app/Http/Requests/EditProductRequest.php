@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Fridge;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidateProductCategoryRequest extends FormRequest
+class EditProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class ValidateProductCategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->isFridgeUser(Fridge::findOrFail($this->product->fridge_id));
     }
 
     /**
@@ -24,7 +25,7 @@ class ValidateProductCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255'
+            //
         ];
     }
 }

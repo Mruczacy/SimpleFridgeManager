@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Fridge;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidateFridgeRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class ValidateFridgeRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->isFridgeUser(Fridge::findOrFail($this->fridge_id)) || $this->user()->isAdmin();
     }
 
     /**
@@ -25,6 +26,9 @@ class ValidateFridgeRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'product_category_id' => 'nullable|numeric|exists:product_categories,id',
+            'fridge_id' => 'required|numeric|exists:fridges,id',
+            'expiration_date' => 'required|date',
         ];
     }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Enums\UserRole;
+use App\Http\Requests\IsEqualToAuthRequest;
+use App\Http\Requests\UserIsEqualToAuth;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UpdateOwnUserRequest;
 use Illuminate\Http\Request;
@@ -15,16 +17,15 @@ class UserController extends Controller
 
     public function index() : View
     {
-
         return view('users.index', [
             'users' => User::paginate(5)
         ]);
     }
 
-    public function showMyAccount() : View
+    public function showMyAccount(Request $request) : View
     {
         return view('users.myaccount', [
-            'user' => Auth::user()
+            'user' => $request->user()
         ]);
     }
 
@@ -36,39 +37,22 @@ class UserController extends Controller
         ]);
     }
 
-    public function editOwn(User $user)
+    public function editOwn(IsEqualToAuthRequest $request, User $user)
     {
-        if($user->isEqualToAuth()) {
-            return view('users.edit', [
-                'user' => $user
-            ]);
-        } else {
-            abort(403, 'Access denied');
-        }
+        return view('users.edit', [
+            'user' => $user
+        ]);
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $request->validated();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role = $request->role;
-        $user->update();
-
+        $user->update($request->validated());
         return redirect()->route('users.index');
     }
 
     public function updateOwn(UpdateOwnUserRequest $request, User $user){
-        if($user->isEqualToAuth()){
-            $request->validated();
-            $user->name = $request->name ?? $user->name;
-            $user->email = $request->email ?? $user->email;
-            $user->update();
-
-            return redirect()->route('users.showMyAccount');
-        } else {
-            abort(403, 'Access denied');
-        }
+        $user->update($request->validated());
+        return redirect()->route('users.showMyAccount');
     }
 
     public function destroy(User $user)
@@ -82,17 +66,13 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Konto zostało usunięte pomyślnie');
     }
 
-    public function destroyOwn(User $user){
-        if($user->isEqualToAuth()){
-            $fridges= $user->managedFridges;
-            $user->fridges()->detach();
-            foreach($fridges as $fridge){
-                $fridge->delete();
-            }
-            $user->delete();
-            return redirect()->route('welcome')->with('success', 'Twoje konto zostało usunięte pomyślnie');
-        } else {
-            abort(403, 'Access denied');
+    public function destroyOwn(IsEqualToAuthRequest $request, User $user){
+        $fridges= $user->managedFridges;
+        $user->fridges()->detach();
+        foreach($fridges as $fridge){
+            $fridge->delete();
         }
+        $user->delete();
+        return redirect()->route('welcome')->with('success', 'Konto zostało usunięte pomyślnie');
     }
 }

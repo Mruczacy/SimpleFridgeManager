@@ -12,7 +12,7 @@ class ProductRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return $this->user()->isFridgeUser(Fridge::findOrFail($this->fridge_id)) || $this->user()->isAdmin();
     }

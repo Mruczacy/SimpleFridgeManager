@@ -10,77 +10,89 @@ class UsersRouteTest extends TestCase {
 
         use RefreshDatabase;
 
-        public function testGuestCannotAccessIndex() {
+        public function testGuestCannotAccessIndex(): void
+        {
             $response = $this->get("/users");
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
 
-        public function testUserCannotAccessIndex() {
+        public function testUserCannotAccessIndex(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->get("/users");
             $response->assertStatus(403);
         }
 
-        public function testAdminCanAccessIndex() {
+        public function testAdminCanAccessIndex(): void
+        {
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
             $response = $this->actingAs($user)->get("/users");
             $response->assertStatus(200);
         }
 
-        public function testGuestCannotAccessShow() {
+        public function testGuestCannotAccessShow(): void
+        {
             $response = $this->get("/account");
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
 
-        public function testUserCanAccessShow() {
+        public function testUserCanAccessShow(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->get("/account");
             $response->assertStatus(200);
         }
 
-        public function testGuestCannotAccessEdit() {
+        public function testGuestCannotAccessEdit(): void
+        {
             $response = $this->get("/users/1/edit");
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
 
-        public function testUserCannotAccessEdit() {
+        public function testUserCannotAccessEdit(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->get("/account/{$user2->id}/edit");
             $response->assertStatus(403);
         }
 
-        public function testAdminCanAccessEdit(){
+        public function testAdminCanAccessEdit(): void
+        {
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->get("/users/{$user2->id}/edit");
             $response->assertStatus(200);
         }
 
-        public function testGuestCannotAccessEditOwn(){
+        public function testGuestCannotAccessEditOwn(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->get("/account/{$user->id}/edit");
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
 
-        public function testUserCanAccessEditOwn(){
+        public function testUserCanAccessEditOwn(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->get("/account/{$user->id}/edit");
             $response->assertStatus(200);
         }
 
-        public function testUserCannotAccessEditOwnOnSb(){
+        public function testUserCannotAccessEditOwnOnSb(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->get("/account/{$user2->id}/edit");
             $response->assertStatus(403);
         }
 
-        public function testGuestCannotAccessUpdate() {
+        public function testGuestCannotAccessUpdate(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->put("/users/{$user->id}", [
                 'name' => 'test',
@@ -90,7 +102,8 @@ class UsersRouteTest extends TestCase {
             $response->assertRedirect("/login");
         }
 
-        public function testUserCannotAccessUpdate() {
+        public function testUserCannotAccessUpdate(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->put("/users/{$user2->id}", [
@@ -100,7 +113,8 @@ class UsersRouteTest extends TestCase {
             $response->assertStatus(403);
         }
 
-        public function testAdminCanAccessUpdate() {
+        public function testAdminCanAccessUpdate(): void
+        {
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->put("/users/{$user2->id}", [
@@ -114,7 +128,8 @@ class UsersRouteTest extends TestCase {
             $this->assertTrue($test->role== UserRole::ADMIN);
         }
 
-        public function testGuestCannotAccessUpdateOwn() {
+        public function testGuestCannotAccessUpdateOwn(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->put("/account/{$user->id}", [
                 'name' => 'test',
@@ -124,7 +139,8 @@ class UsersRouteTest extends TestCase {
             $response->assertRedirect("/login");
         }
 
-        public function testUserCanAccessUpdateOwn() {
+        public function testUserCanAccessUpdateOwn(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->put("/account/{$user->id}", [
                 'name' => 'test',
@@ -134,7 +150,8 @@ class UsersRouteTest extends TestCase {
             $response->assertRedirect("/account");
         }
 
-        public function testUserCannotAccessUpdateOwnOnSb() {
+        public function testUserCannotAccessUpdateOwnOnSb(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->put("/account/{$user2->id}", [
@@ -144,21 +161,24 @@ class UsersRouteTest extends TestCase {
             $response->assertStatus(403);
         }
 
-        public function testGuestCannotAccessDestroy() {
+        public function testGuestCannotAccessDestroy(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->delete("/users/{$user->id}");
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
 
-        public function testUserCannotAccessDestroy() {
+        public function testUserCannotAccessDestroy(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->delete("/users/{$user2->id}");
             $response->assertStatus(403);
         }
 
-        public function testAdminCanAccessDestroy() {
+        public function testAdminCanAccessDestroy(): void
+        {
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->delete("/users/{$user2->id}");
@@ -166,14 +186,16 @@ class UsersRouteTest extends TestCase {
             $response->assertRedirect("/users");
         }
 
-        public function testGuestCannotAccessDestroyOwn() {
+        public function testGuestCannotAccessDestroyOwn(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->delete("/account/{$user->id}");
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
 
-        public function testUserCanAccessDestroyOwn() {
+        public function testUserCanAccessDestroyOwn(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->delete("/account/{$user->id}");
             $response->assertStatus(302);
@@ -181,7 +203,8 @@ class UsersRouteTest extends TestCase {
 
         }
 
-        public function testUserCannotAccessDestroyOwnOnSb() {
+        public function testUserCannotAccessDestroyOwnOnSb(): void
+        {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $user2= User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->delete("/account/{$user2->id}");

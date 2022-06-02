@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 class Createproductcategory extends Migration
 {
 
-    public function up()
+    public function up(): void
     {
         Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
@@ -20,7 +20,7 @@ class Createproductcategory extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn("product_category_id");

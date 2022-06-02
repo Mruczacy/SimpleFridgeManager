@@ -13,7 +13,7 @@ class FridgeObserver
      * @param  \App\Models\Fridge  $fridge
      * @return void
      */
-    public function deleted(Fridge $fridge)
+    public function deleted(Fridge $fridge): void
     {
         foreach ($fridge->users as $user) {
             $user->fridges()->detach($fridge->id);
@@ -26,7 +26,7 @@ class FridgeObserver
      * @param  \App\Models\Fridge  $fridge
      * @return void
      */
-    public function forceDeleted(Fridge $fridge)
+    public function forceDeleted(Fridge $fridge): void
     {
         foreach ($fridge->users as $user) {
             $user->fridges()->detach($fridge->id);

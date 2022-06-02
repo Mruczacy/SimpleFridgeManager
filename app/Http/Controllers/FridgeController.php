@@ -8,20 +8,22 @@
     use App\Http\Requests\IsFridgeUserRequest;
     use App\Http\Requests\IsPermittedToManageRequest;
     use Illuminate\Http\Request;
+    use Illuminate\View\View;
+    use Illuminate\Http\RedirectResponse;
 
     use Exception;
 
     class FridgeController extends Controller
     {
 
-        public function index()
+        public function index(): View
         {
             return view('fridges.index', [
                 'fridges' => Fridge::with('products.category')->get()
             ]);
         }
 
-        public function indexOwn(Request $request)
+        public function indexOwn(Request $request): View
         {
             $fridges = $request->user()->fridges()->with('products.category')->get()/*->sortBy('products.expiration_date', 'desc')*/;
             return view('fridges.index', [
@@ -29,12 +31,12 @@
             ]);
         }
 
-        public function create()
+        public function create(): View
         {
             return view('fridges.create');
         }
 
-        public function store(StoreFridgeRequest $request)
+        public function store(StoreFridgeRequest $request): RedirectResponse
         {
             $fridge=Fridge::create($request->validated() + ['owner_id' => $request->user()->id]);
             $fridge->save();
@@ -43,52 +45,53 @@
             return redirect()->route('myfridges.indexOwn');
         }
 
-        public function show(Fridge $fridge)
+        public function show(Fridge $fridge): View
         {
             return view('fridges.show', [
                 'fridge' => $fridge
             ]);
         }
 
-        public function showOwn(IsFridgeUserRequest $request, Fridge $fridge)
+        public function showOwn(IsFridgeUserRequest $request, Fridge $fridge): View
         {
             return view('fridges.show', [
                 'fridge' => $fridge
             ]);
         }
 
-        public function edit(Fridge $fridge)
+        public function edit(Fridge $fridge): View
         {
             return view('fridges.edit', [
                 'fridge' => $fridge
             ]);
         }
 
-        public function editOwn(IsPermittedToManageRequest $request, Fridge $fridge)
+        public function editOwn(IsPermittedToManageRequest $request, Fridge $fridge): View
         {
             return view('fridges.edit', [
                 'fridge' => $fridge
             ]);
         }
 
-        public function update(UpdateFridgeRequest $request, Fridge $fridge)
+        public function update(UpdateFridgeRequest $request, Fridge $fridge): RedirectResponse
         {
             $fridge->update($request->validated());
             return redirect()->route('fridges.index');
         }
 
-        public function updateOwn(UpdateFridgeRequest $request, Fridge $fridge){
+        public function updateOwn(UpdateFridgeRequest $request, Fridge $fridge): RedirectResponse
+        {
             $fridge->update($request->validated());
             return redirect()->route('myfridges.indexOwn');
         }
 
-        public function destroy(Fridge $fridge)
+        public function destroy(Fridge $fridge): RedirectResponse
         {
             $fridge->delete();
             return redirect()->route('fridges.index');
         }
 
-        public function destroyOwn(IsFridgeOwnerRequest $request, Fridge $fridge)
+        public function destroyOwn(IsFridgeOwnerRequest $request, Fridge $fridge): RedirectResponse
         {
             $fridge->delete();
             return redirect()->route('myfridges.indexOwn');

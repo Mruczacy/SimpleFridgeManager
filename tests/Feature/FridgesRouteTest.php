@@ -11,7 +11,7 @@ use App\Models\Fridge;
 class FridgesRouteTest extends TestCase
 {
     use RefreshDatabase;
-     public function testGuestAndUserCannotAccessFridgesList()
+     public function testGuestAndUserCannotAccessFridgesList(): void
      {
             $response = $this->get("/fridges");
             $response->assertStatus(302);
@@ -21,21 +21,21 @@ class FridgesRouteTest extends TestCase
             $response->assertStatus(403);
      }
 
-        public function testAdminCanAccessFridgesList()
+        public function testAdminCanAccessFridgesList(): void
         {
             $user = User::factory()->create(['role' => UserRole::ADMIN]);
             $response = $this->actingAs($user)->get("/fridges");
             $response->assertStatus(200);
         }
 
-        public function testGuestCannotAccessFridgesCreate()
+        public function testGuestCannotAccessFridgesCreate(): void
         {
             $response = $this->get("/fridges/create");
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
 
-        public function testUserAndAdminCanAccessFridgesCreate()
+        public function testUserAndAdminCanAccessFridgesCreate(): void
         {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->get("/fridges/create");
@@ -45,7 +45,7 @@ class FridgesRouteTest extends TestCase
             $response->assertStatus(200);
         }
 
-        public function testGuestCannotAccessFridgesShow()
+        public function testGuestCannotAccessFridgesShow(): void
         {
             $user= User::factory()->create();
             $fridge= Fridge::factory()->create(['owner_id' => $user->id]);
@@ -54,7 +54,7 @@ class FridgesRouteTest extends TestCase
             $response->assertRedirect("/login");
         }
 
-        public function testUserCannotAccessFridgesShow()
+        public function testUserCannotAccessFridgesShow(): void
         {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $user2 = User::factory()->create();
@@ -63,7 +63,7 @@ class FridgesRouteTest extends TestCase
             $response->assertStatus(403);
         }
 
-        public function testAdminCanAccessFridgesShow()
+        public function testAdminCanAccessFridgesShow(): void
         {
             $user2 = User::factory()->create();
             $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -72,7 +72,7 @@ class FridgesRouteTest extends TestCase
             $response->assertStatus(200);
         }
 
-        public function testGuestAndUserCannotAccessFridgesEdit()
+        public function testGuestAndUserCannotAccessFridgesEdit(): void
         {
             $user2 = User::factory()->create();
             $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -85,7 +85,7 @@ class FridgesRouteTest extends TestCase
             $response->assertStatus(403);
         }
 
-        public function testAdminCanAccessFridgesEdit()
+        public function testAdminCanAccessFridgesEdit(): void
         {
             $user2 = User::factory()->create();
             $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -94,7 +94,7 @@ class FridgesRouteTest extends TestCase
             $response->assertStatus(200);
         }
 
-        public function testGuestAndUserCannotDestroyFridges()
+        public function testGuestAndUserCannotDestroyFridges(): void
         {
             $user2 = User::factory()->create();
             $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -107,7 +107,7 @@ class FridgesRouteTest extends TestCase
             $response->assertStatus(403);
         }
 
-        public function testAdminCanDestroyFridges()
+        public function testAdminCanDestroyFridges(): void
         {
             $user2 = User::factory()->create();
             $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -118,7 +118,7 @@ class FridgesRouteTest extends TestCase
             $response->assertRedirect("/fridges");
         }
 
-        public function testGuestAndUsersCannotUpdateFridges()
+        public function testGuestAndUsersCannotUpdateFridges(): void
         {
             $user2 = User::factory()->create();
             $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -134,7 +134,7 @@ class FridgesRouteTest extends TestCase
             $response->assertStatus(403);
         }
 
-        public function testAdminCanUpdateFridges()
+        public function testAdminCanUpdateFridges(): void
         {
             $user2 = User::factory()->create();
             $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -148,14 +148,14 @@ class FridgesRouteTest extends TestCase
             $response->assertRedirect("/fridges");
         }
 
-        public function testGuestCannotAccessStoreFridges()
+        public function testGuestCannotAccessStoreFridges(): void
         {
             $response = $this->post("/fridges");
             $response->assertStatus(302);
             $response->assertRedirect("/login");
         }
 
-        public function testUserCanStoreFridges()
+        public function testUserCanStoreFridges(): void
         {
             $user = User::factory()->create(['role' => UserRole::USER]);
             $response = $this->actingAs($user)->post("/fridges", [

@@ -14,17 +14,21 @@ use App\Http\Requests\UserRankCandidateRequest;
 use App\Http\Requests\OwnerCandidateRequest;
 use App\Http\Requests\ResignUserFromFridgeRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ManagementController extends Controller {
 
-    public function showAManageForm(IsFridgeOwnerRequest $request,Fridge $fridge) {
+    public function showAManageForm(IsFridgeOwnerRequest $request,Fridge $fridge): View
+    {
         return view('management.manage', [
             'fridge' => $fridge,
             'users' => $fridge->users()->get(),
         ]);
     }
 
-    public function showAMoveForm(Product $product, Fridge $fridge) {
+    public function showAMoveForm(Product $product, Fridge $fridge): View
+    {
         return view('management.moveproduct', [
             'fridges' => Fridge::all(),
             'product' => $product,
@@ -32,7 +36,8 @@ class ManagementController extends Controller {
         ]);
     }
 
-    public function showAMoveFormOwn(IsFridgeUserRequest $request,Product $product, Fridge $fridge) {
+    public function showAMoveFormOwn(IsFridgeUserRequest $request,Product $product, Fridge $fridge): View
+    {
         return view('management.moveproduct', [
             'fridges' => $request->user()->fridges,
             'def_fridge' => $fridge,
@@ -40,31 +45,32 @@ class ManagementController extends Controller {
         ]);
     }
 
-    public function attachUserToFridge(Fridge $fridge, UserCandidateRequest $request)
+    public function attachUserToFridge(Fridge $fridge, UserCandidateRequest $request): RedirectResponse
     {
         $validated=$request->validated();
         $fridge->users()->attach($validated['user_id'], ['is_manager' => $validated['is_manager']]);
         return redirect()->route('myfridges.indexOwn');
     }
 
-    public function detachUserFromFridge(DetachUserFromFridgeRequest $request, Fridge $fridge, User $user)
+    public function detachUserFromFridge(DetachUserFromFridgeRequest $request, Fridge $fridge, User $user): RedirectResponse
     {
         $fridge->users()->detach($user->id);
         return redirect()->route('myfridges.indexOwn');
     }
 
-    public function resignFromFridge(ResignUserFromFridgeRequest $request, Fridge $fridge)
+    public function resignFromFridge(ResignUserFromFridgeRequest $request, Fridge $fridge): RedirectResponse
     {
         $fridge->users()->detach($request->user()->id);
         return redirect()->route('myfridges.indexOwn');
     }
 
-    public function transferOwnership(Fridge $fridge, OwnerCandidateRequest $request){
+    public function transferOwnership(Fridge $fridge, OwnerCandidateRequest $request): RedirectResponse
+    {
         $fridge->update($request->validated());
         return redirect()->route('myfridges.indexOwn');
     }
 
-    public function updateUserRank(Fridge $fridge, UserRankCandidateRequest $request)
+    public function updateUserRank(Fridge $fridge, UserRankCandidateRequest $request): RedirectResponse
     {
         $validated=$request->validated();
         $fridge->users()->updateExistingPivot($validated['user_id'], ['is_manager' => $validated['is_manager']]);

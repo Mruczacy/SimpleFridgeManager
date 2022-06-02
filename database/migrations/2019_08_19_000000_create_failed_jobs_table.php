@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateFailedJobsTable extends Migration
 {
 
-    public function up()
+    public function up(): void
     {
         Schema::create('failed_jobs', function (Blueprint $table) {
             $table->id();
@@ -20,7 +20,7 @@ class CreateFailedJobsTable extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('failed_jobs');
     }

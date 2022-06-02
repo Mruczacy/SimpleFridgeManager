@@ -15,26 +15,30 @@ use Carbon\Carbon;
 class ProductsRouteTest extends TestCase {
 
     use RefreshDatabase;
-    public function testGuestCannotAccessIndex() {
+    public function testGuestCannotAccessIndex(): void
+    {
         $response = $this->get("/products");
 
         $response->assertStatus(302);
         $response->assertRedirect("/login");
     }
 
-    public function testUserCannotAccessIndex() {
+    public function testUserCannotAccessIndex(): void
+    {
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get("/products");
         $response->assertStatus(403);
     }
 
-    public function testAdminCanAccessIndex() {
+    public function testAdminCanAccessIndex(): void
+    {
         $user = User::factory()->create(['role' => UserRole::ADMIN]);
         $response = $this->actingAs($user)->get("/products");
         $response->assertStatus(200);
     }
 
-    public function testGuestCannotAccessCreate() {
+    public function testGuestCannotAccessCreate(): void
+    {
         $user= User::factory()->create();
         $fridge= Fridge::factory()->create(['owner_id' => $user->id]);
         $response = $this->get("/products/create/{$fridge->id}");
@@ -42,7 +46,8 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/login");
     }
 
-    public function testUserCanAccessCreateInUsedFridge() {
+    public function testUserCanAccessCreateInUsedFridge(): void
+    {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
         $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -51,7 +56,8 @@ class ProductsRouteTest extends TestCase {
         $user->fridges()->detach($fridge);
         $response->assertStatus(200);
     }
-    public function testUserCanotAccessCreateOnSbsFridge() {
+    public function testUserCanotAccessCreateOnSbsFridge(): void
+    {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
         $fridge= Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -59,7 +65,7 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(403);
     }
 
-    public function testGuestCannotAccessStore()
+    public function testGuestCannotAccessStore(): void
     {
         $user= User::factory()->create();
         $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
@@ -73,7 +79,7 @@ class ProductsRouteTest extends TestCase {
 
     }
 
-    public function testUserCannotAccessStoreProductOnSbsFridge()
+    public function testUserCannotAccessStoreProductOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -91,7 +97,7 @@ class ProductsRouteTest extends TestCase {
         $fridge->users()->detach();
     }
 
-    public function testUserCanAccessStoreProductOnItsFridge()
+    public function testUserCanAccessStoreProductOnItsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -112,7 +118,7 @@ class ProductsRouteTest extends TestCase {
 
     }
 
-    public function testGuestCannotAccessEdit()
+    public function testGuestCannotAccessEdit(): void
     {
         $product = Product::factory()->create();
         $response = $this->get("/products/{$product->id}/edit");
@@ -120,7 +126,7 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/login");
     }
 
-    public function testUserCannotAccessEdit()
+    public function testUserCannotAccessEdit(): void
     {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $product = Product::factory()->create();
@@ -128,7 +134,7 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(403);
     }
 
-    public function testAdminCanAccessEdit()
+    public function testAdminCanAccessEdit(): void
     {
         $user = User::factory()->create(['role' => UserRole::ADMIN]);
         $product = Product::factory()->create();
@@ -136,7 +142,7 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(200);
     }
 
-    public function testGuestCannotAccessUpdate()
+    public function testGuestCannotAccessUpdate(): void
     {
         $product = Product::factory()->create();
         $response = $this->put("/products/{$product->id}", [
@@ -149,7 +155,7 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/login");
     }
 
-    public function testUserCannotAccessUpdate()
+    public function testUserCannotAccessUpdate(): void
     {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $product = Product::factory()->create();
@@ -162,7 +168,7 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(403);
     }
 
-    public function testAdminCanAccessUpdate()
+    public function testAdminCanAccessUpdate(): void
     {
         $user = User::factory()->create(['role' => UserRole::ADMIN]);
         $product = Product::factory()->create();
@@ -178,7 +184,8 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/myfridges");
     }
 
-    public function testGuestCannotAccessMoveProductsBetweenFridges() {
+    public function testGuestCannotAccessMoveProductsBetweenFridges(): void
+    {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
         $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -193,7 +200,8 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/login");
     }
 
-    public function testUserCannotAccessMoveProductsBetweenFridges() {
+    public function testUserCannotAccessMoveProductsBetweenFridges(): void
+    {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $user2 = User::factory()->create();
         $user3 = User::factory()->create();
@@ -208,7 +216,8 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(403);
     }
 
-    public function testAdminCanAccessMoveProductsBetweenFridges() {
+    public function testAdminCanAccessMoveProductsBetweenFridges(): void
+    {
         $user = User::factory()->create(['role' => UserRole::ADMIN]);
         $user2 = User::factory()->create();
         $user3 = User::factory()->create();
@@ -226,7 +235,8 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/fridges");
     }
 
-    public function testGuestCannotMoveProductsBetweenFridgesOwn(){
+    public function testGuestCannotMoveProductsBetweenFridgesOwn(): void
+    {
         $user= User::factory()->create();
         $user2 = User::factory()->create();
         $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
@@ -241,7 +251,8 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/login");
     }
 
-    public function testUserCanMoveProductsBetweenItsOwnFridges() {
+    public function testUserCanMoveProductsBetweenItsOwnFridges(): void
+    {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $user2 = User::factory()->create();
         $fridge = Fridge::factory()->create(['owner_id' => $user2->id]);
@@ -260,7 +271,8 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/myfridges");
     }
 
-    public function testUserCannotMoveProductsBetweenFridgesOfOtherUsers() {
+    public function testUserCannotMoveProductsBetweenFridgesOfOtherUsers(): void
+    {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $user2 = User::factory()->create(['role' => UserRole::USER]);
         $user3 = User::factory()->create(['role' => UserRole::USER]);
@@ -278,7 +290,7 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(403);
     }
 
-    public function testGuestCannotAccessDestroy()
+    public function testGuestCannotAccessDestroy(): void
     {
         $product = Product::factory()->create();
         $response = $this->delete("/products/{$product->id}");
@@ -286,7 +298,7 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/login");
     }
 
-    public function testUserCannotAccessDestroy()
+    public function testUserCannotAccessDestroy(): void
     {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $product = Product::factory()->create();
@@ -294,7 +306,7 @@ class ProductsRouteTest extends TestCase {
         $response->assertStatus(403);
     }
 
-    public function testAdminCanAccessDestroy()
+    public function testAdminCanAccessDestroy(): void
     {
         $user = User::factory()->create(['role' => UserRole::ADMIN]);
         $product = Product::factory()->create();

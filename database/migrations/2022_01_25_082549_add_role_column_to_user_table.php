@@ -8,14 +8,14 @@ use App\Enums\UserRole;
 class AddRoleColumnToUserTable extends Migration
 {
 
-    public function up()
+    public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
             $table->enum('role', UserRole::Types)->default(UserRole::USER);
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('role');

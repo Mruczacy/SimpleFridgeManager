@@ -15,14 +15,16 @@ use Carbon\Carbon;
 class MyProductsRouteTest extends TestCase {
 
     use RefreshDatabase;
-    public function testGuestCannotAccessEditOwn() {
+    public function testGuestCannotAccessEditOwn(): void
+    {
         $product = Product::factory()->create();
         $response = $this->get("/myproducts/{$product->id}/edit");
         $response->assertStatus(302);
         $response->assertRedirect("/login");
     }
 
-    public function testUserCanAccessEditOwn() {
+    public function testUserCanAccessEditOwn(): void
+    {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
         $fridge->users()->attach($user, ['is_manager' => false]);
@@ -33,7 +35,8 @@ class MyProductsRouteTest extends TestCase {
         $response->assertStatus(200);
     }
 
-    public function testUserCannotAccessEditOwnOnSbs() {
+    public function testUserCannotAccessEditOwnOnSbs(): void
+    {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $user2 = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
@@ -46,7 +49,8 @@ class MyProductsRouteTest extends TestCase {
         $response->assertStatus(403);
     }
 
-    public function testGuestCannotAccessUpdateOwn() {
+    public function testGuestCannotAccessUpdateOwn(): void
+    {
         $category = ProductCategory::factory()->create();
         $category2 = ProductCategory::factory()->create();
         $product = Product::factory()->create([
@@ -64,7 +68,8 @@ class MyProductsRouteTest extends TestCase {
         $response->assertRedirect("/login");
     }
 
-    public function testUserCanAccessUpdateOwn() {
+    public function testUserCanAccessUpdateOwn(): void
+    {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
         $fridge->users()->attach($user, ['is_manager' => false]);
@@ -88,7 +93,8 @@ class MyProductsRouteTest extends TestCase {
         $response->assertRedirect("/myfridges");
     }
 
-    public function testUserCannotAccessUpdateOwnOnSbs() {
+    public function testUserCannotAccessUpdateOwnOnSbs(): void
+    {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $user2 = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
@@ -112,14 +118,16 @@ class MyProductsRouteTest extends TestCase {
         $response->assertStatus(403);
     }
 
-    public function testGuestCannotAccessDestroyOwn() {
+    public function testGuestCannotAccessDestroyOwn(): void
+    {
         $product = Product::factory()->create();
         $response = $this->delete("/myproducts/{$product->id}");
         $response->assertStatus(302);
         $response->assertRedirect("/login");
     }
 
-    public function testUserCanAccessDestroyOwn() {
+    public function testUserCanAccessDestroyOwn(): void
+    {
         $user = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
         $fridge->users()->attach($user, ['is_manager' => true]);
@@ -130,7 +138,8 @@ class MyProductsRouteTest extends TestCase {
         $this->assertNull(Product::find($product->id));
     }
 
-    public function testUserCannotAccessDestroyOwnOnSbs() {
+    public function testUserCannotAccessDestroyOwnOnSbs(): void
+    {
         $user = User::factory()->create(['role' => UserRole::USER]);
 
         $user2 = User::factory()->create(['role' => UserRole::USER]);

@@ -15,7 +15,7 @@ class ManagementsRouteTest extends TestCase
 {
 
     use RefreshDatabase;
-    public function testGuestCannotGetAManageForm()
+    public function testGuestCannotGetAManageForm(): void
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
@@ -24,7 +24,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function testUserCannotGetAManageFormOnSbsFridge()
+    public function testUserCannotGetAManageFormOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -34,7 +34,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testUserCanGetAManageFormOnOwnFridge()
+    public function testUserCanGetAManageFormOnOwnFridge(): void
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
@@ -43,7 +43,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testGuestCannotGetAMoveForm()
+    public function testGuestCannotGetAMoveForm(): void
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
@@ -53,7 +53,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function testUserCannotGetAMoveForm()
+    public function testUserCannotGetAMoveForm(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -64,7 +64,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testAdminCanGetAMoveForm()
+    public function testAdminCanGetAMoveForm(): void
     {
         $user = User::factory()->create(['role' => UserRole::ADMIN]);
         $user2 = User::factory()->create();
@@ -75,7 +75,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testGuestCannotGetAMoveFormOnSbsFridge()
+    public function testGuestCannotGetAMoveFormOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -87,7 +87,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function testUserCannotGetAMoveFormOnSbsFridge()
+    public function testUserCannotGetAMoveFormOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -98,7 +98,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testUserCanGetAMoveFormOnSbsFridge()
+    public function testUserCanGetAMoveFormOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -109,7 +109,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function testGuestCannotAttachFridgeToSb()
+    public function testGuestCannotAttachFridgeToSb(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -122,7 +122,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertRedirect("/login");
     }
 
-    public function testNoOwnerUserCannotAttachFridgeToSb()
+    public function testNoOwnerUserCannotAttachFridgeToSb(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -136,7 +136,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testOwnerUserCanAttachFridgeToSb()
+    public function testOwnerUserCanAttachFridgeToSb(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -151,7 +151,7 @@ class ManagementsRouteTest extends TestCase
         $this->assertTrue($user2->fridges->contains($fridge->id));
     }
 
-    public function testGuestCannotDetachFridgeFromSb()
+    public function testGuestCannotDetachFridgeFromSb(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -161,7 +161,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertRedirect("/login");
     }
 
-    public function testNoOwnerUserCannotDetachFridgeFromSb()
+    public function testNoOwnerUserCannotDetachFridgeFromSb(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -172,7 +172,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testOwnerUserCanDetachFridgeFromSb()
+    public function testOwnerUserCanDetachFridgeFromSb(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -185,7 +185,7 @@ class ManagementsRouteTest extends TestCase
         $this->assertFalse($user2->fridges->contains($fridge->id));
     }
 
-    public function testGuestCannotResignFromSbsFridge()
+    public function testGuestCannotResignFromSbsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -196,7 +196,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertRedirect("/login");
     }
 
-    public function testUserCannotResignFromSbsFridge()
+    public function testUserCannotResignFromSbsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -206,7 +206,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testUserCanResignFromAccessibleFridge()
+    public function testUserCanResignFromAccessibleFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -218,7 +218,7 @@ class ManagementsRouteTest extends TestCase
         $this->assertFalse($fridge->users->contains($user->id));
     }
 
-    public function testOwnerCannotResignFromAccessibleFridge()
+    public function testOwnerCannotResignFromAccessibleFridge(): void
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create(['owner_id' => $user->id]);
@@ -227,7 +227,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testGuestCannotTransferOwnerShip()
+    public function testGuestCannotTransferOwnerShip(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -240,7 +240,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertRedirect("/login");
     }
 
-    public function testUserCannotTransferOwnershipOnSbsFridge()
+    public function testUserCannotTransferOwnershipOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -252,7 +252,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testOwnerCanTransferOwnership()
+    public function testOwnerCanTransferOwnership(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -267,7 +267,7 @@ class ManagementsRouteTest extends TestCase
         $this->assertTrue($fridge->owner_id == $user2->id);
     }
 
-    public function testGuestCannotUpdateUserRank()
+    public function testGuestCannotUpdateUserRank(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -281,7 +281,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertRedirect("/login");
     }
 
-    public function testUserCannotUpdateUserRankOnSbsFridge()
+    public function testUserCannotUpdateUserRankOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();
@@ -294,7 +294,7 @@ class ManagementsRouteTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function testOwnerCanUpdateUserRank()
+    public function testOwnerCanUpdateUserRank(): void
     {
         $user = User::factory()->create();
         $user2 = User::factory()->create();

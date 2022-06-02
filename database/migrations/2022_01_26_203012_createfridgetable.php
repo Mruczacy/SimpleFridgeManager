@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 class Createfridgetable extends Migration
 {
 
-    public function up()
+    public function up(): void
     {
         Schema::create('fridges', function (Blueprint $table) {
             $table->bigIncrements('id');
@@ -29,7 +29,7 @@ class Createfridgetable extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('fridge_id');

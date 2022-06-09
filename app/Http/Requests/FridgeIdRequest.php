@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use App\Models\Fridge;
@@ -23,7 +25,7 @@ class FridgeIdRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'fridge_id' => 'required|numeric|exists:fridges,id',

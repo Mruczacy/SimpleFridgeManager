@@ -10,7 +10,7 @@ use App\Http\Requests\ChangeLanguageRequest;
 
 class LanguageController extends Controller
 {
-    public function changeLanguage(ChangeLanguageRequest $request): RedirectResponse
+    public function __invoke(ChangeLanguageRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         session()->put('lang', $validated['lang']);

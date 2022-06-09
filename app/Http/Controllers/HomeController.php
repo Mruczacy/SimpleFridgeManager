@@ -9,7 +9,7 @@ use Illuminate\Http\RedirectResponse;
 
 class HomeController extends Controller
 {
-    public function index(): RedirectResponse
+    public function __invoke(): RedirectResponse
     {
         return redirect()->route('myfridges.indexOwn');
     }

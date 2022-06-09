@@ -25,7 +25,7 @@ class ManagementController extends Controller {
     {
         return view('management.manage', [
             'fridge' => $fridge,
-            'users' => $fridge->users()->get(),
+            'users' => $fridge->users()->get()->only('id', 'name'),
         ]);
     }
 
@@ -80,5 +80,3 @@ class ManagementController extends Controller {
     }
 
 }
-
-?>

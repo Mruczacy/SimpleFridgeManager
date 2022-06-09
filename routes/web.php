@@ -14,7 +14,7 @@ Route::get('/', function () {
 })->name("welcome");
 
 Auth::routes();
-Route::get('/language-change', [LanguageController::class, 'changeLanguage'])->name('changeLanguage');
+Route::get('/language-change', LanguageController::class)->name('changeLanguage');
 Route::middleware(['auth'])->group(function () {
     Route::prefix('account')->controller(UserController::class)->name('users.')->group(function () {
         Route::put('/{user}', 'updateOwn')->name('updateOwn');
@@ -60,4 +60,4 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', HomeController::class)->name('home');

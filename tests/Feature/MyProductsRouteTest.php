@@ -154,5 +154,3 @@ class MyProductsRouteTest extends TestCase {
         $response->assertStatus(403);
     }
 }
-
-?>

@@ -173,4 +173,3 @@ class ProductsCategoryRouteTest extends TestCase {
         $this->assertNull(ProductCategory::find($productcategory->id));
     }
 }
-?>

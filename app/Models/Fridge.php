@@ -40,5 +40,3 @@ class Fridge extends Model {
     }
 
 }
-
-?>

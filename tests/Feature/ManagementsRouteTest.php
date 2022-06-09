@@ -311,5 +311,3 @@ class ManagementsRouteTest extends TestCase
         $this->assertTrue($fridge->managers->contains($user2->id));
     }
 }
-
-?>

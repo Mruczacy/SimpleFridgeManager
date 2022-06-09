@@ -141,5 +141,3 @@ return [
         'expiration_date' => 'data ważności'
     ],
 ];
-
-?>

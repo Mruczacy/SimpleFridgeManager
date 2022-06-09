@@ -12,5 +12,3 @@ class UserRole
         self::USER => 'User',
     ];
 }
-
-?>

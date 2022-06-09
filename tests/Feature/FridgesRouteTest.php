@@ -169,4 +169,3 @@ class FridgesRouteTest extends TestCase
             $this->assertNotNull(Fridge::find($user->fridges->first()->id));
         }
 }
-?>

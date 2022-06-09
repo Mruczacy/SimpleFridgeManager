@@ -318,4 +318,3 @@ class ProductsRouteTest extends TestCase {
         $response->assertRedirect("/myfridges");
     }
 }
-?>

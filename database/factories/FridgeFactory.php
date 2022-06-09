@@ -18,4 +18,3 @@ class FridgeFactory extends Factory
         ];
     }
 }
-?>

@@ -100,5 +100,3 @@ class FridgeController extends Controller
         return redirect()->route('myfridges.indexOwn');
     }
 }
-
-?>

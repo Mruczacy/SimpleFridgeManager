@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Simple Fridge Manager') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -24,7 +24,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'Simple Fridge Manager') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -38,6 +38,17 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{__('Language')}}
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('changeLanguage')}}?lang=en">English</a>
+                                <a class="dropdown-item" href="{{ route('changeLanguage') }}?lang=pl">Polski</a>
+                            </div>
+
+                        </li>
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
@@ -59,13 +70,13 @@
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
-                                    <a class="dropdown-item" href="{{ route('users.showMyAccount', Auth::id()) }}">Moje konto</a>
-                                    <a class="dropdown-item" href="{{ route('myfridges.indexOwn') }}">Moje lodówki</a>
+                                    <a class="dropdown-item" href="{{ route('users.showMyAccount', Auth::id()) }}">{{__('My Account')}}</a>
+                                    <a class="dropdown-item" href="{{ route('myfridges.indexOwn') }}">{{__('My Fridges')}}</a>
                                     @can('isAdmin')
-                                        <a class="dropdown-item" href="{{ route('categories.index') }}">Kategorie</a>
-                                        <a class="dropdown-item" href="{{ route('fridges.index') }}">Lodówki</a>
-                                        <a class="dropdown-item" href="{{ route('products.index') }}">Produkty</a>
-                                        <a class="dropdown-item" href="{{ route('users.index') }}">Użytkownicy</a>
+                                        <a class="dropdown-item" href="{{ route('categories.index') }}">{{__('Categories')}}</a>
+                                        <a class="dropdown-item" href="{{ route('fridges.index') }}">{{__('Fridges')}}</a>
+                                        <a class="dropdown-item" href="{{ route('products.index') }}">{{__('Products')}}</a>
+                                        <a class="dropdown-item" href="{{ route('users.index') }}">{{__('Users')}}</a>
                                     @endcan
 
 
@@ -80,6 +91,7 @@
                                     </form>
 
                                 </div>
+
                             </li>
                         @endguest
                     </ul>

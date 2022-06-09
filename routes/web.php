@@ -7,13 +7,14 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\FridgeController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LanguageController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name("welcome");
 
 Auth::routes();
-
+Route::get('/language-change', [LanguageController::class, 'changeLanguage'])->name('changeLanguage');
 Route::middleware(['auth'])->group(function () {
     Route::prefix('account')->controller(UserController::class)->name('users.')->group(function () {
         Route::put('/{user}', 'updateOwn')->name('updateOwn');

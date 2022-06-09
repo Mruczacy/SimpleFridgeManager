@@ -4,14 +4,14 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Edytuj użytkownika</h2>
+                <h2>{{__('Edit User')}}</h2>
             </div>
             <div class="pull-right">
                 @can('isAdmin')
-                <a class="btn btn-primary" href="{{ route('users.index') }}">Wróć</a>
+                <a class="btn btn-primary" href="{{ route('users.index') }}">{{__('Go Back')}}</a>
                 @endcan
                 @can('isUser')
-                <a class="btn btn-primary" href="{{ route('home') }}">Wróć</a>
+                <a class="btn btn-primary" href="{{ route('home') }}">{{__('Go Back')}}</a>
                 @endcan
             </div>
         </div>
@@ -19,7 +19,7 @@
 
     @if ($errors->any())
         <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <strong>{{__('OOPS')}}</strong>{{__('There is a problem with your input')}}<br><br>
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -28,7 +28,6 @@
         </div>
     @endif
     @can('isAdmin')
-    a
         <form action="{{ route('users.update',$user->id) }}" method="POST">
     @else
         <form action="{{ route('users.updateOwn',$user->id) }}" method="POST">
@@ -39,20 +38,20 @@
          <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Nazwa:</strong>
-                    <input type="text" name="name" value="{{ $user->name }}" class="form-control" placeholder="Name">
+                    <strong>{{__('Name')}}:</strong>
+                    <input type="text" name="name" value="{{ $user->name }}" class="form-control" placeholder="{{__('Name')}}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Email:</strong>
-                    <textarea class="form-control" style="height:150px" name="email" placeholder="Email">{{ $user->email }}</textarea>
+                    <strong>{{__('Email Address')}}:</strong>
+                    <textarea class="form-control" style="height:150px" name="email" placeholder="{{__('Email Address')}}">{{ $user->email }}</textarea>
                 </div>
             </div>
             @can('isAdmin')
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Role:</strong>
+                        <strong>{{__('Roles')}}:</strong>
                         <select name="role">
                             <option value="{{$roles::ADMIN}}" @if($user->isActualRank($roles::ADMIN)) selected @endif>{{ $roles::ADMIN }}</option>
                             <option value="{{$roles::USER}}" @if($user->isActualRank($roles::USER)) selected @endif>{{ $roles::USER }}</option>
@@ -61,7 +60,7 @@
                 </div>
             @endcan
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-              <button type="submit" class="btn btn-primary">Potwierdź</button>
+              <button type="submit" class="btn btn-primary">{{__('Submit')}}</button>
             </div>
         </div>
 

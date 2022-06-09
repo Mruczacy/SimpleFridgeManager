@@ -4,14 +4,14 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Edytuj produkt</h2>
+                <h2>{{__('Edit Product')}}</h2>
             </div>
             <div class="pull-right">
                 @can('isAdmin')
-                    <a class="btn btn-primary" href="{{ route('fridges.index') }}">Wróć (lodówki)</a>
-                    <a class="btn btn-primary" href="{{ route('products.index') }}">Wróć (produkty)</a>
+                    <a class="btn btn-primary" href="{{ route('fridges.index') }}">{{__('Go Back To The Fridges List')}}</a>
+                    <a class="btn btn-primary" href="{{ route('products.index') }}">{{__('Go Back To The Products List')}}</a>
                 @else
-                    <a class="btn btn-primary" href="{{ route('myfridges.indexOwn') }}">Wróć</a>
+                    <a class="btn btn-primary" href="{{ route('myfridges.indexOwn') }}">{{__('Go Back')}}</a>
                 @endcan
 
             </div>
@@ -20,7 +20,7 @@
 
     @if ($errors->any())
         <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <strong>{{__('OOPS')}}</strong>{{__('There is a problem with your input')}}<br><br>
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -39,19 +39,19 @@
          <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Nazwa:</strong>
-                    <input type="text" name="name" class="form-control" placeholder="Nazwa" value="{{ $product->name }}">
+                    <strong>{{__('Name')}}:</strong>
+                    <input type="text" name="name" class="form-control" placeholder="{{__('Name')}}" value="{{ $product->name }}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Expiration Date:</strong>
+                    <strong>{{__('Expiration Date')}}:</strong>
                     <input type="date" name="expiration_date" class="form-control" value="{{ $manipulate_date->format('Y-m-d') }}" min="{{ $manipulate_date->subDays(30)->format('Y-m-d') }}" max="{{ $manipulate_date->addDays(2137)->format('Y-m-d') }}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Lodówka:</strong>
+                    <strong>{{__('Fridge')}}:</strong>
                     <select name="fridge_id">
                         @foreach($fridges as $fridge)
                             <option value="{{ $fridge->id }}" @if($product->isActualFridge($fridge)) selected @endif>{{ $fridge->name }}</option>
@@ -61,7 +61,7 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Kategoria:</strong>
+                    <strong>{{__('Category')}}:</strong>
                     <select name="product_category_id">
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" @if($product->isActualCategory($category)) selected @endif>{{ $category->name }}</option>
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary">Potwierdź</button>
+                    <button type="submit" class="btn btn-primary">{{__('Submit')}}</button>
             </div>
         </div>
 

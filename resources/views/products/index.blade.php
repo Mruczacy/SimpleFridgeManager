@@ -14,34 +14,34 @@
 
     <table class="table table-bordered">
         <tr>
-            <th>ID</th>
-            <th>Nazwa</th>
-            <th>Data przydatności do spożycia</th>
-            <th>Kategoria</th>
-            <th>ID Lodówki</th>
-            <th width="280px">Akcje</th>
+            <th>{{__('ID')}}</th>
+            <th>{{__('Name')}}</th>
+            <th>{{__('Expiration Date')}}</th>
+            <th>{{__('Category')}}</th>
+            <th>{{__('Fridge ID')}}</th>
+            <th width="280px">{{__('Actions')}}</th>
         </tr>
         @forelse ($products as $product)
         <tr>
-            <td>ID: {{ $product->id }}</td>
-            <td>Nazwa: {{ $product->name }}</td>
-            <td>Data przydatności do spożycia: {{ $product->expiration_date }}</td>
-            <td>Kategoria: {{ $product->category->name ?? "Brak kategorii"}}</td>
-            <td>ID lodówki: {{ $product->fridge_id}}</td>
+            <td>{{__('ID')}}: {{ $product->id }}</td>
+            <td>{{__('Name')}}: {{ $product->name }}</td>
+            <td>{{__('Expiration Date')}}: {{ $product->expiration_date }}</td>
+            <td>{{__('Category')}}: {{ $product->category->name ?? __('No Category')}}</td>
+            <td>{{__('Fridge ID')}}: {{ $product->fridge_id}}</td>
             <td>
                 <form action="{{ route('products.destroy',$product->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('products.edit',$product->id) }}">{{__('Edit')}}</a>
 
 
 
-                    <button type="submit" class="btn btn-danger">Usuń</button>
+                    <button type="submit" class="btn btn-danger">{{__('Delete')}}</button>
                 </form>
             </td>
         </tr>
         @empty
-            <div>Nie ma jeszcze żadnych produktów</div>
+            <div>{{__('There is no products here')}}</div>
         @endforelse
     </table>
 

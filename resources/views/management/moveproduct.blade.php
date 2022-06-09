@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('myfridges.showOwn', $def_fridge->id) }}">Wróć</a>
+                <a class="btn btn-primary" href="{{ route('myfridges.showOwn', $def_fridge->id) }}">{{__('Go Back')}}</a>
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
                     @method('PUT')
                     @csrf
                     <div class="input-group">
-                        <strong>Lodówka</strong>
+                        <strong>{{__('A Fridge')}}</strong>
                         <select name="fridge_id">
                             @foreach($fridges as $fridge)
                                 <option value="{{ $fridge->id }}" @if($def_fridge == $fridge) selected @endif>{{ $fridge->name }}</option>
@@ -30,14 +30,14 @@
                     @method('PUT')
                     @csrf
                     <div class="input-group">
-                        <strong>Lodówka</strong>
+                        <strong>{{__('A Fridge')}}</strong>
                         <select name="fridge_id">
                             @foreach($fridges as $fridge)
                                 <option value="{{ $fridge->id }}" @if($def_fridge == $fridge) selected @endif>{{ $fridge->name }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Zmień</button>
+                    <button type="submit" class="btn btn-primary">{{__('Change')}}</button>
                 </form>
                 @endcan
             </div>

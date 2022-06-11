@@ -122,3 +122,8 @@ Homestead.json
 # Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/laravel,symfony,phpunit,visualstudiocode
+
+
+# Laravel Debugbar
+/storage/debugbar
+/config/debugbar.php

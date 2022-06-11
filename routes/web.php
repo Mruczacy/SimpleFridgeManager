@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('products/create/{fridge}', [ProductController::class, 'create'])->name('products.create');
     Route::middleware(['can:isAdmin'])->group(function () {
         Route::put('/products/move/{product}', [ProductController::class, 'moveProductBetweenFridges'])->name('products.move');
-        Route::get('/products/moveform/{product}/{fridge}', [ManagementController::class, 'showAMoveForm'])->name('moveform');
+        Route::get('/products/moveform/{product}/{fridge}', [ManagementController::class, 'showAMoveForm'])->name('products.moveform');
         Route::resource('users', UserController::class);
         Route::resource('fridges', FridgeController::class)->except(['store', 'create']);
         Route::resource('products', ProductController::class)->except(['store', 'create', 'show']);

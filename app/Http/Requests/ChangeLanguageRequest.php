@@ -15,7 +15,7 @@ class ChangeLanguageRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->lang=="en" || $this->lang=="pl";
+        return true;
     }
 
     /**

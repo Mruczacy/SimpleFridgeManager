@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $user= User::factory()->create([
+        $user = User::factory()->create([
             'name' => env('APP_TEST_USERNAME'),
             'email' => env('APP_TEST_EMAIL'),
             'password' => bcrypt(env('APP_TEST_PASSWORD')),

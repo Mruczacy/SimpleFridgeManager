@@ -22,7 +22,7 @@ class Language
      */
     public function handle(Request $request, Closure $next): Response|RedirectResponse
     {
-        if(Session::has('lang')) {
+        if (Session::has('lang')) {
             App::setLocale(Session::get('lang'));
         }
         return $next($request);

@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model {
-
+class Product extends Model
+{
     use HasFactory;
 
     protected $fillable = [
@@ -21,20 +21,23 @@ class Product extends Model {
         'fridge_id',
     ];
 
-    public function fridge() : BelongsTo {
+    public function fridge(): BelongsTo
+    {
         return $this->belongsTo(Fridge::class);
     }
 
-    public function category() : BelongsTo {
+    public function category(): BelongsTo
+    {
         return $this->belongsTo(ProductCategory::class, 'product_category_id');
     }
 
-    public function isActualCategory(ProductCategory $category) : bool {
+    public function isActualCategory(ProductCategory $category): bool
+    {
         return $this->product_category_id == $category->id;
     }
 
-    public function isActualFridge(Fridge $fridge) : bool {
+    public function isActualFridge(Fridge $fridge): bool
+    {
         return $this->fridge_id == $fridge->id;
     }
-
 }

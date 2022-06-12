@@ -19,9 +19,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-class ManagementController extends Controller {
-
-    public function showAManageForm(IsFridgeOwnerRequest $request,Fridge $fridge): View
+class ManagementController extends Controller
+{
+    public function showAManageForm(IsFridgeOwnerRequest $request, Fridge $fridge): View
     {
         return view('management.manage', [
             'fridge' => $fridge,
@@ -38,7 +38,7 @@ class ManagementController extends Controller {
         ]);
     }
 
-    public function showAMoveFormOwn(IsFridgeUserRequest $request,Product $product, Fridge $fridge): View
+    public function showAMoveFormOwn(IsFridgeUserRequest $request, Product $product, Fridge $fridge): View
     {
         return view('management.moveproduct', [
             'fridges' => $request->user()->fridges,
@@ -49,7 +49,7 @@ class ManagementController extends Controller {
 
     public function attachUserToFridge(Fridge $fridge, UserCandidateRequest $request): RedirectResponse
     {
-        $validated=$request->validated();
+        $validated = $request->validated();
         $fridge->users()->attach($validated['user_id'], ['is_manager' => $validated['is_manager']]);
         return redirect()->route('myfridges.indexOwn');
     }
@@ -74,9 +74,8 @@ class ManagementController extends Controller {
 
     public function updateUserRank(Fridge $fridge, UserRankCandidateRequest $request): RedirectResponse
     {
-        $validated=$request->validated();
+        $validated = $request->validated();
         $fridge->users()->updateExistingPivot($validated['user_id'], ['is_manager' => $validated['is_manager']]);
         return redirect()->route('myfridges.indexOwn');
     }
-
 }

@@ -13,12 +13,10 @@ use App\Http\Requests\IsPermittedToManageRequest;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-
 use Exception;
 
 class FridgeController extends Controller
 {
-
     public function index(): View
     {
         return view('fridges.index', [
@@ -28,7 +26,7 @@ class FridgeController extends Controller
 
     public function indexOwn(Request $request): View
     {
-        $fridges = $request->user()->fridges()->with('products.category')->get()/*->sortBy('products.expiration_date', 'desc')*/;
+        $fridges = $request->user()->fridges()->with('products.category')->get();
         return view('fridges.index', [
             'fridges' => $fridges
         ]);
@@ -41,10 +39,8 @@ class FridgeController extends Controller
 
     public function store(StoreFridgeRequest $request): RedirectResponse
     {
-        $fridge=Fridge::create($request->validated() + ['owner_id' => $request->user()->id]);
-        $fridge->save();
+        $fridge = Fridge::create($request->validated() + ['owner_id' => $request->user()->id]);
         $request->user()->fridges()->attach($fridge->id, ['is_manager' => 1]);
-
         return redirect()->route('myfridges.indexOwn');
     }
 

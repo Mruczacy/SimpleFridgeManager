@@ -9,11 +9,10 @@ use App\Enums\UserRole;
 
 class AddRoleColumnToUserTable extends Migration
 {
-
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', UserRole::Types)->default(UserRole::USER);
+            $table->enum('role', UserRole::TYPES)->default(UserRole::USER);
         });
     }
 

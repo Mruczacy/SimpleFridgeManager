@@ -4,10 +4,10 @@ namespace App\Enums;
 
 class UserRole
 {
-    const ADMIN = 'Admin';
-    const USER = 'User';
+    public const ADMIN = 'Admin';
+    public const USER = 'User';
 
-    const Types = [
+    public const TYPES = [
         self::ADMIN => 'Admin',
         self::USER => 'User',
     ];

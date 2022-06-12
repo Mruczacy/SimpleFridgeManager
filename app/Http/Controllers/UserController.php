@@ -17,22 +17,21 @@ use Illuminate\View\View;
 
 class UserController extends Controller
 {
-
-    public function index() : View
+    public function index(): View
     {
         return view('users.index', [
             'users' => User::paginate(5)
         ]);
     }
 
-    public function showMyAccount(Request $request) : View
+    public function showMyAccount(Request $request): View
     {
         return view('users.myaccount', [
             'user' => $request->user()
         ]);
     }
 
-    public function edit(User $user) : View
+    public function edit(User $user): View
     {
         return view('users.edit', [
             'user' => $user,
@@ -61,7 +60,7 @@ class UserController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
-        $fridges= $user->managedFridges;
+        $fridges = $user->managedFridges;
         $user->ownFridges()->delete();
         $user->fridges()->detach();
         $user->delete();
@@ -70,7 +69,7 @@ class UserController extends Controller
 
     public function destroyOwn(IsEqualToAuthRequest $request, User $user): RedirectResponse
     {
-        $fridges= $user->managedFridges;
+        $fridges = $user->managedFridges;
         $user->ownFridges()->delete();
         $user->fridges()->detach();
         $user->delete();

@@ -8,9 +8,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Createfridgetable extends Migration
+class CreateFridgeTable extends Migration
 {
-
     public function up(): void
     {
         Schema::create('fridges', function (Blueprint $table) {
@@ -22,7 +21,6 @@ class Createfridgetable extends Migration
             $table->integer('is_owner');
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Fridge::class);
-
         });
 
         Schema::table('products', function (Blueprint $table) {

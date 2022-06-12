@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\ProductCategory;
-
 use App\Http\Requests\ProductCategoryRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -13,7 +12,6 @@ use Illuminate\View\View;
 
 class ProductCategoryController extends Controller
 {
-
     public function index(): View
     {
         return view('products.categories.index', [
@@ -28,7 +26,7 @@ class ProductCategoryController extends Controller
 
     public function store(ProductCategoryRequest $request): RedirectResponse
     {
-        ProductCategory::create($request->validated())->save();
+        ProductCategory::create($request->validated());
 
         return redirect()->route('categories.index');
     }

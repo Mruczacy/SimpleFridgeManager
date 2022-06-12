@@ -8,7 +8,6 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Fridge;
 use App\Models\User;
-
 use Carbon\Carbon;
 use App\Http\Requests\DestroyOwnRequest;
 use App\Http\Requests\EditProductRequest;
@@ -22,7 +21,6 @@ use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-
     public function index(): View
     {
         return view('products.index', [
@@ -42,15 +40,15 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request): RedirectResponse
     {
-        $validated=$request->validated();
-        Product::create($validated)->save();
+        $validated = $request->validated();
+        Product::create($validated);
         return redirect()->route('myfridges.showOwn', $validated['fridge_id']);
     }
 
     public function edit(Product $product): View
     {
         return view('products.edit', [
-            'product' =>$product,
+            'product' => $product,
             'manipulate_date' => Carbon::createFromFormat('Y-m-d', $product->expiration_date),
             'fridges' => Fridge::all(),
             'categories' => ProductCategory::all(),

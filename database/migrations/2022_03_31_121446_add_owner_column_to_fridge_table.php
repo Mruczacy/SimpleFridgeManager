@@ -8,11 +8,10 @@ use Illuminate\Support\Facades\Schema;
 
 class AddOwnerColumnToFridgeTable extends Migration
 {
-
     public function up(): void
     {
 
-        Schema::table('fridgesToUsers', function(Blueprint $table) {
+        Schema::table('fridgesToUsers', function (Blueprint $table) {
             $table->renameColumn('is_owner', 'is_manager');
         });
 
@@ -20,8 +19,6 @@ class AddOwnerColumnToFridgeTable extends Migration
             $table->unsignedBigInteger('owner_id');
             $table->foreign('owner_id')->references('id')->on('users')->delete('cascade');
         });
-
-
     }
 
     public function down(): void
@@ -31,7 +28,7 @@ class AddOwnerColumnToFridgeTable extends Migration
             $table->dropColumn(['owner_id']);
         });
 
-        Schema::table('fridgesToUsers', function(Blueprint $table) {
+        Schema::table('fridgesToUsers', function (Blueprint $table) {
             $table->renameColumn('is_manager', 'is_owner');
         });
     }

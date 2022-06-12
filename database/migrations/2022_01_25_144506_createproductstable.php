@@ -16,7 +16,7 @@ class CreateProductsTable extends Migration
             $table->string("name");
             $table->date("expiration_date");
             $table->timestamps();
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
         });
     }
 

@@ -60,18 +60,12 @@ class UserController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
-        $fridges = $user->managedFridges;
-        $user->ownFridges()->delete();
-        $user->fridges()->detach();
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Konto zostało usunięte pomyślnie');
     }
 
     public function destroyOwn(IsEqualToAuthRequest $request, User $user): RedirectResponse
     {
-        $fridges = $user->managedFridges;
-        $user->ownFridges()->delete();
-        $user->fridges()->detach();
         $user->delete();
         return redirect()->route('welcome')->with('success', 'Konto zostało usunięte pomyślnie');
     }

@@ -17,13 +17,14 @@ class CreateProductCategory extends Migration
         });
 
         Schema::table('products', function (Blueprint $table) {
-            $table->foreignIdFor(ProductCategory::class)->nullable();
+            $table->foreignIdFor(ProductCategory::class)->constrained()->onDelete('cascade')->nullable();
         });
     }
 
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
+            $table->dropForeign('products_product_category_id_foreign');
             $table->dropColumn("product_category_id");
         });
         Schema::dropIfExists('product_categories');

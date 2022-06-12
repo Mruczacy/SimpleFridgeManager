@@ -19,21 +19,23 @@ class CreateFridgeTable extends Migration
         Schema::create('fridgesToUsers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('is_owner');
-            $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Fridge::class);
+            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Fridge::class)->constrained()->onDelete('cascade');
         });
 
         Schema::table('products', function (Blueprint $table) {
+            $table->dropForeign('products_user_id_foreign');
             $table->dropColumn('user_id');
-            $table->foreignIdFor(Fridge::class);
+            $table->foreignIdFor(Fridge::class)->constrained()->onDelete('cascade');
         });
     }
 
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
+            $table->dropForeign('products_fridge_id_foreign');
             $table->dropColumn('fridge_id');
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
         });
         Schema::dropIfExists('fridgesToUsers');
         Schema::dropIfExists('fridges');

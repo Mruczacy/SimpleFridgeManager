@@ -26,7 +26,10 @@ class ChangeLanguageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'lang' => 'required|in:en,pl',
+            'lang' => [
+                'required',
+                'in:en,pl'
+            ],
         ];
     }
 }

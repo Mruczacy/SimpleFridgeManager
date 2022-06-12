@@ -26,7 +26,11 @@ class OwnerCandidateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'owner_id' => 'required|numeric|exists:users,id',
+            'owner_id' => [
+                'required',
+                'numeric',
+                'exists:users,id',
+            ],
         ];
     }
 }

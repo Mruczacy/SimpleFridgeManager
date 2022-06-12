@@ -28,7 +28,11 @@ class FridgeIdRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fridge_id' => 'required|numeric|exists:fridges,id',
+            'fridge_id' => [
+                'required',
+                'exists:fridges,id',
+                'numeric'
+            ],
         ];
     }
 }

@@ -26,8 +26,17 @@ class UserCandidateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'is_manager' => 'required|numeric|min:0|max:1',
-            'user_id' => 'required|numeric|exists:users,id'
+            'is_manager' => [
+                'required',
+                'numeric',
+                'min:0',
+                'max:1',
+            ],
+            'user_id' => [
+                'required',
+                'numeric',
+                'exists:users,id',
+            ],
         ];
     }
 }

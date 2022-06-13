@@ -11,7 +11,7 @@ use App\Models\Fridge;
 
 class ProductFactory extends Factory
 {
-    public function definition() : array
+    public function definition(): array
     {
         return [
             'name' => $this->faker->name(),

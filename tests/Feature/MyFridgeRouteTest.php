@@ -12,27 +12,26 @@ use App\Models\Fridge;
 
 class MyFridgeRouteTest extends TestCase
 {
-
     use RefreshDatabase;
+
     public function testGuestCannotAccessIndexOwn(): void
     {
-        $response = $this->get("/myfridges");
-        $response->assertStatus(302);
-        $response->assertRedirect("/login");
+        $response = $this->get(route('myfridges.indexOwn'));
+        $response->assertRedirect(route('login'));
     }
 
     public function testUserCanAccessIndexOwn(): void
     {
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->get("/myfridges");
-        $response->assertStatus(200);
+        $response = $this->actingAs($user)->get(route('myfridges.indexOwn'));
+        $response->assertOk();
     }
 
     public function testGuestCannotAccessEditOwn(): void
     {
-        $response = $this->get("/myfridges/1/edit");
-        $response->assertStatus(302);
-        $response->assertRedirect("/login");
+        $fridge = Fridge::factory()->create();
+        $response = $this->get(route('myfridges.editOwn', $fridge->id));
+        $response->assertRedirect(route('login'));
     }
 
     public function testUserCanAccessEditOwnOnItsFridge(): void
@@ -40,23 +39,23 @@ class MyFridgeRouteTest extends TestCase
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
         $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
-        $response = $this->actingAs($user)->get("/myfridges/{$fridge->id}/edit");
-        $response->assertStatus(200);
+        $response = $this->actingAs($user)->get(route('myfridges.editOwn', $fridge->id));
+        $response->assertOk();
     }
 
     public function testUserCannotAccessEditOwnOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
-        $response = $this->actingAs($user)->get("/myfridges/{$fridge->id}/edit");
-        $response->assertStatus(403);
+        $response = $this->actingAs($user)->get(route('myfridges.editOwn', $fridge->id));
+        $response->assertForbidden();
     }
 
     public function testGuestCannotAccessUpdateOwn(): void
     {
-        $response = $this->put("/myfridges/1");
-        $response->assertStatus(302);
-        $response->assertRedirect("/login");
+        $fridge = Fridge::factory()->create();
+        $response = $this->put(route('myfridges.updateOwn', $fridge->id));
+        $response->assertRedirect(route('login'));
     }
 
     public function testUserCanAccessUpdateOwnOnItsFridge(): void
@@ -64,31 +63,29 @@ class MyFridgeRouteTest extends TestCase
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
         $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
-        $response = $this->actingAs($user)->put("/myfridges/{$fridge->id}", [
+        $response = $this->actingAs($user)->put(route('myfridges.updateOwn', $fridge->id), [
             'name' => 'test',
         ]);
         $fridge2 = Fridge::find($fridge->id);
         $this->assertFalse($fridge2->name == $fridge->name);
-        $response->assertStatus(302);
-        $response->assertRedirect("/myfridges");
+        $response->assertRedirect(route('myfridges.indexOwn'));
     }
 
     public function testUserCannotAccessUpdateOwnOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
-        $response = $this->actingAs($user)->put("/myfridges/{$fridge->id}", [
+        $response = $this->actingAs($user)->put(route('myfridges.updateOwn', $fridge->id), [
             'name' => 'test',
         ]);
-        $response->assertStatus(403);
+        $response->assertForbidden();
     }
 
     public function testGuestCannotAccessDestroyOwn(): void
     {
-        $response = $this->delete("/myfridges/1");
-
-        $response->assertStatus(302);
-        $response->assertRedirect("/login");
+        $fridge = Fridge::factory()->create();
+        $response = $this->delete(route('myfridges.destroyOwn', $fridge->id));
+        $response->assertRedirect(route('login'));
     }
 
     public function testUserCanAccessDestroyOwnOnItsFridge(): void
@@ -98,17 +95,16 @@ class MyFridgeRouteTest extends TestCase
             'owner_id' => $user->id,
         ]);
         $user->fridges()->attach($fridge->id, ['is_manager' => 1]);
-        $response = $this->actingAs($user)->delete("/myfridges/{$fridge->id}");
+        $response = $this->actingAs($user)->delete(route('myfridges.destroyOwn', $fridge->id));
         $this->assertNull(Fridge::find($fridge->id));
-        $response->assertStatus(302);
-        $response->assertRedirect("/myfridges");
+        $response->assertRedirect(route('myfridges.indexOwn'));
     }
 
     public function testUserCannotAccessDestroyOwnOnSbsFridge(): void
     {
         $user = User::factory()->create();
         $fridge = Fridge::factory()->create();
-        $response = $this->actingAs($user)->delete("/myfridges/{$fridge->id}");
-        $response->assertStatus(403);
+        $response = $this->actingAs($user)->delete(route('myfridges.destroyOwn', $fridge->id));
+        $response->assertForbidden();
     }
 }

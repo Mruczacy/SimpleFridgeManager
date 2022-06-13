@@ -9,9 +9,7 @@ use App\Http\Controllers\FridgeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name("welcome");
+Route::view('/', 'welcome')->name("welcome");
 
 Auth::routes();
 Route::get('/language-change', LanguageController::class)->name('changeLanguage');
@@ -28,7 +26,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{fridge}', 'updateOwn')->name('updateOwn');
         Route::get('/{fridge}/edit', 'editOwn')->name('editOwn');
         Route::delete('/{fridge}', 'destroyOwn')->name('destroyOwn');
-
     });
     Route::prefix('myproducts')->controller(ProductController::class)->name('myproducts.')->group(function () {
         Route::put('/{product}', 'updateOwn')->name('updateOwn');
@@ -56,8 +53,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('products', ProductController::class)->except(['store', 'create', 'show']);
         Route::resource('products/categories', ProductCategoryController::class);
     });
-
-
 });
 
 Route::get('/home', HomeController::class)->name('home');

@@ -14,15 +14,15 @@ use App\Models\ProductCategory;
 use App\Enums\UserRole;
 use Carbon\Carbon;
 
-class MyProductsRouteTest extends TestCase {
-
+class MyProductsRouteTest extends TestCase
+{
     use RefreshDatabase;
+
     public function testGuestCannotAccessEditOwn(): void
     {
         $product = Product::factory()->create();
-        $response = $this->get("/myproducts/{$product->id}/edit");
-        $response->assertStatus(302);
-        $response->assertRedirect("/login");
+        $response = $this->get(route('myproducts.editOwn', $product->id));
+        $response->assertRedirect(route('login'));
     }
 
     public function testUserCanAccessEditOwn(): void
@@ -33,8 +33,8 @@ class MyProductsRouteTest extends TestCase {
         $product = Product::factory()->create([
             'fridge_id' => $fridge->id,
         ]);
-        $response = $this->actingAs($user)->get("/myproducts/{$product->id}/edit");
-        $response->assertStatus(200);
+        $response = $this->actingAs($user)->get(route('myproducts.editOwn', $product->id));
+        $response->assertOk();
     }
 
     public function testUserCannotAccessEditOwnOnSbs(): void
@@ -47,8 +47,8 @@ class MyProductsRouteTest extends TestCase {
             'fridge_id' => $fridge->id,
         ]);
 
-        $response = $this->actingAs($user)->get("/myproducts/{$product->id}/edit");
-        $response->assertStatus(403);
+        $response = $this->actingAs($user)->get(route('myproducts.editOwn', $product->id));
+        $response->assertForbidden();
     }
 
     public function testGuestCannotAccessUpdateOwn(): void
@@ -59,15 +59,14 @@ class MyProductsRouteTest extends TestCase {
             'name' => 'test2',
             'product_category_id' => $category->id,
         ]);
-        $response = $this->put("/myproducts/{$product->id}", [
+        $response = $this->put(route('myproducts.updateOwn', $product->id), [
             'name' => 'test',
             'product_category_id' => $category2->id,
         ]);
         $product2 = Product::find($product->id);
         $this->assertTrue($product2->category_id == $product->category_id);
         $this->assertTrue($product2->name == $product->name);
-        $response->assertStatus(302);
-        $response->assertRedirect("/login");
+        $response->assertRedirect(route('login'));
     }
 
     public function testUserCanAccessUpdateOwn(): void
@@ -82,7 +81,7 @@ class MyProductsRouteTest extends TestCase {
             'product_category_id' => $category->id,
             'fridge_id' => $fridge->id,
         ]);
-        $response = $this->actingAs($user)->put("/myproducts/{$product->id}", [
+        $response = $this->actingAs($user)->put(route('myproducts.updateOwn', $product->id), [
             'name' => 'test',
             'product_category_id' => $category2->id,
             'fridge_id' => $fridge->id,
@@ -91,8 +90,7 @@ class MyProductsRouteTest extends TestCase {
         $product2 = Product::find($product->id);
         $this->assertTrue($product2->product_category_id != $product->product_category_id);
         $this->assertTrue($product2->name == 'test');
-        $response->assertStatus(302);
-        $response->assertRedirect("/myfridges");
+        $response->assertRedirect(route('myfridges.indexOwn'));
     }
 
     public function testUserCannotAccessUpdateOwnOnSbs(): void
@@ -108,7 +106,7 @@ class MyProductsRouteTest extends TestCase {
             'product_category_id' => $category->id,
             'fridge_id' => $fridge->id,
         ]);
-        $response = $this->actingAs($user)->put("/myproducts/{$product->id}", [
+        $response = $this->actingAs($user)->put(route('myproducts.updateOwn', $product->id), [
             'name' => 'test',
             'product_category_id' => $category2->id,
             'fridge_id' => $fridge->id,
@@ -117,15 +115,14 @@ class MyProductsRouteTest extends TestCase {
         $product2 = Product::find($product->id);
         $this->assertTrue($product2->product_category_id == $product->product_category_id);
         $this->assertTrue($product2->name == $product->name);
-        $response->assertStatus(403);
+        $response->assertForbidden();
     }
 
     public function testGuestCannotAccessDestroyOwn(): void
     {
         $product = Product::factory()->create();
-        $response = $this->delete("/myproducts/{$product->id}");
-        $response->assertStatus(302);
-        $response->assertRedirect("/login");
+        $response = $this->delete(route('myproducts.destroyOwn', $product->id));
+        $response->assertRedirect(route('login'));
     }
 
     public function testUserCanAccessDestroyOwn(): void
@@ -134,9 +131,8 @@ class MyProductsRouteTest extends TestCase {
         $fridge = Fridge::factory()->create();
         $fridge->users()->attach($user, ['is_manager' => true]);
         $product = Product::factory()->create(['fridge_id' => $fridge->id]);
-        $response = $this->actingAs($user)->delete("/myproducts/{$product->id}");
-        $response->assertStatus(302);
-        $response->assertRedirect("/myfridges");
+        $response = $this->actingAs($user)->delete(route('myproducts.destroyOwn', $product->id));
+        $response->assertRedirect(route('myfridges.indexOwn'));
         $this->assertNull(Product::find($product->id));
     }
 
@@ -146,11 +142,11 @@ class MyProductsRouteTest extends TestCase {
 
         $user2 = User::factory()->create(['role' => UserRole::USER]);
         $fridge = Fridge::factory()->create();
-        $fridge2= Fridge::factory()->create();
+        $fridge2 = Fridge::factory()->create();
         $fridge->users()->attach($user, ['is_manager' => true]);
         $fridge2->users()->attach($user2, ['is_manager' => true]);
         $product = Product::factory()->create(['fridge_id' => $fridge2->id]);
-        $response = $this->actingAs($user)->delete("/myproducts/{$product->id}");
-        $response->assertStatus(403);
+        $response = $this->actingAs($user)->delete(route('myproducts.destroyOwn', $product->id));
+        $response->assertForbidden();
     }
 }

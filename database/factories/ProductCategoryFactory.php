@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class ProductCategoryFactory extends Factory
 {
-    public function definition() : array
+    public function definition(): array
     {
         return [
             'name' => $this->faker->name()

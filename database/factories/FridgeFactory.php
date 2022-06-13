@@ -10,7 +10,7 @@ use App\Models\User;
 
 class FridgeFactory extends Factory
 {
-    public function definition() : array
+    public function definition(): array
     {
         return [
             'name' => $this->faker->name(),

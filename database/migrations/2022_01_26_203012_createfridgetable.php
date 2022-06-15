@@ -16,12 +16,6 @@ class CreateFridgeTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
         });
-        Schema::create('fridgesToUsers', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('is_owner');
-            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(Fridge::class)->constrained()->onDelete('cascade');
-        });
 
         Schema::table('products', function (Blueprint $table) {
             $table->dropForeign('products_user_id_foreign');
@@ -37,7 +31,6 @@ class CreateFridgeTable extends Migration
             $table->dropColumn('fridge_id');
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
         });
-        Schema::dropIfExists('fridgesToUsers');
         Schema::dropIfExists('fridges');
     }
 }

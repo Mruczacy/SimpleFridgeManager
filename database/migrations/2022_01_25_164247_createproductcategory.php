@@ -17,7 +17,7 @@ class CreateProductCategory extends Migration
         });
 
         Schema::table('products', function (Blueprint $table) {
-            $table->foreignIdFor(ProductCategory::class)->constrained()->onDelete('cascade')->nullable();
+            $table->foreignIdFor(ProductCategory::class)->nullable()->constrained()->onDelete('cascade');
         });
     }
 

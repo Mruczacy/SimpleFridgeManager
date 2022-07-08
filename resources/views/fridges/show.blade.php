@@ -28,11 +28,15 @@
             <table class="table table-bordered">
                 <tr>
                     <th>{{__('Name')}}</th>
+                    <th>{{__('Expiration Date')}}</th>
+                    <th>{{__('Category')}}</th>
                     <th width="280px">{{__('Actions')}}</th>
                 </tr>
                 @forelse ($fridge->products as $product)
                 <tr>
                     <td>{{ $product->name }}</td>
+                    <td @if ($product->trashTresholdHit()) class="throw-it" @elseif ($product->asapTresholdHit()) class="eat-asap" @elseif ($product->inNearFutureTresholdHit()) class="in-near-future" @else class="long-term" @endif>{{ $product->expiration_date }}</td>
+                    <td> @isset($product->category) {{__('Category')}}: @endisset {{ $product->category->name ?? __('No Category')  }}</td>
                     <td>
                         @can('isAdmin')
                         <form action="{{ route('products.destroy',$product->id) }}" method="POST">
@@ -57,9 +61,31 @@
                     </td>
                 </tr>
                 @empty
-                    <div>Brak produktów w lodówce</div>
+                    <div>{{__('There are no products here')}}</div>
                     <a class="btn btn-primary" href="{{ route('products.create', $fridge->id)}}">{{__('Throw sth into the Fridge')}}</a>
                 @endforelse
+            </table>
+            <table class="table table-bordered">
+                <tr>
+                    <th>{{__('Color')}}</th>
+                    <th>{{__('Meaning')}}</th>
+                </tr>
+                <tr>
+                    <td class="throw-it-back"></td>
+                    <td>{{__('Throw it out')}}</td>
+                </tr>
+                <tr>
+                    <td class="eat-asap-back"></td>
+                    <td>{{__('Eat Asap')}}</td>
+                </tr>
+                <tr>
+                    <td class="in-near-future"></td>
+                    <td>{{__('In Near Future')}}</td>
+                </tr>
+                <tr>
+                    <td class="long-term"></td>
+                    <td>{{__('Long Term')}}</td>
+                </tr>
             </table>
         </div>
     </div>

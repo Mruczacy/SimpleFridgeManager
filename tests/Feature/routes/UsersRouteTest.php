@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests\Feature\Routes;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Enums\UserRole;
 use App\Models\User;
 
-class UsersRouteTest extends TestCase
+class UsersTest extends TestCase
 {
     use RefreshDatabase;
 

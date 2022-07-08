@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -20,6 +21,9 @@ class Fridge extends Model
     protected $fillable = [
         'name',
         'owner_id',
+        'throw_it_out_treshold',
+        'asap_treshold',
+        'in_near_future_treshold'
     ];
 
     public function owner(): BelongsTo

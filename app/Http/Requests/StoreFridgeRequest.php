@@ -32,6 +32,20 @@ class StoreFridgeRequest extends FormRequest
                 'string',
                 'max:255',
             ],
+            'throw_it_out_treshold' => [
+                'integer',
+                'nullable'
+            ],
+            'asap_treshold' => [
+                'gt:throw_it_out_treshold',
+                'integer',
+                'nullable'
+            ],
+            'in_near_future_treshold' => [
+                'gt:asap_treshold',
+                'integer',
+                'nullable'
+            ]
         ];
     }
 }

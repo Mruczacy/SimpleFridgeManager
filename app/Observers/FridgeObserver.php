@@ -8,7 +8,6 @@ use App\Models\Fridge;
 
 class FridgeObserver
 {
-
     /**
      * Handle the Fridge "deleted" event.
      *

@@ -63,6 +63,7 @@
                 <div class="form-group">
                     <strong>{{__('Category')}}:</strong>
                     <select name="product_category_id">
+                        <option value="">{{__('No')}}</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" @if($product->isActualCategory($category)) selected @endif>{{ $category->name }}</option>
                         @endforeach

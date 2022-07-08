@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests\Feature\Routes;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\UserController;
@@ -12,7 +12,7 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ManagementsRouteTest extends TestCase
+class ManagementTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests\Feature\Routes;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -10,7 +10,7 @@ use App\Models\User;
 use App\Enums\UserRole;
 use App\Models\Fridge;
 
-class MyFridgeRouteTest extends TestCase
+class MyFridgesTest extends TestCase
 {
     use RefreshDatabase;
 

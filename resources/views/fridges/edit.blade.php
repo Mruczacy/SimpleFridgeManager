@@ -34,7 +34,26 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
-                            <input type="text" name="name" value="{{ $fridge->name }}" class="form-control" placeholder="{{__('Name')}}">
+                            <input type="text" name="name" value="{{ $fridge->name }}" class="form-control" placeholder="{{__('Name')}}" required>
+                        </div>
+                    </div>
+                    <strong class="padding-vertical-10">{{__('Warning Tresholds')}}</strong>
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <strong>{{__('Throw it out')}}</strong>
+                            <input type="number" name="throw_it_out_treshold" value="{{ $fridge->throw_it_out_treshold }}" class="form-control" placeholder="{{__('Throw it out')}}" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <strong>{{__('Eat Asap')}}</strong>
+                            <input type="number" name="asap_treshold" value="{{ $fridge->asap_treshold }}" class="form-control" placeholder="{{__('Eat Asap')}}" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <strong>{{__('In Near Future')}}</strong>
+                            <input type="number" name="in_near_future_treshold" value="{{ $fridge->in_near_future_treshold }}" class="form-control" placeholder="{{__('In Near Future')}}" required>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 text-center">

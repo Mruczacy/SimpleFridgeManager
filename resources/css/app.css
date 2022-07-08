@@ -11,7 +11,36 @@
 .margin-bot {
     margin-bottom: 20px;
 }
-
+.padding-vertical-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
 .text-red {
     color: #ff0000;
 }
+
+td.throw-it {
+    background-color: #440000;
+    color: #ffffff;
+}
+
+td.throw-it-back {
+    background-color: #440000;
+}
+td.eat-asap {
+    background-color: #ff0000;
+    color: #ffffff;
+}
+td.eat-asap-back {
+    background-color: #ff0000;
+}
+
+td.in-near-future {
+    background-color: #ffff00;
+}
+
+
+td.long-term {
+    background-color: #00ff00;
+}
+
